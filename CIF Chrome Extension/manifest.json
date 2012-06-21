@@ -15,6 +15,7 @@
 	"48": "ciflogo.png",
 	"128": "ciflogo.png"
   },
+  "update_url":"https://raw.github.com/collectiveintel/cif-client-chrome/master/update_manifest.xml",
   "options_page": "settings.html",
   "permissions": [ "http://*/*", "https://*/*", "contextMenus","tabs" ]
 }
