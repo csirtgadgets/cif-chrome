@@ -2,17 +2,38 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-var query;
+
 var server;
 var cifapikey;
 var cifurl;
 var logQuery;
 $(document).ready(function() {
 	window.protocoldata = new Array();
+	settingsCheck();
 	populateProtocolTranslations();
 	prepSearchBox();
 	runQuerySet(); 
 });
+function settingsCheck(){
+    try{
+		options = JSON.parse(localStorage["cifapiprofiles"]);
+	} catch(err) {
+		options = new Array();
+	}
+	if (options.length<1){
+		var views = chrome.extension.getViews({'type':'tab'});
+		for (i in views) {
+			if (views[i].location.href == chrome.extension.getURL('settings.html')) {
+			  views[i].makeMeVisible();
+			  window.close();
+			  return;
+			} 
+		}
+		chrome.tabs.create({url: "settings.html"});
+		window.close();
+		return;
+	}
+}
 function populateProtocolTranslations(){
 	$.ajax({
 		type: "GET",
@@ -213,13 +234,11 @@ function parseDataToBody(data){
 				      'server':$(this).attr('server'),
 					   'logquery':$("#logquery").is(':checked')
 					};
-			localStorage['datatoadd']=JSON.stringify(query);
+			localStorage['query']=JSON.stringify(query);
 			runQuerySet();
 			return false;
 		});
 	});
-	
-	
 }
 function parseEntries(data){
 	$.each(data, function(key, val) {

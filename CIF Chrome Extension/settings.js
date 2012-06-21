@@ -30,6 +30,11 @@ function restore_options() {
   }
   addProfileRow('','','',false,true);
 }
+function makeMeVisible(){
+	chrome.tabs.getCurrent(function(tab){
+		chrome.tabs.update(tab.id, {selected: true});
+	});
+}
 function addProfileRow(name,url,key,isDefault,logQueries){
 	toappend='<tr class="profilerow">\
 <td><input type="text" class="nameinput" size=28/></td>\

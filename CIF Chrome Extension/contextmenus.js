@@ -8,14 +8,10 @@ function queryClick(info, tab) {
 				  'type':'contextmenuquery'
 				 };
 	localStorage['query']=JSON.stringify(query);
-	//alert(localStorage['query']);
 	var views = chrome.extension.getViews({'type':'tab'});
-	for (var i = 0; i < views.length; i++) {
-		var view = views[i];
-		if (view.location.href == chrome.extension.getURL('query.html')) {
-		  view.runQuerySet();
-		  //console.log(view);
-		  //chrome.tabs.update(view.id, {selected: true});
+	for (i in views) {
+		if (views[i].location.href == chrome.extension.getURL('query.html')) {
+		  views[i].runQuerySet();
 		  return;
 		} 
 	}
