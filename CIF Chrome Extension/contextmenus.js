@@ -38,6 +38,6 @@ function iconParty(){
 	iconindex++;
 	window.setTimeout(iconParty, 10000, true);
 }									 
-iconParty();
+
 
 

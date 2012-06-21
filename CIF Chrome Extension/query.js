@@ -7,6 +7,8 @@ var server;
 var cifapikey;
 var cifurl;
 var logQuery;
+window.querycount=0;
+window.searchhashmap = {};
 $(document).ready(function() {
 	window.protocoldata = new Array();
 	settingsCheck();
@@ -47,12 +49,20 @@ function populateProtocolTranslations(){
 	});
 }
 function runQuerySet(){
-	query=JSON.parse(localStorage["query"]);
+	var query=JSON.parse(localStorage["query"]);
 	chrome.tabs.getCurrent(function(tab){
 		chrome.tabs.update(tab.id, {selected: true});
 	});
 	$("#loadinggif").show();
-	queries=query['query'].split(',');
+	var queries=query['query'].replace(/(\r\n|\n|\r| )/gm,',').split(',');
+	var cleanedqueries = new Array();
+	for (i in queries){
+		if ($.trim(queries[i])!=''){
+			cleanedqueries.push(queries[i]);
+		}
+	}
+	queries=cleanedqueries;
+	window.querycount+=queries.length;
 	if (query['type']=='formquery'){
 		server=query['server'];
 		logQuery=query['logquery'];
@@ -129,6 +139,7 @@ function runQuery(string,cifurl,cifapikey,logQuery){
 		/* sha1 hex */
 		//alert(string);
 		string=CryptoJS.SHA1(string);
+		window.searchhashmap[string]=origterm;
 	} 
 	cifquery=string;
 	
@@ -138,10 +149,10 @@ function runQuery(string,cifurl,cifapikey,logQuery){
 	}
 	$.getJSON(cifurl+cifquery+"?apikey="+cifapikey+"&fmt=json"+noLog,function(data) {
 		//alert(data);
-		$("#loadinggif").hide();
+		loadingHide();
 		$("#searchbox").show();
 		if (data['message']=='no records') {
-			showError('no results for "'+string+'"');
+			showError('no results for "'+origterm+'"');
 		}
 		else {
 			parseDataToBody(data);
@@ -149,14 +160,23 @@ function runQuery(string,cifurl,cifapikey,logQuery){
 	}).error(function(e){ 
 		var errorstring;
 		if (e['status']==404){
-			showError('no results for "'+string+'"');
+			showError('no results for "'+origterm+'"');
 			//window.close();
 		} else {
 			showError('error retrieving results for "'+origterm+'"');
 		}
-		$("#loadinggif").hide();
+		loadingHide();
 		$("#searchbox").show();
 	});
+}
+function loadingHide(){
+	window.querycount--;
+	$("#remainingqueries").html(window.querycount+' queries remaining');
+	if (window.querycount<1) {
+		$("#loadinggif").hide();
+		$("#remainingqueries").html('');
+		window.querycount=0;
+	}
 }
 function showError(errorstring){
 	$('#queries').prepend('<fieldset><h3>'+errorstring+'</h3></fieldset>');
@@ -172,8 +192,12 @@ function uri_escape( text, re ) {
     });
 }
 function parseDataToBody(data){
+	feeddesc=data['data']['feed']['description'];
+	if (typeof window.searchhashmap[feeddesc.replace("search ","")] != 'undefined'){
+		feeddesc=window.searchhashmap[feeddesc.replace("search ","")];
+	} 
 	$("#queries").prepend('<fieldset class="resultsfield">\
-	  <legend>Results for <b>'+data['data']['feed']['description']+'</b></legend></fieldset>\
+	  <legend>Results for <b>'+feeddesc+'</b></legend></fieldset>\
 	 ');
 	$(".resultsfield").first().append('\
 	  <span class="servername"></span><br/><span class="restriction"></span><br/><span class="detecttime"></span>\
