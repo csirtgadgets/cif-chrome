@@ -1,0 +1,61 @@
+<!doctype html>
+<html>
+  <head>
+    <title>CIF Query</title>
+
+    <!-- JavaScript and HTML must be in separate files for security. -->
+	<script src="sha1.js"></script>
+	<script src="jquery-1.7.2.min.js"></script>
+    <script src="query.js"></script>
+	<style type="text/css">
+		table.results {
+			border-width: thin;
+			border-spacing: 0px;
+			border-style: outset;
+			border-color: gray;
+			border-collapse: separate;
+			background-color: white;
+		}
+		table.results th {
+			border-width: thin;
+			padding: 2px;
+			border-style: inset;
+			border-color: gray;
+			background-color: rgb(255, 255, 240);
+			-moz-border-radius: ;
+		}
+		table.results td {
+			border-width: thin;
+			padding: 2px;
+			border-style: inset;
+			border-color: gray;
+			background-color: rgb(255, 255, 240);
+			-moz-border-radius: ;
+		}
+		.smallfont {
+			font-size: 75%;
+		}
+	</style>
+
+
+  </head>
+  <body>
+  <div id="searchbox" style="display:none;">
+    <fieldset style="width:400px;">
+	<legend><b>Run a New Query</b></legend>
+	<form id="theform">
+	Server: <select id="serverselect"></select><br/>
+	Query: <input type="text" id="querystring" value="" size="50"><br/>
+	<input type="submit" name="Submit">Log Query: <input type="checkbox" id="logquery" checked>
+	</form>
+	</fieldset>
+  </div>
+  
+  <img src="ajax-loader.gif" id="loadinggif"/>
+  <div id="queries">
+ 
+  
+  </div>
+
+  </body>
+</html>

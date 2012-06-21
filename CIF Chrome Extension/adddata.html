@@ -1,0 +1,110 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Add Data</title>
+
+    <!-- JavaScript and HTML must be in separate files for security. -->
+	<script src="sha1.js"></script>
+	<script src="jquery-1.7.2.min.js"></script>
+	<script src="adddata.js"></script>
+	<style>
+		td{
+			padding-bottom:10px;
+		}
+	</style>
+  </head>
+  <body>
+  <h2>Document the Observation</h2>
+  <h3>General Details</h3>
+	<table>
+	<tr>
+		<td><b>Data</b></td>
+		<td>
+			<input type="text" id="datapoints" size="50"/><br>
+			<i>multiple datapoints (max: 100) may be entered as comma-separated values. they will all share the same classifications below</i>
+		</td>
+	</tr>
+	<tr>
+		<td><b>Impact</b></td>
+		<td>
+			<select id="impact">
+				<option value="botnet">Botnet</option>
+				<option value="malware/exploit">Malware / Exploit</option>
+				<option value="phishing">Phishing</option>
+				<option value="networks">Networks</option>
+				<option value="nameserver">Nameserver</option>
+				<option value="fastflux">Fastflux</option>
+				<option value="scanner">Scanner</option>
+				<option value="spam">Spam</option>
+				<option value="whitelist">Whitelist</option>
+			</select>
+			<br>
+			<i>Refer to the impact taxonomy <a href="http://code.google.com/p/collective-intelligence-framework/wiki/TaxonomyImpact" target="_blank">here</a></i>
+		</td>
+	</tr>
+	<tr>
+		<td><b>Description</b></td>
+		<td>
+			<input type="text" id="description" size="50" maxlength="140"/><br>
+			<i>short description (e.g. zues c&amp;c)</i>
+		</td>
+	</tr>
+	<tr>
+		<td><b>Confidence</b></td>
+		<td>
+			<select id="confidence">
+				<option value="41">Not Confident</option>
+				<option value="75">Somewhat Confident</option>
+				<option value="85">Very Confident</option>
+				<option value="95">Certain</option>
+			</select>
+			<br>
+			<i>Refer to the confidence taxonomy <a href="http://code.google.com/p/collective-intelligence-framework/wiki/TaxonomyConfidence" target="_blank">here</a></i>
+		</td>
+	</tr>
+	<tr>
+		<td>Protocol</td>
+		<td>
+			<select id="protocol">
+				<option value="">N/A</option>
+			</select>
+		</td>
+	</tr>
+	<tr>
+		<td>Portlist</td>
+		<td>
+			<input type="text" id="portlist" size="50" maxlength="140"/><br>
+			<i>e.g. 21,22,80-89</i>
+		</td>
+	</tr>
+	</table>
+	
+	<h3>Sharing Information</h3>
+	<table>
+	<tr>
+		<td><b>Groups</b></td>
+		<td>
+			<input type="checkbox" id="datapoints"/><br>
+			<input type="checkbox" id="datapoints"/><br>
+			<input type="checkbox" id="datapoints"/><br>
+			<input type="checkbox" id="datapoints"/><br>
+			<i>select at least one</i>
+		</td>
+	</tr>
+	<tr>
+		<td><b>Restriction</b></td>
+		<td>
+			<select id="restriction">
+				<option value="41">Not Confident</option>
+				<option value="75">Somewhat Confident</option>
+				<option value="85">Very Confident</option>
+				<option value="95">Certain</option>
+			</select>
+		</td>
+	</tr>
+	</table>
+  <!--<img src="ajax-loader.gif" id="loadinggif"/>-->
+  <button id="submitbutton">Submit</button>
+
+  </body>
+</html>
