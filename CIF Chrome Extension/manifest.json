@@ -4,7 +4,7 @@
   "manifest_version": 2,
   "description": "Client for a collective intelligence framework server",
   "browser_action": {
-    "default_icon": "ciflogo.png",
+    "default_icon": "favicon_1.ico",
 	"default_popup": "popup.html"
   },
   "background": {
