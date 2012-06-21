@@ -1,6 +1,6 @@
 {
   "name": "Collective Intelligence Framework Client",
-  "version": "0.52",
+  "version": "0.53",
   "manifest_version": 2,
   "description": "Client for a collective intelligence framework server",
   "browser_action": {
