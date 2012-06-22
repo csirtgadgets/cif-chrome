@@ -78,9 +78,9 @@ function addProfileRow(name,url,key,isDefault,logQueries){
 	}
 }
 function test_settings(clickedbutton){
-	var cifurl=$(".urlinput",clickedbutton.parent().parent()).val();
+	var cifurl=$(".urlinput",clickedbutton.parent().parent()).val().trim();
 	var cifquery="";
-	var cifapikey=$(".keyinput",clickedbutton.parent().parent()).val();
+	var cifapikey=$(".keyinput",clickedbutton.parent().parent()).val().trim();
 	try{
 		$.getJSON(cifurl+cifquery+"?apikey="+cifapikey+"&fmt=json",function(data) {
 			if (data['status']==200){
