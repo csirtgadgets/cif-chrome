@@ -50,6 +50,8 @@ function populateProtocolTranslations(){
 	});
 }
 function runQuerySet(){
+	$('body').animate({scrollTop:0}, 'medium');
+	//window.scrollTo(0, 0);
 	var query=JSON.parse(localStorage["query"]);
 	chrome.tabs.getCurrent(function(tab){
 		chrome.tabs.update(tab.id, {selected: true});
@@ -210,7 +212,7 @@ function parseDataToBody(data,fieldset){
 	if (typeof window.searchhashmap[feeddesc.replace("search ","")] != 'undefined'){
 		feeddesc=window.searchhashmap[feeddesc.replace("search ","")];
 	} 
-	fieldset.append('<legend>Results for <b>'+feeddesc+'</b></legend>');
+	//fieldset.append('<legend>Results for <b>'+feeddesc+'</b></legend>');
 	fieldset.append('\
 	  <span class="servername"></span><br/><span class="restriction"></span><br/><span class="detecttime"></span>\
 	  <table class="results">\
