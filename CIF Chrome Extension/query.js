@@ -9,6 +9,7 @@ var cifurl;
 var logQuery;
 window.querycount=0;
 window.searchhashmap = {};
+window.group_map = new Array();
 $(document).ready(function() {
 	window.protocoldata = new Array();
 	settingsCheck();
@@ -119,7 +120,7 @@ function getServerKey(server){
 	servers = JSON.parse(localStorage["cifapiprofiles"]);
 	return servers[server]['key'];
 }
-function runQuery(string,cifurl,cifapikey,logQuery){
+function runQuery(string,cifurl,cifapikey,logQuery,fieldset){
 	var cifquery;
 	var origterm=string;
 	if (string.substring(0,7)=='http://' || string.substring(0,8)=='https://'){
@@ -147,26 +148,38 @@ function runQuery(string,cifurl,cifapikey,logQuery){
 	if (!logQuery){
 		noLog='&nolog=1';
 	}
-	$.getJSON(cifurl+cifquery+"?apikey="+cifapikey+"&fmt=json"+noLog,function(data) {
-		//alert(data);
-		loadingHide();
-		$("#searchbox").show();
-		if (data['message']=='no records') {
-			showError('no results for "'+origterm+'"');
+	$("#stagingarea").prepend('<fieldset class="resultsfield">\
+	  <legend>Results for <b>'+origterm+'</b></legend></fieldset>\
+	 ');
+	fieldset=$('.resultsfield',$("#stagingarea")).first();
+	$.ajax({
+		type: "GET",
+		url: cifurl+"/"+cifquery+"?apikey="+cifapikey+"&fmt=json"+noLog, 
+		dataType: "json",
+		context: fieldset,
+		success: function(data){
+			//alert(data);
+			loadingHide();
+			$("#searchbox").show();
+			if (data['message']=='no records') {
+				showError('no results for "'+origterm+'"',$(this));
+			}
+			else {
+				parseDataToBody(data,$(this));
+				$(this).prependTo("#queries");
+			}
+		},
+		error: function(e){ 
+			var errorstring;
+			if (e['status']==404){
+				showError('no results for "'+origterm+'"',$(this));
+				//window.close();
+			} else {
+				showError('error retrieving results for "'+origterm+'"',$(this));
+			}
+			loadingHide();
+			$("#searchbox").show();
 		}
-		else {
-			parseDataToBody(data);
-		}
-	}).error(function(e){ 
-		var errorstring;
-		if (e['status']==404){
-			showError('no results for "'+origterm+'"');
-			//window.close();
-		} else {
-			showError('error retrieving results for "'+origterm+'"');
-		}
-		loadingHide();
-		$("#searchbox").show();
 	});
 }
 function loadingHide(){
@@ -178,8 +191,9 @@ function loadingHide(){
 		window.querycount=0;
 	}
 }
-function showError(errorstring){
-	$('#queries').prepend('<fieldset><h3>'+errorstring+'</h3></fieldset>');
+function showError(errorstring,fieldset){
+	fieldset.html('<h3>'+errorstring+'</h3>');
+	fieldset.prependTo("#queries");
 }
 function uri_escape( text, re ) {
 
@@ -191,15 +205,13 @@ function uri_escape( text, re ) {
         return "%"+pad(v.charCodeAt(0).toString(16)).toUpperCase();
     });
 }
-function parseDataToBody(data){
+function parseDataToBody(data,fieldset){
 	feeddesc=data['data']['feed']['description'];
 	if (typeof window.searchhashmap[feeddesc.replace("search ","")] != 'undefined'){
 		feeddesc=window.searchhashmap[feeddesc.replace("search ","")];
 	} 
-	$("#queries").prepend('<fieldset class="resultsfield">\
-	  <legend>Results for <b>'+feeddesc+'</b></legend></fieldset>\
-	 ');
-	$(".resultsfield").first().append('\
+	fieldset.append('<legend>Results for <b>'+feeddesc+'</b></legend>');
+	fieldset.append('\
 	  <span class="servername"></span><br/><span class="restriction"></span><br/><span class="detecttime"></span>\
 	  <table class="results">\
 	  <tr>\
@@ -213,42 +225,40 @@ function parseDataToBody(data){
 	  </tr>\
 	  </table>\
 	');
-	$(".servername").first().html("<b>Server Name:</b> "+getServerName(server));
-	$.each(data['data']['feed'], function(key, val) {
-		if (key==="restriction"){ $(".restriction").first().html("<b>Feed Restriction:</b> "+val);}
-		if (key==="detecttime") { $(".detecttime").first().html("<b>Time:</b> "+val);}
-		if (key==="entry") { parseEntries(val);}
-		if (key==="group_map") {window.group_map=val;}
-	});
-	$('.showinfo',$(".resultsfield").first()).click(function(){
+	$(".servername",fieldset).html("<b>Server Name:</b> "+getServerName(server));
+	$(".restriction",fieldset).html("<b>Feed Restriction:</b> "+data['data']['feed']['restriction']);
+	$(".detecttime",fieldset).html("<b>Time:</b> "+data['data']['feed']['restriction']);
+	window.group_map=data['data']['feed']['group_map'];
+	parseEntries(data['data']['feed']['entry'],fieldset);
+	$('.showinfo',fieldset).click(function(){
 		$('.addinfo',$(this).parent()).slideDown();
 		$(this).hide();
 		$('.hideinfo',$(this).parent()).show();
 		return false;
 	});
-	$('.hideinfo',$(".resultsfield").first()).click(function(){
+	$('.hideinfo',fieldset).click(function(){
 		$('.addinfo',$(this).parent()).slideUp();
 		$(this).hide();
 		$('.showinfo',$(this).parent()).show();
 		return false;
 	});
-	$('.expandall.incident',$(".resultsfield").first()).click(function(){
+	$('.expandall.incident',fieldset).click(function(){
 		$('.showinfo.incidentshow',$(this).parent().parent().parent().parent()).click();
 		return false;
 	});
-	$('.collapseall.incident',$(".resultsfield").first()).click(function(){
+	$('.collapseall.incident',fieldset).click(function(){
 		$('.hideinfo.incidenthide',$(this).parent().parent().parent().parent()).click();
 		return false;
 	});	
-	$('.expandall.object',$(".resultsfield").first()).click(function(){
+	$('.expandall.object',fieldset).click(function(){
 		$('.showinfo.objectshow',$(this).parent().parent().parent().parent()).click();
 		return false;
 	});
-	$('.collapseall.object',$(".resultsfield").first()).click(function(){
+	$('.collapseall.object',fieldset).click(function(){
 		$('.hideinfo.objecthide',$(this).parent().parent().parent().parent()).click();
 		return false;
 	});
-	$('.relatedevent',$(".resultsfield").first()).each(function(){
+	$('.relatedevent',fieldset).each(function(){
 		$(this).attr('title',"Click to query for related incident '"+$(this).attr('href')+"'");
 		$(this).attr('alt',$(this).attr('title'));
 		$(this).attr('server',server);
@@ -264,12 +274,12 @@ function parseDataToBody(data){
 		});
 	});
 }
-function parseEntries(data){
-	$.each(data, function(key, val) {
-		parseIODEFentry(val);
-	});
+function parseEntries(data,fieldset){
+	for (i in data){
+		parseIODEFentry(data[i],fieldset);
+	}
 }
-function parseIODEFentry(data){
+function parseIODEFentry(data,fieldset){
 	//alert();
 	var ulchunk="<tr>";
 	ulchunk+=tdwrap(extractItem('restriction',data['Incident'])); //restriction
@@ -296,7 +306,7 @@ function parseIODEFentry(data){
 	if (altidrestriction!="") altid+=' ['+altidrestriction+']';
 	ulchunk+=tdwrap(altid);//alternative id and restriction
 	ulchunk+="</tr>";
-	$(".results").first().append(ulchunk);
+	$(".results",fieldset).append(ulchunk);
 }
 function extractItem(path,data){
 	var arr=path.split(',');

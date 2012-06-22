@@ -37,9 +37,9 @@ function makeMeVisible(){
 }
 function addProfileRow(name,url,key,isDefault,logQueries){
 	toappend='<tr class="profilerow">\
-<td><input type="text" class="nameinput" size=28/></td>\
-<td><input type="text" class="urlinput" size=50/></td>\
-<td><input type="text" class="keyinput" size=40/></td>\
+<td><input type="text" class="nameinput" size=28 placeholder="e.g. My CIF Server"/></td>\
+<td><input type="text" class="urlinput" size=50 placeholder="e.g. https://example.org/api/"/></td>\
+<td><input type="text" class="keyinput" size=40 placeholder="e.g. 012345678-1234-abcd-4321-dcba00000000"/></td>\
 <td><button class="testbutton">Test Connection</button><button class="deletebutton">Delete</button></td>\
 <td class="teststatus" ></td>\
 <td><input type="radio" class="defaultradioinput" name="isdefault" disabled/></td>\
@@ -73,6 +73,9 @@ function addProfileRow(name,url,key,isDefault,logQueries){
 	$(".deletebutton").last().click(function(){
 		$(this).parent().parent().remove();
 	});
+	if (!$("input[name='isdefault']:checked").val()) {
+		$('.defaultradioinput').last().prop('checked',true);
+	}
 }
 function test_settings(clickedbutton){
 	var cifurl=$(".urlinput",clickedbutton.parent().parent()).val();
