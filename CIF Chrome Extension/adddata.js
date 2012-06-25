@@ -153,7 +153,6 @@ function parseDataInput(){
 			points.push($.trim(sorted_arr[i]));
 		} 
 	}
-	console.log(points);
 	var urlRegex = /(https?:\/\/[^\s]+)/;
 	var urlfound=false;
 	var ipordomainfound=false;

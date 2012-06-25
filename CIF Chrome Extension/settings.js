@@ -116,12 +116,7 @@ function test_settings(clickedbutton){
 			}
 		}).error(function(xhr,status,error){ 
 			e=xhr;
-			/* console.log(e);console.log(status);console.log(xhr.getAllResponseHeaders()); */
-			/*
-			console.log(xhr.isRejected());
-			console.log(xhr.isResolved());
-			*/
-			
+		
 			if (e['status']==401){
 				$(".teststatus",clickedbutton.parent().parent()).html('401 authorization error. check your api key');
 			}

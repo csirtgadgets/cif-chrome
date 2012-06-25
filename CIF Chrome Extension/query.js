@@ -101,9 +101,12 @@ function runQuery(string,cifurl,cifapikey,logQuery,fieldset){
 	  <legend>Results for <b>'+origterm+'</b></legend></fieldset>\
 	 ');
 	fieldset=$('.resultsfield',$("#stagingarea")).first();
+	if (cifurl.charAt(cifurl.length-1)!='/'){
+		cifurl+='/';
+	}
 	$.ajax({
 		type: "GET",
-		url: cifurl+"/"+cifquery+"?apikey="+cifapikey+"&fmt=json"+noLog, 
+		url: cifurl+cifquery+"?apikey="+cifapikey+"&fmt=json"+noLog, 
 		dataType: "json",
 		context: fieldset,
 		success: function(data){
@@ -297,6 +300,14 @@ function parseAdditionalIncidentData(Incident){
 }
 function translateGroup(guid){
 	if (typeof window.group_map[guid] != 'undefined') return window.group_map[guid];
+	try{
+		var existing = JSON.parse(localStorage["observed_groups"]);
+	} catch(err) {
+		var existing = new Array();
+	}
+	for (i in existing){
+		if (existing[i]['guid']==guid) return existing[i]['name'];
+	}
 	return guid;
 }
 function translateProtocol(number){
