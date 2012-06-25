@@ -25,6 +25,14 @@ $(document).ready(function() {
 		chrome.tabs.create({url: "query.html"}); 
 		return false;
 	});
+	$("#datasubmissionlink").click(function(){
+		query = { 'data':$("#querystring").val().trim(),
+				  'type':'contextmenuadd'
+				 };
+		localStorage['datatoadd']=JSON.stringify(query);
+		chrome.tabs.create({url: "adddata.html"});
+		return false;
+	});
 });
 function settingsCheck(){
     try{

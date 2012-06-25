@@ -330,10 +330,10 @@ function recordObservedGroups(groups){
 	}
 	var uniques = new Array();
 	var exists=false;
-	for (i in existing){
+	for (i in observed){
 		exists=false;
-		for (j in observed){
-			if (observed[j]['name']==existing[i]['name']) exists=true;
+		for (j in existing){
+			if (observed[i]['name']==existing[j]['name']) exists=true;
 		}
 		if (!exists){
 			uniques.push(observed[i]);

@@ -79,6 +79,7 @@ function sendToServer(){
 		dataType: "json",
 		success: function(data){
 			parseResponse(data);
+			resetForm();
 		},
 		error: function(e){ 
 			if (e['status']==401){
@@ -100,6 +101,12 @@ function prepServerBox(){
 			$('#serverselect').append('<option value="'+i+'">'+options[i]['name']+'</option>');
 		}
 	}
+}
+function resetForm(){
+	$("#datapoints").val('');
+	$("#datapoints").keyup();
+	$("#description").val('');
+	$("option").removeAttr('selected');
 }
 function showError(string){
 	$("#submitbutton").removeAttr("disabled");
@@ -137,7 +144,7 @@ function populateProtocols(){
 }
 
 function parseDataInput(){
-	var points=$("#datapoints").val().split(',');
+	var points=$("#datapoints").val().replace(/(\r\n|\n|\r| )/gm,',').split(',');
 	var sorted_arr = points.sort();
 	points = [];
 	for (i in sorted_arr) {
@@ -152,6 +159,10 @@ function parseDataInput(){
 	var ipordomainfound=false;
 	var emailfound=false;
 	$("#detectedentries").empty();
+	$("#protocol-tr, #portlist-tr").show();
+	$("#portlist").val('');
+	$("option",$("#protocol")).removeAttr('selected');
+	$("option[value='']",$("#protocol")).attr('selected',true);
 	for (i in points){
 		if (urlRegex.test(points[i])){
 			urlfound=true;
