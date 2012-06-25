@@ -17,38 +17,7 @@ $(document).ready(function() {
 	prepSearchBox();
 	runQuerySet(); 
 });
-function settingsCheck(){
-    try{
-		options = JSON.parse(localStorage["cifapiprofiles"]);
-	} catch(err) {
-		options = new Array();
-	}
-	if (options.length<1){
-		var views = chrome.extension.getViews({'type':'tab'});
-		for (i in views) {
-			if (views[i].location.href == chrome.extension.getURL('settings.html')) {
-			  views[i].makeMeVisible();
-			  window.close();
-			  return;
-			} 
-		}
-		chrome.tabs.create({url: "settings.html"});
-		window.close();
-		return;
-	}
-}
-function populateProtocolTranslations(){
-	$.ajax({
-		type: "GET",
-		url:'Protocol-Numbers.xml', 
-		dataType: "xml",
-		success: function(data){
-			$(data).find("record").each(function(){
-				window.protocoldata.push({'proto':$(this).find('value').text(), 'name':$(this).find('name').text(), 'desc':$(this).find('description').text()});
-			});
-		}
-	});
-}
+
 function runQuerySet(){
 	$('body').animate({scrollTop:0}, 'medium');
 	//window.scrollTo(0, 0);
@@ -99,29 +68,7 @@ function prepSearchBox(){
 		return false;
 	});
 }
-function getServerLogSetting(server){
-	servers = JSON.parse(localStorage["cifapiprofiles"]);
-	return servers[server]['logQueries'];
-}
-function getServerName(server){
-	servers = JSON.parse(localStorage["cifapiprofiles"]);
-	return servers[server]['name'];
-}
-function getDefaultServer(){
-	servers = JSON.parse(localStorage["cifapiprofiles"]);
-	for (i in servers){
-		if (servers[i]['isDefault']) return i;
-	}
-	return 0;
-}
-function getServerUrl(server){
-	servers = JSON.parse(localStorage["cifapiprofiles"]);
-	return servers[server]['url'];
-}
-function getServerKey(server){
-	servers = JSON.parse(localStorage["cifapiprofiles"]);
-	return servers[server]['key'];
-}
+
 function runQuery(string,cifurl,cifapikey,logQuery,fieldset){
 	var cifquery;
 	var origterm=string;
@@ -197,16 +144,7 @@ function showError(errorstring,fieldset){
 	fieldset.html('<h3>'+errorstring+'</h3>');
 	fieldset.prependTo("#queries");
 }
-function uri_escape( text, re ) {
 
-    function pad( num ) {
-        return num.length < 2 ? "0" + num : num;
-    }
-
-    return text.replace( re, function(v){
-        return "%"+pad(v.charCodeAt(0).toString(16)).toUpperCase();
-    });
-}
 function parseDataToBody(data,fieldset){
 	feeddesc=data['data']['feed']['description'];
 	if (typeof window.searchhashmap[feeddesc.replace("search ","")] != 'undefined'){
@@ -231,6 +169,7 @@ function parseDataToBody(data,fieldset){
 	$(".restriction",fieldset).html("<b>Feed Restriction:</b> "+data['data']['feed']['restriction']);
 	$(".detecttime",fieldset).html("<b>Time:</b> "+data['data']['feed']['restriction']);
 	window.group_map=data['data']['feed']['group_map'];
+	recordObservedGroups(data['data']['feed']['group_map']);
 	parseEntries(data['data']['feed']['entry'],fieldset);
 	$('.showinfo',fieldset).click(function(){
 		$('.addinfo',$(this).parent()).slideDown();
@@ -377,4 +316,29 @@ function getRelatedEventLink(Incident){
 	}
 	//return "<a class='relatedevent' href='example.org'>Related Event</a><br/>";
 	return ret;
+}
+
+function recordObservedGroups(groups){
+	var observed = new Array();
+	for (i in groups){
+		observed.push({'name':groups[i],'guid':i});
+	}
+	try{
+		var existing = JSON.parse(localStorage["observed_groups"]);
+	} catch(err) {
+		var existing = new Array();
+	}
+	var uniques = new Array();
+	var exists=false;
+	for (i in existing){
+		exists=false;
+		for (j in observed){
+			if (observed[j]['name']==existing[i]['name']) exists=true;
+		}
+		if (!exists){
+			uniques.push(observed[i]);
+		}
+	}
+	var combined=existing.concat(uniques);
+	localStorage['observed_groups']=JSON.stringify(combined);
 }

@@ -14,7 +14,22 @@ function save_options() {
 		}
 	});
 	localStorage["cifapiprofiles"] = JSON.stringify(options);
-
+	/*
+	var restrictions=$("#restrictionsnames").val().trim().split("\n");
+	if (restrictions.length>0){
+		localStorage['restrictions']=JSON.stringify(restrictions);
+	}
+	*/
+	var confidences=$("#confidencevalues").val().split("\n");
+	var tosave= new Array();
+	for (i in confidences){
+		var parts=confidences[i].split(':');
+		if (parts.length!=2) continue;
+		tosave.push({'numeric':parts[0],'word':parts[1]});
+	}
+	if (tosave.length>0){
+		localStorage['confidencemap']=JSON.stringify(tosave);
+	}
 	// Update status to let user know options were saved.
 	$("#status").html("Options Saved.").show().delay(1000).fadeOut('slow');
 }
@@ -28,8 +43,20 @@ function restore_options() {
   } catch(err) {
 	console.log(err);
   }
+  confidencemap=getConfidenceMap();
+  $("#confidencevalues").val('');
+  for (i in confidencemap){
+	$("#confidencevalues").val($("#confidencevalues").val()+confidencemap[i]['numeric']+":"+confidencemap[i]['word']+"\n");
+  }
+  restrictions=getRestrictions();
+  $("#restrictionsnames").val('');
+  for (i in restrictions){
+	$("#restrictionsnames").val($("#restrictionsnames").val()+restrictions[i]+"\n");
+  }
+  
   addProfileRow('','','',false,true);
 }
+
 function makeMeVisible(){
 	chrome.tabs.getCurrent(function(tab){
 		chrome.tabs.update(tab.id, {selected: true});
@@ -81,22 +108,29 @@ function test_settings(clickedbutton){
 	var cifurl=$(".urlinput",clickedbutton.parent().parent()).val().trim();
 	var cifquery="";
 	var cifapikey=$(".keyinput",clickedbutton.parent().parent()).val().trim();
+	window.visitme="If you use a self-signed certificate, you will need to <a target='_blank' href='"+cifurl+cifquery+"?apikey="+cifapikey+"'>accept your certificate</a> before this will work.";
 	try{
 		$.getJSON(cifurl+cifquery+"?apikey="+cifapikey+"&fmt=json",function(data) {
 			if (data['status']==200){
 				$(".teststatus",clickedbutton.parent().parent()).html('connection successful');
 			}
-		}).error(function(e){ 
+		}).error(function(xhr,status,error){ 
+			e=xhr;
+			/* console.log(e);console.log(status);console.log(xhr.getAllResponseHeaders()); */
+			/*
+			console.log(xhr.isRejected());
+			console.log(xhr.isResolved());
+			*/
+			
 			if (e['status']==401){
 				$(".teststatus",clickedbutton.parent().parent()).html('401 authorization error. check your api key');
 			}
 			if (e['status']==0){
-				$(".teststatus",clickedbutton.parent().parent()).html('could not connect to that address');
+				$(".teststatus",clickedbutton.parent().parent()).html('Could not connect to that address.<br/><i>'+window.visitme+'</i>');
 			}
 			if (e['status']==404){
 				$(".teststatus",clickedbutton.parent().parent()).html('404 error. make sure that you have the correct path to the API');
 			}
-			console.log(e);
 		});
 	} catch (err) {
 		$(".teststatus",clickedbutton.parent().parent()).html('could not connect with those settings');
@@ -111,4 +145,32 @@ $(document).ready(function() {
 	$("#addarow").click(function(){
 		addProfileRow('','','',false,true);
 	});
+	$("#showtax").click(function(){
+		$(this).hide();
+		$('#hidetax').show();
+		$("#additional").slideDown();
+		return false;
+	});
+	$("#hidetax").click(function(){
+		$(this).hide();
+		$('#showtax').show();
+		$("#additional").slideUp();
+		return false;
+	});
+	$("#def_confidence").click(function(){
+		confidencemap = defaultConfidence();
+		$("#confidencevalues").val('');
+		for (i in confidencemap){
+			$("#confidencevalues").val($("#confidencevalues").val()+confidencemap[i]['numeric']+":"+confidencemap[i]['word']+"\n");
+		}
+	});
+	/*
+	$("#def_restriction").click(function(){
+		restrictions = defaultRestrictions();  
+		$("#restrictionsnames").val('');
+		for (i in restrictions){
+			$("#restrictionsnames").val($("#restrictionsnames").val()+restrictions[i]+"\n");
+		}
+	});
+	*/
 });

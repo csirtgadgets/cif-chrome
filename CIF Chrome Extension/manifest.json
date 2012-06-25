@@ -1,6 +1,6 @@
 {
   "name": "Collective Intelligence Framework Client",
-  "version": "0.54",
+  "version": "0.75",
   "manifest_version": 2,
   "description": "Client for a collective intelligence framework server",
   "browser_action": {
@@ -15,7 +15,6 @@
 	"48": "ciflogo.png",
 	"128": "ciflogo.png"
   },
-  "update_url":"https://raw.github.com/collectiveintel/cif-client-chrome/master/update_manifest.xml",
   "options_page": "settings.html",
   "permissions": [ "http://*/*", "https://*/*", "contextMenus","tabs" ]
 }

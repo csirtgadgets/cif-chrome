@@ -1,6 +1,7 @@
 <html>
 <head><title>CIF Client Extension Options</title></head>
 <script src="jquery-1.7.2.min.js"></script>
+<script src="common.js"></script>
 <script src="settings.js"></script>
 <body>
 <h3>Server Profiles</h3>
@@ -9,8 +10,27 @@
 <th>Nickname</th><th>URL to CIF API</th><th>API Key</th><th>Actions</th><th>Test Results</th><th>Set as Default</th><th>Log Queries by Default</th>
 </tr>
 </table>
-<br>
 <button id="addarow">Add Another Profile</button>
+<br>
+
+<h3>Taxonomy Customizations (<a href="#" id="showtax">Show</a><a href="#" id="hidetax" style="display:none;">Hide</a>)</h3>
+<div id="additional" style="display:none;">
+<table>
+<td>
+<!--
+<td>
+<h4>Restictions</h4>
+<textarea id="restrictionsnames" rows="6" cols="30">Need-to-know</textarea>
+<br/><button id="def_restriction">Restore Defaults</button>
+</td>
+-->
+<td>
+<h4>Confidence Intervals</h4>
+<textarea id="confidencevalues" rows="6" cols="30"></textarea>
+<br/><button id="def_confidence">Restore Defaults</button>
+</td></tr>
+</table>
+</div>
 <button id="savebutton">Save</button>
 <h3 id="status"></h3>
 </body>

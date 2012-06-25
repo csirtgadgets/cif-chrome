@@ -28,11 +28,10 @@ function addClick(info, tab){
 var id = chrome.contextMenus.create({"title": "Query CIF Server for '%s'",
 									 "contexts":['selection'],
 									 "onclick": queryClick});
-/*
+
 var id2 = chrome.contextMenus.create({"title": "Add '%s' to CIF",
 									 "contexts":['selection'],
 									 "onclick": addClick});
-*/
 iconindex = 1;
 function iconParty(){
 	if (iconindex>4) iconindex=1;

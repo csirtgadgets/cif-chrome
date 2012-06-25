@@ -5,6 +5,7 @@
 
     <!-- JavaScript and HTML must be in separate files for security. -->
 	<script src="sha1.js"></script>
+	<script src="common.js"></script>
 	<script src="jquery-1.7.2.min.js"></script>
 	<script src="adddata.js"></script>
 	<style>
@@ -14,13 +15,25 @@
 	</style>
   </head>
   <body>
+  <div style="float:right;">
+  <h3>Parsed Items</h3>
+  <ul id="detectedentries">
+  
+  </ul>
+  </div>
   <h2>Document the Observation</h2>
   <h3>General Details</h3>
 	<table>
 	<tr>
+		<td><b>Server</b></td>
+		<td>
+			<select id="serverselect"></select>
+		</td>
+	</tr>
+	<tr>
 		<td><b>Data</b></td>
 		<td>
-			<input type="text" id="datapoints" size="50"/><br>
+			<input type="text" id="datapoints" size="100"/><span id="mixedContentWarning" style="color:red;display:none;"><b>Mixed content types are not supported.</b></span><br>
 			<i>multiple datapoints (max: 100) may be entered as comma-separated values. they will all share the same classifications below</i>
 		</td>
 	</tr>
@@ -53,24 +66,33 @@
 		<td><b>Confidence</b></td>
 		<td>
 			<select id="confidence">
-				<option value="41">Not Confident</option>
-				<option value="75">Somewhat Confident</option>
-				<option value="85">Very Confident</option>
-				<option value="95">Certain</option>
+
 			</select>
 			<br>
 			<i>Refer to the confidence taxonomy <a href="http://code.google.com/p/collective-intelligence-framework/wiki/TaxonomyConfidence" target="_blank">here</a></i>
 		</td>
 	</tr>
-	<tr>
+	<tr id="severity-tr">
+		<td><b>Severity</b></td>
+		<td>
+			<select id="severity">
+				<option value="null">Null</option>
+				<option value="low">Low</option>
+				<option value="medium">Medium</option>
+				<option value="high">High</option>
+			</select>
+			<br/><i>Refer to the severity taxonomy <a href="http://code.google.com/p/collective-intelligence-framework/wiki/TaxonomySeverity" target="_blank">here</a></i>
+		</td>
+	</tr>
+	<tr id="protocol-tr">
 		<td>Protocol</td>
 		<td>
 			<select id="protocol">
-				<option value="">N/A</option>
+				<option value="" id="naoption">N/A</option>
 			</select>
 		</td>
 	</tr>
-	<tr>
+	<tr id="portlist-tr">
 		<td>Portlist</td>
 		<td>
 			<input type="text" id="portlist" size="50" maxlength="140"/><br>
@@ -84,10 +106,9 @@
 	<tr>
 		<td><b>Groups</b></td>
 		<td>
-			<input type="checkbox" id="datapoints"/><br>
-			<input type="checkbox" id="datapoints"/><br>
-			<input type="checkbox" id="datapoints"/><br>
-			<input type="checkbox" id="datapoints"/><br>
+			<div id="groupboxarea">
+			<input type="checkbox" class="groupbox" value="everyone"/>everyone<br>
+			</div>
 			<i>select at least one</i>
 		</td>
 	</tr>
@@ -95,16 +116,15 @@
 		<td><b>Restriction</b></td>
 		<td>
 			<select id="restriction">
-				<option value="41">Not Confident</option>
-				<option value="75">Somewhat Confident</option>
-				<option value="85">Very Confident</option>
-				<option value="95">Certain</option>
+
 			</select>
 		</td>
 	</tr>
 	</table>
   <!--<img src="ajax-loader.gif" id="loadinggif"/>-->
   <button id="submitbutton">Submit</button>
-
+  <div id="submissionstatus">
+  
+  </div>
   </body>
 </html>
