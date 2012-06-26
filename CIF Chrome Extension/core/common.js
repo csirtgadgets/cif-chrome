@@ -41,7 +41,7 @@ function settingsCheck(){
 	} catch(err) {
 		options = new Array();
 	}
-	if (options.length<1){
+	if (options.length<1 || options == null){
 		switchToPage('core/settings.html');
 	}
 	return;

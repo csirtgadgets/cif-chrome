@@ -122,6 +122,7 @@ function test_settings(clickedbutton){
 			if (e['status']==404){
 				$(".teststatus",clickedbutton.parent().parent()).html('404 error. make sure that you have the correct path to the API');
 			}
+			console.log(e);
 		});
 	} catch (err) {
 		$(".teststatus",clickedbutton.parent().parent()).html('could not connect with those settings');
