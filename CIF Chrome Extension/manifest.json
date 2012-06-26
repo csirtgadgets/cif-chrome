@@ -1,20 +1,20 @@
 {
   "name": "Collective Intelligence Framework Client",
-  "version": "0.76",
+  "version": "0.80",
   "manifest_version": 2,
   "description": "Client for a collective intelligence framework server",
   "browser_action": {
-    "default_icon": "favicon_1.ico",
-	"default_popup": "popup.html"
+    "default_icon": "core/favicon_1.ico",
+	"default_popup": "core/popup.html"
   },
   "background": {
     "scripts": ["contextmenus.js"]
   },
   "icons": {
-	"16": "ciflogo.png",
-	"48": "ciflogo.png",
-	"128": "ciflogo.png"
+	"16": "core/ciflogo.png",
+	"48": "core/ciflogo.png",
+	"128": "core/ciflogo.png"
   },
-  "options_page": "settings.html",
+  "options_page": "core/settings.html",
   "permissions": [ "http://*/*", "https://*/*", "contextMenus","tabs" ]
 }

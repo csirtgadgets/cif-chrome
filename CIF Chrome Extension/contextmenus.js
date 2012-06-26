@@ -10,19 +10,19 @@ function queryClick(info, tab) {
 	localStorage['query']=JSON.stringify(query);
 	var views = chrome.extension.getViews({'type':'tab'});
 	for (i in views) {
-		if (views[i].location.href == chrome.extension.getURL('query.html')) {
+		if (views[i].location.href == chrome.extension.getURL('core/query.html')) {
 		  views[i].runQuerySet();
 		  return;
 		} 
 	}
-	chrome.tabs.create({url: "query.html"}); 
+	chrome.tabs.create({url: "core/query.html"}); 
 }
 function addClick(info, tab){
 	query = { 'data':info['selectionText'],
 				  'type':'contextmenuadd'
 				 };
 	localStorage['datatoadd']=JSON.stringify(query);
-	chrome.tabs.create({url: "adddata.html"});
+	chrome.tabs.create({url: "core/adddata.html"});
 }
 
 var id = chrome.contextMenus.create({"title": "Query CIF Server for '%s'",

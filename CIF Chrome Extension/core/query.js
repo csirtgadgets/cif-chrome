@@ -22,9 +22,7 @@ function runQuerySet(){
 	$('body').animate({scrollTop:0}, 'medium');
 	//window.scrollTo(0, 0);
 	var query=JSON.parse(localStorage["query"]);
-	chrome.tabs.getCurrent(function(tab){
-		chrome.tabs.update(tab.id, {selected: true});
-	});
+	makeMeVisible();
 	$("#loadinggif").show();
 	var queries=query['query'].replace(/(\r\n|\n|\r| )/gm,',').split(',');
 	var cleanedqueries = new Array();

@@ -42,18 +42,9 @@ function settingsCheck(){
 		options = new Array();
 	}
 	if (options.length<1){
-		var views = chrome.extension.getViews({'type':'tab'});
-		for (i in views) {
-			if (views[i].location.href == chrome.extension.getURL('settings.html')) {
-			  views[i].makeMeVisible();
-			  window.close();
-			  return;
-			} 
-		}
-		chrome.tabs.create({url: "settings.html"});
-		window.close();
-		return;
+		switchToPage('core/settings.html');
 	}
+	return;
 }
 function getRestrictions(){
 	try {
