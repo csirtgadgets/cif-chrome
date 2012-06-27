@@ -56,8 +56,8 @@ CIF_CLIENT.submitData=function(){
 CIF_CLIENT.sendToServer=function(){
 	$("#submissionstatus").html('<img src="ajax-loader.gif" id="loadinggif"/>');
 	var server=$("#serverselect option:selected").val();
-	var cifapikey = getServerKey(server);
-	var cifurl = getServerUrl(server);
+	var cifapikey = CIF_CLIENT.getServerKey(server);
+	var cifurl = CIF_CLIENT.getServerUrl(server);
 	var dataToSend = new Array();
 	for (i in window.datapoints){
 		for (j in window.groupstosendto){
@@ -220,13 +220,13 @@ CIF_CLIENT.parseDataInput=function(){
 	}
 }
 CIF_CLIENT.populateRestrictions=function(){
-	restrictions = getRestrictions();
+	restrictions = CIF_CLIENT.getRestrictions();
 	for (i in restrictions){
 		$("#restriction").append('<option value="'+restrictions[i]+'">'+restrictions[i]+'</option>');
 	}
 }
 CIF_CLIENT.populateConfidenceValues=function (){
-	cons = getConfidenceMap();
+	cons = CIF_CLIENT.getConfidenceMap();
 	for (i in cons){
 		$("#confidence").append('<option value="'+cons[i]['numeric']+'">'+cons[i]['word']+'</option>');
 	}

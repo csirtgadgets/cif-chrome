@@ -1,5 +1,5 @@
 $(document).ready(function() {
-	settingsCheck();
+	CIF_CLIENT.settingsCheck();
 	for (i in options){
 		if (options[i]['isDefault']){
 			$('#serverselect').append('<option value="'+i+'" selected>'+options[i]['name']+'</option>');
@@ -14,7 +14,7 @@ $(document).ready(function() {
 				  'logquery':$("#logquery").is(':checked')
 				 };
 		localStorage['query']=JSON.stringify(query);
-		switchToQueryPageAndRun();
+		CIF_CLIENT.switchToQueryPageAndRun();
 		return false;
 	});
 	$("#datasubmissionlink").click(function(){
@@ -22,7 +22,7 @@ $(document).ready(function() {
 				  'type':'contextmenuadd'
 				 };
 		localStorage['datatoadd']=JSON.stringify(query);
-		makeNewPage("core/adddata.html");
+		CIF_CLIENT.makeNewPage("core/adddata.html");
 		return false;
 	});
 });

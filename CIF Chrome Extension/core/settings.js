@@ -1,6 +1,9 @@
-// Saves options to localStorage.
+if(!CIF_CLIENT){
+    var CIF_CLIENT = {};
+}
 var options = new Array();
-function save_options() {
+// Saves options to localStorage.
+CIF_CLIENT.save_options=function() {
 	options = [];
 	$('.profilerow').each(function() {
 		var key=$(".keyinput",$(this)).val().trim();
@@ -34,31 +37,31 @@ function save_options() {
 	$("#status").html("Options Saved.").show().delay(1000).fadeOut('slow');
 }
 // Restores select box state to saved value from localStorage.
-function restore_options() {
+CIF_CLIENT.restore_options=function() {
   try {
 	  options = JSON.parse(localStorage["cifapiprofiles"]);
 	  for (i in options){
-		addProfileRow(options[i]['name'],options[i]['url'],options[i]['key'],options[i]['isDefault'],options[i]['logQueries']);
+		CIF_CLIENT.addProfileRow(options[i]['name'],options[i]['url'],options[i]['key'],options[i]['isDefault'],options[i]['logQueries']);
 	  }
   } catch(err) {
 	console.log(err);
   }
-  confidencemap=getConfidenceMap();
+  confidencemap=CIF_CLIENT.getConfidenceMap();
   $("#confidencevalues").val('');
   for (i in confidencemap){
 	$("#confidencevalues").val($("#confidencevalues").val()+confidencemap[i]['numeric']+":"+confidencemap[i]['word']+"\n");
   }
-  restrictions=getRestrictions();
+  restrictions=CIF_CLIENT.getRestrictions();
   $("#restrictionsnames").val('');
   for (i in restrictions){
 	$("#restrictionsnames").val($("#restrictionsnames").val()+restrictions[i]+"\n");
   }
   
-  addProfileRow('','','',false,true);
+  CIF_CLIENT.addProfileRow('','','',false,true);
 }
 
 
-function addProfileRow(name,url,key,isDefault,logQueries){
+CIF_CLIENT.addProfileRow=function(name,url,key,isDefault,logQueries){
 	toappend='<tr class="profilerow">\
 <td><input type="text" class="nameinput" size=28 placeholder="e.g. My CIF Server"/></td>\
 <td><input type="text" class="urlinput" size=50 placeholder="e.g. https://example.org/api/"/></td>\
@@ -91,7 +94,7 @@ function addProfileRow(name,url,key,isDefault,logQueries){
 		$('.defaultradioinput').last().attr('disabled',true);
 	}
 	$(".testbutton").last().click(function(){
-		test_settings($(this));
+		CIF_CLIENT.test_settings($(this));
 	});
 	$(".deletebutton").last().click(function(){
 		$(this).parent().parent().remove();
@@ -100,7 +103,7 @@ function addProfileRow(name,url,key,isDefault,logQueries){
 		$('.defaultradioinput').last().prop('checked',true);
 	}
 }
-function test_settings(clickedbutton){
+CIF_CLIENT.test_settings=function(clickedbutton){
 	var cifurl=$(".urlinput",clickedbutton.parent().parent()).val().trim();
 	var cifquery="";
 	var cifapikey=$(".keyinput",clickedbutton.parent().parent()).val().trim();
@@ -129,13 +132,13 @@ function test_settings(clickedbutton){
 	}
 }
 $(document).ready(function() {
-	restore_options();
+	CIF_CLIENT.restore_options();
 	$("#savebutton").click(function(){
-		save_options();
+		CIF_CLIENT.save_options();
 	});
 
 	$("#addarow").click(function(){
-		addProfileRow('','','',false,true);
+		CIF_CLIENT.addProfileRow('','','',false,true);
 	});
 	$("#showtax").click(function(){
 		$(this).hide();
@@ -150,7 +153,7 @@ $(document).ready(function() {
 		return false;
 	});
 	$("#def_confidence").click(function(){
-		confidencemap = defaultConfidence();
+		confidencemap = CIF_CLIENT.defaultConfidence();
 		$("#confidencevalues").val('');
 		for (i in confidencemap){
 			$("#confidencevalues").val($("#confidencevalues").val()+confidencemap[i]['numeric']+":"+confidencemap[i]['word']+"\n");

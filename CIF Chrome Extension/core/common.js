@@ -1,31 +1,33 @@
+if(!CIF_CLIENT){
+    var CIF_CLIENT = {};
+}
 
 
-
-function getServerLogSetting(server){
+CIF_CLIENT.getServerLogSetting=function(server){
 	servers = JSON.parse(localStorage["cifapiprofiles"]);
 	return servers[server]['logQueries'];
 }
-function getServerName(server){
+CIF_CLIENT.getServerName=function(server){
 	servers = JSON.parse(localStorage["cifapiprofiles"]);
 	return servers[server]['name'];
 }
-function getDefaultServer(){
+CIF_CLIENT.getDefaultServer=function(){
 	servers = JSON.parse(localStorage["cifapiprofiles"]);
 	for (i in servers){
 		if (servers[i]['isDefault']) return i;
 	}
 	return 0;
 }
-function getServerUrl(server){
+CIF_CLIENT.getServerUrl=function(server){
 	servers = JSON.parse(localStorage["cifapiprofiles"]);
 	return servers[server]['url'];
 }
-function getServerKey(server){
+CIF_CLIENT.getServerKey=function(server){
 	servers = JSON.parse(localStorage["cifapiprofiles"]);
 	return servers[server]['key'];
 }
 
-function uri_escape( text, re ) {
+CIF_CLIENT.uri_escape=function( text, re ) {
 
     function pad( num ) {
         return num.length < 2 ? "0" + num : num;
@@ -35,35 +37,35 @@ function uri_escape( text, re ) {
         return "%"+pad(v.charCodeAt(0).toString(16)).toUpperCase();
     });
 }
-function settingsCheck(){
+CIF_CLIENT.settingsCheck=function(){
     try{
 		options = JSON.parse(localStorage["cifapiprofiles"]);
 	} catch(err) {
 		options = new Array();
 	}
 	if (options.length<1 || options == null){
-		switchToPage('core/settings.html');
+		CIF_CLIENT.switchToPage('core/settings.html');
 	}
 	return;
 }
-function getRestrictions(){
+CIF_CLIENT.getRestrictions=function(){
 	try {
 		restrictions = JSON.parse(localStorage['restrictions']);
 	} catch(err){
-		restrictions = defaultRestrictions();
+		restrictions = CIF_CLIENT.defaultRestrictions();
 	}
 	//return restrictions;
-	return defaultRestrictions();
+	return CIF_CLIENT.defaultRestrictions();
 }
-function getConfidenceMap(){
+CIF_CLIENT.getConfidenceMap=function(){
   try {
 	confidencemap = JSON.parse(localStorage['confidencemap']);
   } catch(err){
-	confidencemap = defaultConfidence();
+	confidencemap = CIF_CLIENT.defaultConfidence();
   }
   return confidencemap;
 }
-function defaultRestrictions(){
+CIF_CLIENT.defaultRestrictions=function(){
 	res = new Array();
 	res.push('private');
 	res.push('need-to-know');
@@ -71,7 +73,7 @@ function defaultRestrictions(){
 	res.push('default');
 	return res;
 }
-function defaultConfidence(){
+CIF_CLIENT.defaultConfidence=function(){
 	confidencemap = new Array();
 	confidencemap.push({'numeric':'41','word':'Not Confident'});
 	confidencemap.push({'numeric':'75','word':'Somewhat Confident'});
@@ -79,7 +81,7 @@ function defaultConfidence(){
 	confidencemap.push({'numeric':'95','word':'Certain'});
 	return confidencemap;
 }
-function populateProtocolTranslations(){
+CIF_CLIENT.populateProtocolTranslations=function(){
 	$.ajax({
 		type: "GET",
 		url:'Protocol-Numbers.xml', 

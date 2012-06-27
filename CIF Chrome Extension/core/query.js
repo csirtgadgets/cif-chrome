@@ -1,8 +1,6 @@
-// Copyright (c) 2012 The Chromium Authors. All rights reserved.
-// Use of this source code is governed by a BSD-style license that can be
-// found in the LICENSE file.
-
-
+if(!CIF_CLIENT){
+    var CIF_CLIENT = {};
+}
 var server;
 var cifapikey;
 var cifurl;
@@ -12,17 +10,17 @@ window.searchhashmap = {};
 window.group_map = new Array();
 $(document).ready(function() {
 	window.protocoldata = new Array();
-	settingsCheck();
-	populateProtocolTranslations();
-	prepSearchBox();
-	runQuerySet(); 
+	CIF_CLIENT.settingsCheck();
+	CIF_CLIENT.populateProtocolTranslations();
+	CIF_CLIENT.prepSearchBox();
+	CIF_CLIENT.runQuerySet(); 
 });
 
-function runQuerySet(){
+CIF_CLIENT.runQuerySet=function(){
 	$('body').animate({scrollTop:0}, 'medium');
 	//window.scrollTo(0, 0);
 	var query=JSON.parse(localStorage["query"]);
-	makeMeVisible("query");
+	CIF_CLIENT.makeMeVisible("query");
 	$("#loadinggif").show();
 	var queries=query['query'].replace(/(\r\n|\n|\r| )/gm,',').split(',');
 	var cleanedqueries = new Array();
@@ -37,16 +35,16 @@ function runQuerySet(){
 		server=query['server'];
 		logQuery=query['logquery'];
 	} else {
-		server=getDefaultServer();
-		logQuery=getServerLogSetting(server);
+		server=CIF_CLIENT.getDefaultServer();
+		logQuery=CIF_CLIENT.getServerLogSetting(server);
 	}
-	cifapikey = getServerKey(server);
-	cifurl = getServerUrl(server);
+	cifapikey = CIF_CLIENT.getServerKey(server);
+	cifurl = CIF_CLIENT.getServerUrl(server);
 	for (i in queries){
-		runQuery($.trim(queries[i]),cifurl,cifapikey,logQuery);
+		CIF_CLIENT.runQuery($.trim(queries[i]),cifurl,cifapikey,logQuery);
 	}
 }
-function prepSearchBox(){
+CIF_CLIENT.prepSearchBox=function(){
     options = JSON.parse(localStorage["cifapiprofiles"]);
 	for (i in options){
 		if (options[i]['isDefault']){
@@ -62,12 +60,12 @@ function prepSearchBox(){
 				  'logquery':$("#logquery").is(':checked')
 				 };
 		localStorage['query']=JSON.stringify(query);
-		runQuerySet(); 
+		CIF_CLIENT.runQuerySet(); 
 		return false;
 	});
 }
 
-function runQuery(string,cifurl,cifapikey,logQuery,fieldset){
+CIF_CLIENT.runQuery=function(string,cifurl,cifapikey,logQuery,fieldset){
 	var cifquery;
 	var origterm=string;
 	if (string.substring(0,7)=='http://' || string.substring(0,8)=='https://'){
@@ -81,7 +79,7 @@ function runQuery(string,cifurl,cifapikey,logQuery,fieldset){
 		//string = string.replace( re, function( whole, m1 ) { return String.fromCharCode( parseInt( m1, 16 ) ); });
 		
 		/* escape control and hi-bit chars */		
-		string=uri_escape( string, /[\x00-\x1f\x7f-\xff]/g );
+		string=CIF_CLIENT.uri_escape( string, /[\x00-\x1f\x7f-\xff]/g );
 		/* lower case */
 		string=string.toLowerCase();
 		/* sha1 hex */
@@ -109,30 +107,30 @@ function runQuery(string,cifurl,cifapikey,logQuery,fieldset){
 		context: fieldset,
 		success: function(data){
 			//alert(data);
-			loadingHide();
+			CIF_CLIENT.loadingHide();
 			$("#searchbox").show();
 			if (data['message']=='no records') {
-				showError('no results for "'+origterm+'"',$(this));
+				CIF_CLIENT.showError('no results for "'+origterm+'"',$(this));
 			}
 			else {
-				parseDataToBody(data,$(this));
+				CIF_CLIENT.parseDataToBody(data,$(this));
 				$(this).prependTo("#queries");
 			}
 		},
 		error: function(e){ 
 			var errorstring;
 			if (e['status']==404){
-				showError('no results for "'+origterm+'"',$(this));
+				CIF_CLIENT.showError('no results for "'+origterm+'"',$(this));
 				//window.close();
 			} else {
-				showError('error retrieving results for "'+origterm+'"',$(this));
+				CIF_CLIENT.showError('error retrieving results for "'+origterm+'"',$(this));
 			}
-			loadingHide();
+			CIF_CLIENT.loadingHide();
 			$("#searchbox").show();
 		}
 	});
 }
-function loadingHide(){
+CIF_CLIENT.loadingHide=function(){
 	window.querycount--;
 	$("#remainingqueries").html(window.querycount+' queries remaining');
 	if (window.querycount<1) {
@@ -141,12 +139,12 @@ function loadingHide(){
 		window.querycount=0;
 	}
 }
-function showError(errorstring,fieldset){
+CIF_CLIENT.showError=function(errorstring,fieldset){
 	fieldset.html('<h3>'+errorstring+'</h3>');
 	fieldset.prependTo("#queries");
 }
 
-function parseDataToBody(data,fieldset){
+CIF_CLIENT.parseDataToBody=function(data,fieldset){
 	feeddesc=data['data']['feed']['description'];
 	if (typeof window.searchhashmap[feeddesc.replace("search ","")] != 'undefined'){
 		feeddesc=window.searchhashmap[feeddesc.replace("search ","")];
@@ -166,12 +164,12 @@ function parseDataToBody(data,fieldset){
 	  </tr></thead><tbody></tbody>\
 	  </table>\
 	');
-	$(".servername",fieldset).html("<b>Server Name:</b> "+getServerName(server));
+	$(".servername",fieldset).html("<b>Server Name:</b> "+CIF_CLIENT.getServerName(server));
 	$(".restriction",fieldset).html("<b>Feed Restriction:</b> "+data['data']['feed']['restriction']);
 	$(".detecttime",fieldset).html("<b>Time:</b> "+data['data']['feed']['restriction']);
 	window.group_map=data['data']['feed']['group_map'];
-	recordObservedGroups(data['data']['feed']['group_map']);
-	parseEntries(data['data']['feed']['entry'],fieldset);
+	CIF_CLIENT.recordObservedGroups(data['data']['feed']['group_map']);
+	CIF_CLIENT.parseEntries(data['data']['feed']['entry'],fieldset);
 	$('.showinfo',fieldset).click(function(){
 		$('.addinfo',$(this).parent()).slideDown();
 		$(this).hide();
@@ -211,7 +209,7 @@ function parseDataToBody(data,fieldset){
 					   'logquery':$("#logquery").is(':checked')
 					};
 			localStorage['query']=JSON.stringify(query);
-			runQuerySet();
+			CIF_CLIENT.runQuerySet();
 			return false;
 		});
 	});
@@ -221,7 +219,7 @@ function parseDataToBody(data,fieldset){
 		"bInfo": false,
 	});
 }
-function parseEntries(data,fieldset){
+CIF_CLIENT.parseEntries=function(data,fieldset){
 	if (data.length==1){
 		if ((typeof data[0])=="string"){
 			fieldset.prepend("<h3>This client doesn't support feeds.</h3>");
@@ -233,39 +231,39 @@ function parseEntries(data,fieldset){
 		}
 	}
 	for (i in data){
-		parseIODEFentry(data[i],fieldset);
+		CIF_CLIENT.parseIODEFentry(data[i],fieldset);
 	}
 }
-function parseIODEFentry(data,fieldset){
+CIF_CLIENT.parseIODEFentry=function(data,fieldset){
 	//alert();
 	var ulchunk="<tr>";
-	ulchunk+=tdwrap(extractItem('restriction',data['Incident'])); //restriction
-	var address=extractItem('EventData,Flow,System,Node,Address,content',data['Incident']);
-	if (address=='') address=extractItem('EventData,Flow,System,Node,Address',data['Incident']);
-	ulchunk+=tdwrap(address);//address
-	var protocol=translateProtocol(extractItem('EventData,Flow,System,Service,ip_protocol',data['Incident']));
-	var ports=extractItem('EventData,Flow,System,Service,Portlist',data['Incident']);
+	ulchunk+=CIF_CLIENT.tdwrap(CIF_CLIENT.extractItem('restriction',data['Incident'])); //restriction
+	var address=CIF_CLIENT.extractItem('EventData,Flow,System,Node,Address,content',data['Incident']);
+	if (address=='') address=CIF_CLIENT.extractItem('EventData,Flow,System,Node,Address',data['Incident']);
+	ulchunk+=CIF_CLIENT.tdwrap(address);//address
+	var protocol=CIF_CLIENT.translateProtocol(CIF_CLIENT.extractItem('EventData,Flow,System,Service,ip_protocol',data['Incident']));
+	var ports=CIF_CLIENT.extractItem('EventData,Flow,System,Service,Portlist',data['Incident']);
 	if (protocol!='' && ports!=''){
-		ulchunk+=tdwrap(protocol+" / "+ports);//only need the slash separator if they are both not empty
+		ulchunk+=CIF_CLIENT.tdwrap(protocol+" / "+ports);//only need the slash separator if they are both not empty
 	} else {
-		ulchunk+=tdwrap(protocol+" "+ports);//protocol and ports
+		ulchunk+=CIF_CLIENT.tdwrap(protocol+" "+ports);//protocol and ports
 	}
-	ulchunk+=tdwrap(extractItem('DetectTime',data['Incident'])); //detection time
-	ulchunk+=tdwrap(extractItem('Assessment,Impact,content',data['Incident']));//impact
-	ulchunk+=tdwrap(extractItem('Assessment,Impact,severity',data['Incident'])); //severity
-	ulchunk+=tdwrap(extractItem('Assessment,Confidence,content',data['Incident'])); //confidence
-	ulchunk+=tdwrap(extractItem('Description',data['Incident']));//description
-	ulchunk+=tdwrap(getRelatedEventLink(data['Incident'])+parseAdditionalIncidentData(data['Incident']));//additional incident data
-	ulchunk+=tdwrap(parseAdditionalObjectData(data['Incident']));//additional address data
-	altid=extractItem('AlternativeID,IncidentID,content',data['Incident']);
+	ulchunk+=CIF_CLIENT.tdwrap(CIF_CLIENT.extractItem('DetectTime',data['Incident'])); //detection time
+	ulchunk+=CIF_CLIENT.tdwrap(CIF_CLIENT.extractItem('Assessment,Impact,content',data['Incident']));//impact
+	ulchunk+=CIF_CLIENT.tdwrap(CIF_CLIENT.extractItem('Assessment,Impact,severity',data['Incident'])); //severity
+	ulchunk+=CIF_CLIENT.tdwrap(CIF_CLIENT.extractItem('Assessment,Confidence,content',data['Incident'])); //confidence
+	ulchunk+=CIF_CLIENT.tdwrap(CIF_CLIENT.extractItem('Description',data['Incident']));//description
+	ulchunk+=CIF_CLIENT.tdwrap(CIF_CLIENT.getRelatedEventLink(data['Incident'])+CIF_CLIENT.parseAdditionalIncidentData(data['Incident']));//additional incident data
+	ulchunk+=CIF_CLIENT.tdwrap(CIF_CLIENT.parseAdditionalObjectData(data['Incident']));//additional address data
+	altid=CIF_CLIENT.extractItem('AlternativeID,IncidentID,content',data['Incident']);
 	if (altid!='') altid="<a href='"+altid+"' target='_blank'>"+altid+"</a>";
-	altidrestriction=extractItem('AlternativeID,IncidentID,restriction',data['Incident']);
+	altidrestriction=CIF_CLIENT.extractItem('AlternativeID,IncidentID,restriction',data['Incident']);
 	if (altidrestriction!="") altid+=' ['+altidrestriction+']';
-	ulchunk+=tdwrap(altid);//alternative id and restriction
+	ulchunk+=CIF_CLIENT.tdwrap(altid);//alternative id and restriction
 	ulchunk+="</tr>";
 	$('tbody',$(".results",fieldset)).append(ulchunk);
 }
-function extractItem(path,data){
+CIF_CLIENT.extractItem=function(path,data){
 	var arr=path.split(',');
 	var datapath=data;
 	for (i in arr){
@@ -276,13 +274,13 @@ function extractItem(path,data){
 	}
 	return datapath;
 }
-function tdwrap(string){
+CIF_CLIENT.tdwrap=function(string){
 	return "<td>"+string+"</td>";
 }
-function parseAdditionalObjectData(Incident){
+CIF_CLIENT.parseAdditionalObjectData=function(Incident){
 	var output='<a href="#" class="showinfo objectshow">Show Data</a><a href="#" class="hideinfo objecthide" style="display:none;">Hide Data</a>';
 	output+="<div class='addinfo' style='display:none;'>";
-	var items=extractItem('EventData,Flow,System,AdditionalData',Incident);
+	var items=CIF_CLIENT.extractItem('EventData,Flow,System,AdditionalData',Incident);
 	if (items.length==0) return output+"</div>";
 	if (typeof items['meaning'] != 'undefined'){
 		output+='<b>'+items['meaning']+":</b> "+items['content']+"<br></div>";
@@ -294,13 +292,13 @@ function parseAdditionalObjectData(Incident){
 	output+='</div>';
 	return output;
 }
-function parseAdditionalIncidentData(Incident){
+CIF_CLIENT.parseAdditionalIncidentData=function(Incident){
 	var output='<a href="#" class="showinfo incidentshow">Show Data</a><a href="#" class="hideinfo incidenthide" style="display:none;">Hide Data</a>';
 	output+="<div class='addinfo' style='display:none;'>";
-	var items=extractItem('AdditionalData',Incident);
+	var items=CIF_CLIENT.extractItem('AdditionalData',Incident);
 	if (items.length==0) return output;
 	if (typeof items['meaning'] != 'undefined'){
-		if (items['meaning']=='guid') items['content']=translateGroup(items['content']);
+		if (items['meaning']=='guid') items['content']=CIF_CLIENT.translateGroup(items['content']);
 		output+='<b>'+items['meaning']+":</b> "+items['content']+"<br></div>";
 		return output;
 	}
@@ -311,7 +309,7 @@ function parseAdditionalIncidentData(Incident){
 	output+='</div>';
 	return output;
 }
-function translateGroup(guid){
+CIF_CLIENT.translateGroup=function(guid){
 	if (typeof window.group_map[guid] != 'undefined') return window.group_map[guid];
 	try{
 		var existing = JSON.parse(localStorage["observed_groups"]);
@@ -323,14 +321,14 @@ function translateGroup(guid){
 	}
 	return guid;
 }
-function translateProtocol(number){
+CIF_CLIENT.translateProtocol=function(number){
 	for (i in window.protocoldata){
 		if (number==window.protocoldata[i]['proto']) return window.protocoldata[i]['name'];
 	}
 	return number;
 }
-function getRelatedEventLink(Incident){
-	var rel=extractItem('RelatedActivity',Incident);
+CIF_CLIENT.getRelatedEventLink=function(Incident){
+	var rel=CIF_CLIENT.extractItem('RelatedActivity',Incident);
 	var ret="";
 	if (typeof rel['IncidentID'] != 'undefined'){
 		return "<a class='relatedevent' href='"+rel['IncidentID']+"'>Related Event</a><br/>";
@@ -342,7 +340,7 @@ function getRelatedEventLink(Incident){
 	return ret;
 }
 
-function recordObservedGroups(groups){
+CIF_CLIENT.recordObservedGroups=function(groups){
 	var observed = new Array();
 	for (i in groups){
 		observed.push({'name':groups[i],'guid':i});

@@ -1,9 +1,8 @@
-// Copyright (c) 2010 The Chromium Authors. All rights reserved.
-// Use of this source code is governed by a BSD-style license that can be
-// found in the LICENSE file.
+if(!CIF_CLIENT){
+    var CIF_CLIENT = {};
+}
 
-// A generic onclick callback function.
-function queryClick(info, tab) {
+CIF_CLIENT.queryClick=function(info, tab) {
 	query = { 'query':info['selectionText'],
 				  'type':'contextmenuquery'
 				 };
@@ -11,7 +10,7 @@ function queryClick(info, tab) {
 	var views = chrome.extension.getViews({'type':'tab'});
 	for (i in views) {
 		if (views[i].location.href == chrome.extension.getURL('core/query.html')) {
-		  views[i].runQuerySet();
+		  views[i].CIF_CLIENT.runQuerySet();
 		  return;
 		} 
 	}
@@ -19,7 +18,7 @@ function queryClick(info, tab) {
 		window.cifquerytabid=tab.id;
 	}); 
 }
-function addClick(info, tab){
+CIF_CLIENT.addClick=function(info, tab){
 	query = { 'data':info['selectionText'],
 				  'type':'contextmenuadd'
 				 };
@@ -29,13 +28,13 @@ function addClick(info, tab){
 
 var id = chrome.contextMenus.create({"title": "Query CIF Server for '%s'",
 									 "contexts":['selection'],
-									 "onclick": queryClick});
+									 "onclick": CIF_CLIENT.queryClick});
 
 var id2 = chrome.contextMenus.create({"title": "Add '%s' to CIF",
 									 "contexts":['selection'],
-									 "onclick": addClick});
+									 "onclick": CIF_CLIENT.addClick});
 iconindex = 1;
-function iconParty(){
+CIF_CLIENT.iconParty=function(){
 	if (iconindex>4) iconindex=1;
 	chrome.browserAction.setIcon({'path':"favicon_"+iconindex+".ico"});
 	iconindex++;

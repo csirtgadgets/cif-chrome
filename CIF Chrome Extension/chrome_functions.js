@@ -1,4 +1,7 @@
-function makeMeVisible(pagetype){
+if(!CIF_CLIENT){
+    var CIF_CLIENT = {};
+}
+CIF_CLIENT.makeMeVisible=function(pagetype){
 	
 	chrome.tabs.getCurrent(function(tab){
 		chrome.tabs.update(tab.id, {selected: true});
@@ -12,11 +15,11 @@ function makeMeVisible(pagetype){
 	}
 }
 
-function switchToPage(pageName){
+CIF_CLIENT.switchToPage=function(pageName){
 	var views = chrome.extension.getViews({'type':'tab'});
 	for (i in views) {
 		if (views[i].location.href == chrome.extension.getURL(pageName)) {
-		  views[i].makeMeVisible();
+		  views[i].CIF_CLIENT.makeMeVisible();
 		  window.close();
 		  return;
 		} 
@@ -33,16 +36,16 @@ function switchToPage(pageName){
 	return;
 }
 
-function makeNewPage(pageName){
+CIF_CLIENT.makeNewPage=function(pageName){
 	chrome.tabs.create({url: pageName});
 	return;
 }
-function switchToQueryPageAndRun(){
+CIF_CLIENT.switchToQueryPageAndRun=function(){
 	var views = chrome.extension.getViews({'type':'tab'});
 	for (var i = 0; i < views.length; i++) {
 		var view = views[i];
 		if (view.location.href == chrome.extension.getURL('core/query.html')) {
-		  view.runQuerySet();
+		  view.CIF_CLIENT.runQuerySet();
 		  return;
 		} 
 	}
