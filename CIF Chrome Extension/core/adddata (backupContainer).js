@@ -3,40 +3,37 @@ $(document).ready(function() {
 		var fromcontext=JSON.parse(localStorage["datatoadd"]);
 		$('#datapoints').val(fromcontext['data']);
 	} catch(err) {}
-	CIF_CLIENT.populateProtocols();
-	CIF_CLIENT.populateRestrictions();
-	CIF_CLIENT.populateConfidenceValues();
-	CIF_CLIENT.addObservedGroups();
-	CIF_CLIENT.parseDataInput();
-	CIF_CLIENT.prepServerBox();
+	populateProtocols();
+	populateRestrictions();
+	populateConfidenceValues();
+	addObservedGroups();
+	parseDataInput();
+	prepServerBox();
 	$("#datapoints").keyup(function(){
 		window.clearTimeout(window.keyuptimeoutid);
-		window.keyuptimeoutid=window.setTimeout(CIF_CLIENT.parseDataInput,1000, true);
+		window.keyuptimeoutid=window.setTimeout(parseDataInput,1000, true);
 	});
 	$("#submitbutton").click(function(){
-		CIF_CLIENT.submitData();
+		submitData();
 	});
 	$("#impact").change(function(){
 		if ($("#impact option:selected").val()=='whitelist'){
-			CIF_CLIENT.severitynull();
+			severitynull();
 		} else {
-			CIF_CLIENT.severitynotnull();
+			severitynotnull();
 		}
 	});
-	CIF_CLIENT.severitynotnull();
+	severitynotnull();
 });
-if(!CIF_CLIENT){
-    var CIF_CLIENT = {};
-}
-CIF_CLIENT.severitynull=function(){
+function severitynull(){
 	$("option",$("#severity")).remove();
 	$("#severity").append('<option value="null">Null</option>');
 }
-CIF_CLIENT.severitynotnull=function(){
+function severitynotnull(){
 	$("option",$("#severity")).remove();
 	$("#severity").append('<option value="low">Low</option><option value="medium">Medium</option><option value="high">High</option>');
 }
-CIF_CLIENT.submitData=function(){
+function submitData(){
 	$("#submitbutton").attr("disabled","disabled");
 	var groups = new Array();
 	$('.groupbox:checked').each(function() {
@@ -51,9 +48,9 @@ CIF_CLIENT.submitData=function(){
 		return;
 	}
 	window.groupstosendto=groups;
-	CIF_CLIENT.sendToServer();
+	sendToServer();
 }
-CIF_CLIENT.sendToServer=function(){
+function sendToServer(){
 	$("#submissionstatus").html('<img src="ajax-loader.gif" id="loadinggif"/>');
 	var server=$("#serverselect option:selected").val();
 	var cifapikey = getServerKey(server);
@@ -81,8 +78,8 @@ CIF_CLIENT.sendToServer=function(){
 		data: JSON.stringify(dataToSend),
 		dataType: "json",
 		success: function(data){
-			CIF_CLIENT.parseResponse(data);
-			CIF_CLIENT.resetForm();
+			parseResponse(data);
+			resetForm();
 		},
 		error: function(e){ 
 			if (e['status']==401){
@@ -95,7 +92,7 @@ CIF_CLIENT.sendToServer=function(){
 		}
 	});
 }
-CIF_CLIENT.prepServerBox=function(){    
+function prepServerBox(){    
 	options = JSON.parse(localStorage["cifapiprofiles"]);
 	for (i in options){
 		if (options[i]['isDefault']){
@@ -105,24 +102,24 @@ CIF_CLIENT.prepServerBox=function(){
 		}
 	}
 }
-CIF_CLIENT.resetForm=function(){
+function resetForm(){
 	$("#datapoints").val('');
 	$("#datapoints").keyup();
 	$("#description").val('');
 	$("option").removeAttr('selected');
 }
-CIF_CLIENT.showError=function(string){
+function showError(string){
 	$("#submitbutton").removeAttr("disabled");
 	$("#submissionstatus").html("<h4 style='color:red;'>"+string+"</h4>");
 }
-CIF_CLIENT.parseResponse=function(data){
+function parseResponse(data){
 	$("#submitbutton").removeAttr("disabled");
 	$("#submissionstatus").html('');
 	for (i in data['data']){
 		$("#submissionstatus").append('Observation <b>'+window.dataToSend[i]['address']+'</b> submitted with ID <b>'+data['data'][i]+'</b><br/>');
 	}
 }
-CIF_CLIENT.addObservedGroups=function(){
+function addObservedGroups(){
 	try{
 		var observedgroups=JSON.parse(localStorage["observed_groups"]);
 		for (i in observedgroups){
@@ -133,7 +130,7 @@ CIF_CLIENT.addObservedGroups=function(){
 	} catch(err) {}
 }
 
-CIF_CLIENT.populateProtocols=function(){
+function populateProtocols(){
 	$.ajax({
 		type: "GET",
 		url:'Protocol-Numbers.xml', 
@@ -146,7 +143,7 @@ CIF_CLIENT.populateProtocols=function(){
 	});
 }
 
-CIF_CLIENT.parseDataInput=function(){
+function parseDataInput(){
 	var points=$("#datapoints").val().replace(/(\r\n|\n|\r| )/gm,',').split(',');
 	var sorted_arr = points.sort();
 	points = [];
@@ -219,13 +216,13 @@ CIF_CLIENT.parseDataInput=function(){
 		$("#datapoints").css('border-color', 'none');
 	}
 }
-CIF_CLIENT.populateRestrictions=function(){
+function populateRestrictions(){
 	restrictions = getRestrictions();
 	for (i in restrictions){
 		$("#restriction").append('<option value="'+restrictions[i]+'">'+restrictions[i]+'</option>');
 	}
 }
-CIF_CLIENT.populateConfidenceValues=function (){
+function populateConfidenceValues(){
 	cons = getConfidenceMap();
 	for (i in cons){
 		$("#confidence").append('<option value="'+cons[i]['numeric']+'">'+cons[i]['word']+'</option>');
