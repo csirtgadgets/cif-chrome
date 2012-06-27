@@ -231,18 +231,26 @@ CIF_CLIENT.parseDataToBody=function(data,fieldset){
 CIF_CLIENT.parseEntries=function(data,fieldset){
 	if (data.length==1){
 		if ((typeof data[0])=="string"){
-			fieldset.prepend("<h3>This client doesn't support feeds.</h3>");
-			$('.results,.restriction,.servername,.detecttime,br',fieldset).remove();
-			return;
-			//console.log(inflate(window.atob((data[0].replace(/(\r\n|\n|\r|)/gm,'')))));
-			//var decompressed = deflate.inflate(compressed);
-			//RawDeflate.inflate(window.atob(data[0].replace(/(\r\n|\n|\r|)/gm,'')));
+			var deflated=CIF_CLIENT.poorinflate(window.atob(data[0].replace(/(\r\n|\n|\r|)/gm,'')));
+			if (deflated==''){
+				fieldset.prepend("<h3>This client doesn't support feeds.</h3>");
+				$('.results,.restriction,.servername,.detecttime,br',fieldset).remove();
+				return;
+			} else {
+				data=JSON.parse(deflated);
+			}
+			if (data==null || data.length==0){
+				fieldset.prepend("<h3>This client doesn't support feeds.</h3>");
+				$('.results,.restriction,.servername,.detecttime,br',fieldset).remove();
+				return;
+			}
 		}
 	}
 	for (i in data){
 		CIF_CLIENT.parseIODEFentry(data[i],fieldset);
 	}
 }
+
 CIF_CLIENT.parseIODEFentry=function(data,fieldset){
 	//alert();
 	var ulchunk="<tr>";
@@ -372,4 +380,16 @@ CIF_CLIENT.recordObservedGroups=function(groups){
 	}
 	var combined=existing.concat(uniques);
 	localStorage['observed_groups']=JSON.stringify(combined);
+}
+CIF_CLIENT.poorinflate=function(data){
+	var res=RawDeflate.inflate(data);
+	if (res==""){
+		data=data.substring(2,data.length);
+	}
+	res=RawDeflate.inflate(data);
+	while (res=="" && data.length > 1){
+		data=data.substring(0,data.length-2);
+		res=RawDeflate.inflate(data);
+	}
+	return res;
 }
