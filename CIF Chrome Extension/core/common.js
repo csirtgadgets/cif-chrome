@@ -2,7 +2,12 @@ if(!CIF_CLIENT){
     var CIF_CLIENT = {};
 }
 
-
+CIF_CLIENT.populateRestrictions=function(){
+	restrictions = CIF_CLIENT.getRestrictions();
+	for (i in restrictions){
+		$("#restriction").append('<option value="'+restrictions[i]+'">'+restrictions[i]+'</option>');
+	}
+}
 CIF_CLIENT.getServerLogSetting=function(server){
 	servers = JSON.parse(localStorage["cifapiprofiles"]);
 	return servers[server]['logQueries'];
@@ -93,3 +98,66 @@ CIF_CLIENT.populateProtocolTranslations=function(){
 		}
 	});
 }
+CIF_CLIENT.prepSearchFilters=function(){
+	CIF_CLIENT.populateRestrictions();
+	$("#useseverity").click(function(){
+		if ($(this).is(":checked")){
+			$("#severity").removeAttr('disabled');
+		} else {
+			$("#severity").attr('disabled',true);
+		}
+	});
+	$("#useconfidence").click(function(){
+		if ($(this).is(":checked")){
+			$("#confidence").removeAttr('disabled');
+		} else {
+			$("#confidence").attr('disabled',true);
+		}
+	});
+	$("#userestriction").click(function(){
+		if ($(this).is(":checked")){
+			$("#restriction").removeAttr('disabled');
+		} else {
+			$("#restriction").attr('disabled',true);
+		}
+	});
+	$("#uselimit").click(function(){
+		if ($(this).is(":checked")){
+			$("#limit").removeAttr('disabled');
+		} else {
+			$("#limit").attr('disabled',true);
+		}
+	});
+	$("#showfilters").attr('title',"Show additional search filters.");
+	$("#showfilters").attr('alt',$(this).attr('title'));
+	$("#hidefilters").attr('title',"Hide additional search filters.");
+	$("#hidefilters").attr('alt',$(this).attr('title'));
+	$("#showfilters").click(function(){
+		$(this).hide();
+		$("#hidefilters").show();
+		$("#additionalfilters").slideDown();
+		return false;
+	});
+	$("#hidefilters").click(function(){
+		$(this).hide();
+		$("#showfilters").show();
+		$("#additionalfilters").slideUp();
+		return false;
+	});
+}
+CIF_CLIENT.getFilters=function(){
+	var filters = {};
+	if ($("#uselimit").is(":checked") && $('#limit').val().trim()!=''){
+		filters['limit']=$('#limit').val().trim();
+	}
+	if ($("#useseverity").is(":checked") && $('#severity').val().trim()!=''){
+		filters['severity']=$('#severity').val().trim();
+	}
+	if ($("#useconfidence").is(":checked") && $('#confidence').val().trim()!=''){
+		filters['confidence']=$('#confidence').val().trim();
+	}
+	if ($("#userestriction").is(":checked") && $('#restriction').val().trim()!=''){
+		filters['restriction']=$('#restriction').val().trim();
+	}
+	return filters;
+}	

@@ -10,6 +10,7 @@ $(document).ready(function() {
 	$("#theform").submit(function(){ 
 		query = { 'query':$("#querystring").val().trim(),
 				  'type':'formquery',
+				  'filters': CIF_CLIENT.getFilters(),
 				  'server':$("#serverselect option:selected").val(),
 				  'logquery':$("#logquery").is(':checked')
 				 };
@@ -25,4 +26,5 @@ $(document).ready(function() {
 		CIF_CLIENT.makeNewPage("core/adddata.html");
 		return false;
 	});
+	CIF_CLIENT.prepSearchFilters();
 });

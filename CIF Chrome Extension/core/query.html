@@ -87,6 +87,20 @@ tr.odd td.sorting_1 {
 	Server: <select id="serverselect"></select><br/>
 	Query: <input type="text" id="querystring" value="" size="50"><br/>
 	<input type="submit" name="Submit">Log Query: <input type="checkbox" id="logquery" checked>
+	  [<a href="#" id="showfilters">+</a><a href="#" id="hidefilters" style="display:none;">-</a>]
+	  <fieldset id="additionalfilters" style="display:none;">
+	  <legend>Search Filters</legend>
+	  <input type="checkbox" id="useseverity"> Severity: 			
+				<select id="severity" disabled>
+					<option value="null">Null</option>
+					<option value="low">Low</option>
+					<option value="medium">Medium</option>
+					<option value="high">High</option>
+				</select><br/>
+	  <input type="checkbox" id="useconfidence"> Confidence: <input type="text" id="confidence" size="3" disabled/><br/>
+	  <input type="checkbox" id="userestriction"> Restriction: <select id="restriction" disabled></select><br/>
+	  <input type="checkbox" id="uselimit"> Limit: <input type="text" id="limit" size="5" disabled/>
+	  </fieldset>
 	</form>
 	</fieldset>
   </div>

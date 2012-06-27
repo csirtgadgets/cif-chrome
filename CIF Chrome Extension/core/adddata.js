@@ -219,12 +219,7 @@ CIF_CLIENT.parseDataInput=function(){
 		$("#datapoints").css('border-color', 'none');
 	}
 }
-CIF_CLIENT.populateRestrictions=function(){
-	restrictions = CIF_CLIENT.getRestrictions();
-	for (i in restrictions){
-		$("#restriction").append('<option value="'+restrictions[i]+'">'+restrictions[i]+'</option>');
-	}
-}
+
 CIF_CLIENT.populateConfidenceValues=function (){
 	cons = CIF_CLIENT.getConfidenceMap();
 	for (i in cons){

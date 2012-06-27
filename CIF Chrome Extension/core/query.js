@@ -15,6 +15,7 @@ $(document).ready(function() {
 	CIF_CLIENT.prepSearchBox();
 	CIF_CLIENT.runQuerySet(); 
 	$("#searchbox").show();
+	CIF_CLIENT.prepSearchFilters();
 });
 
 CIF_CLIENT.runQuerySet=function(){
@@ -32,9 +33,11 @@ CIF_CLIENT.runQuerySet=function(){
 	}
 	queries=cleanedqueries;
 	window.querycount+=queries.length;
+	var filters={};
 	if (query['type']=='formquery'){
 		server=query['server'];
 		logQuery=query['logquery'];
+		filters=query['filters'];
 	} else {
 		server=CIF_CLIENT.getDefaultServer();
 		logQuery=CIF_CLIENT.getServerLogSetting(server);
@@ -42,7 +45,7 @@ CIF_CLIENT.runQuerySet=function(){
 	cifapikey = CIF_CLIENT.getServerKey(server);
 	cifurl = CIF_CLIENT.getServerUrl(server);
 	for (i in queries){
-		CIF_CLIENT.runQuery($.trim(queries[i]),cifurl,cifapikey,logQuery);
+		CIF_CLIENT.runQuery($.trim(queries[i]),filters,cifurl,cifapikey,logQuery);
 	}
 	CIF_CLIENT.loadingHide();
 }
@@ -58,6 +61,7 @@ CIF_CLIENT.prepSearchBox=function(){
 	$("#theform").submit(function(){ 
 		query = { 'query':$("#querystring").val().trim(),
 				  'type':'formquery',
+				  'filters': CIF_CLIENT.getFilters(),
 				  'server':$("#serverselect option:selected").val(),
 				  'logquery':$("#logquery").is(':checked')
 				 };
@@ -67,7 +71,7 @@ CIF_CLIENT.prepSearchBox=function(){
 	});
 }
 
-CIF_CLIENT.runQuery=function(string,cifurl,cifapikey,logQuery,fieldset){
+CIF_CLIENT.runQuery=function(string,filterobj,cifurl,cifapikey,logQuery,fieldset){
 	var cifquery;
 	var origterm=string;
 	if (string.substring(0,7)=='http://' || string.substring(0,8)=='https://'){
@@ -91,12 +95,34 @@ CIF_CLIENT.runQuery=function(string,cifurl,cifapikey,logQuery,fieldset){
 	} 
 	cifquery=string;
 	
+	
+	var filters='';
+	var prettyfilters='';
+	if (typeof filterobj['limit']!='undefined'){
+		filters+='&limit='+encodeURIComponent(filterobj['limit']);
+		prettyfilters+="Limit: "+encodeURIComponent(filterobj['limit'])+" ";
+	}
+	if (typeof filterobj['restriction']!='undefined'){
+		filters+='&restriction='+encodeURIComponent(filterobj['restriction']);
+		prettyfilters+="Restriction: "+encodeURIComponent(filterobj['restriction'])+" ";
+	}
+	if (typeof filterobj['severity']!='undefined'){
+		filters+='&severity='+encodeURIComponent(filterobj['severity']);
+		prettyfilters+="Severity: "+encodeURIComponent(filterobj['severity'])+" ";
+	}
+	if (typeof filterobj['confidence']!='undefined'){
+		filters+='&confidence='+encodeURIComponent(filterobj['confidence']);
+		prettyfilters+="Confidence: "+encodeURIComponent(filterobj['confidence'])+" ";
+	}
+	if (prettyfilters!=''){
+		prettyfilters=" [<b>Filters</b>: "+prettyfilters+"]";
+	}
 	var noLog='';
 	if (!logQuery){
 		noLog='&nolog=1';
 	}
 	$("#stagingarea").prepend('<fieldset class="resultsfield">\
-	  <legend>Results for <b>'+origterm+'</b></legend></fieldset>\
+	  <legend>Results for <b>'+origterm+'</b>'+prettyfilters+'</legend></fieldset>\
 	 ');
 	fieldset=$('.resultsfield',$("#stagingarea")).first();
 	if (cifurl.charAt(cifurl.length-1)!='/'){
@@ -104,7 +130,7 @@ CIF_CLIENT.runQuery=function(string,cifurl,cifapikey,logQuery,fieldset){
 	}
 	$.ajax({
 		type: "GET",
-		url: cifurl+cifquery+"?apikey="+cifapikey+"&fmt=json"+noLog, 
+		url: cifurl+cifquery+"?apikey="+cifapikey+"&fmt=json"+noLog+filters, 
 		dataType: "json",
 		context: fieldset,
 		success: function(data){
