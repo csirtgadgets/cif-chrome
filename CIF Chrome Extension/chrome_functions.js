@@ -1,7 +1,15 @@
-function makeMeVisible(){
+function makeMeVisible(pagetype){
+	
 	chrome.tabs.getCurrent(function(tab){
 		chrome.tabs.update(tab.id, {selected: true});
 	});
+	return;
+	if (pagetype=="settings"){
+		chrome.tabs.update(window.cifsettingstabid, {selected: true});
+	} 
+	else if (pagetype=="query"){
+		chrome.tabs.update(window.cifquerytabid, {selected: true});
+	}
 }
 
 function switchToPage(pageName){
@@ -13,7 +21,14 @@ function switchToPage(pageName){
 		  return;
 		} 
 	}
-	chrome.tabs.create({url: pageName});
+	chrome.tabs.create({url: pageName},function(tab){
+		if (pageName=="core/query.html"){
+			window.cifquerytabid=tab.id;
+		}
+		else if (pageName=="core/settings.html"){
+			window.cifsettingstabid=tab.id;
+		}
+	});
 	window.close();
 	return;
 }

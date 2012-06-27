@@ -16,5 +16,5 @@
 	"128": "core/ciflogo.png"
   },
   "options_page": "core/settings.html",
-  "permissions": [ "http://*/*", "https://*/*", "contextMenus","tabs" ]
+  "permissions": [ "http://*/*", "https://*/*", "contextMenus","tabs"]
 }

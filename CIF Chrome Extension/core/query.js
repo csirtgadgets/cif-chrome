@@ -22,7 +22,7 @@ function runQuerySet(){
 	$('body').animate({scrollTop:0}, 'medium');
 	//window.scrollTo(0, 0);
 	var query=JSON.parse(localStorage["query"]);
-	makeMeVisible();
+	makeMeVisible("query");
 	$("#loadinggif").show();
 	var queries=query['query'].replace(/(\r\n|\n|\r| )/gm,',').split(',');
 	var cleanedqueries = new Array();
@@ -154,7 +154,7 @@ function parseDataToBody(data,fieldset){
 	//fieldset.append('<legend>Results for <b>'+feeddesc+'</b></legend>');
 	fieldset.append('\
 	  <span class="servername"></span><br/><span class="restriction"></span><br/><span class="detecttime"></span>\
-	  <table class="results">\
+	  <table class="results"><thead>\
 	  <tr>\
 		  <th>restriction</th>\
 		  <th>address</th><th>protocol/ports</th>\
@@ -163,7 +163,7 @@ function parseDataToBody(data,fieldset){
 		  <th>Incident Meta Data <br/><span class="smallfont">(<a href="#" class="expandall incident">Expand</a>/<a href="#" class="collapseall incident">Collapse</a> all)</span></th>\
 		  <th>Additional Data<br/><span class="smallfont">(<a href="#" class="expandall object">Expand</a>/<a href="#" class="collapseall object">Collapse</a> all)</span></th>\
 		  <th>alternativeid [restriction]</th>\
-	  </tr>\
+	  </tr></thead><tbody></tbody>\
 	  </table>\
 	');
 	$(".servername",fieldset).html("<b>Server Name:</b> "+getServerName(server));
@@ -185,19 +185,19 @@ function parseDataToBody(data,fieldset){
 		return false;
 	});
 	$('.expandall.incident',fieldset).click(function(){
-		$('.showinfo.incidentshow',$(this).parent().parent().parent().parent()).click();
+		$('.showinfo.incidentshow',$(this).parent().parent().parent().parent().parent()).click();
 		return false;
 	});
 	$('.collapseall.incident',fieldset).click(function(){
-		$('.hideinfo.incidenthide',$(this).parent().parent().parent().parent()).click();
+		$('.hideinfo.incidenthide',$(this).parent().parent().parent().parent().parent()).click();
 		return false;
 	});	
 	$('.expandall.object',fieldset).click(function(){
-		$('.showinfo.objectshow',$(this).parent().parent().parent().parent()).click();
+		$('.showinfo.objectshow',$(this).parent().parent().parent().parent().parent()).click();
 		return false;
 	});
 	$('.collapseall.object',fieldset).click(function(){
-		$('.hideinfo.objecthide',$(this).parent().parent().parent().parent()).click();
+		$('.hideinfo.objecthide',$(this).parent().parent().parent().parent().parent()).click();
 		return false;
 	});
 	$('.relatedevent',fieldset).each(function(){
@@ -215,8 +215,23 @@ function parseDataToBody(data,fieldset){
 			return false;
 		});
 	});
+	$('.results',fieldset).dataTable({
+		"bFilter": false,
+		"bPaginate": false,
+		"bInfo": false,
+	});
 }
 function parseEntries(data,fieldset){
+	if (data.length==1){
+		if ((typeof data[0])=="string"){
+			fieldset.prepend("<h3>This client doesn't support feeds.</h3>");
+			$('.results,.restriction,.servername,.detecttime,br',fieldset).remove();
+			return;
+			//console.log(inflate(window.atob((data[0].replace(/(\r\n|\n|\r|)/gm,'')))));
+			//var decompressed = deflate.inflate(compressed);
+			//RawDeflate.inflate(window.atob(data[0].replace(/(\r\n|\n|\r|)/gm,'')));
+		}
+	}
 	for (i in data){
 		parseIODEFentry(data[i],fieldset);
 	}
@@ -248,7 +263,7 @@ function parseIODEFentry(data,fieldset){
 	if (altidrestriction!="") altid+=' ['+altidrestriction+']';
 	ulchunk+=tdwrap(altid);//alternative id and restriction
 	ulchunk+="</tr>";
-	$(".results",fieldset).append(ulchunk);
+	$('tbody',$(".results",fieldset)).append(ulchunk);
 }
 function extractItem(path,data){
 	var arr=path.split(',');

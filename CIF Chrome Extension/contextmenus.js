@@ -15,7 +15,9 @@ function queryClick(info, tab) {
 		  return;
 		} 
 	}
-	chrome.tabs.create({url: "core/query.html"}); 
+	chrome.tabs.create({url: "core/query.html"},function(tab){
+		window.cifquerytabid=tab.id;
+	}); 
 }
 function addClick(info, tab){
 	query = { 'data':info['selectionText'],
