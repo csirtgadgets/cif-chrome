@@ -14,6 +14,7 @@ $(document).ready(function() {
 	CIF_CLIENT.populateProtocolTranslations();
 	CIF_CLIENT.prepSearchBox();
 	CIF_CLIENT.runQuerySet(); 
+	$("#searchbox").show();
 });
 
 CIF_CLIENT.runQuerySet=function(){
@@ -43,6 +44,7 @@ CIF_CLIENT.runQuerySet=function(){
 	for (i in queries){
 		CIF_CLIENT.runQuery($.trim(queries[i]),cifurl,cifapikey,logQuery);
 	}
+	CIF_CLIENT.loadingHide();
 }
 CIF_CLIENT.prepSearchBox=function(){
     options = JSON.parse(localStorage["cifapiprofiles"]);
@@ -107,8 +109,8 @@ CIF_CLIENT.runQuery=function(string,cifurl,cifapikey,logQuery,fieldset){
 		context: fieldset,
 		success: function(data){
 			//alert(data);
+			window.querycount--;
 			CIF_CLIENT.loadingHide();
-			$("#searchbox").show();
 			if (data['message']=='no records') {
 				CIF_CLIENT.showError('no results for "'+origterm+'"',$(this));
 			}
@@ -122,16 +124,23 @@ CIF_CLIENT.runQuery=function(string,cifurl,cifapikey,logQuery,fieldset){
 			if (e['status']==404){
 				CIF_CLIENT.showError('no results for "'+origterm+'"',$(this));
 				//window.close();
-			} else {
+			} else if (e['status']==0) {				
+				var errormsg='Error retrieving results for "'+origterm+'".';
+				errormsg+='<br> If you are using a self-signed certificate, you will have to open the API in a tab once during each browsing session to accept the certificate.';
+				errormsg+='<br/>Otherwise, you need to install the certificate into your browser to avoid this issue.';
+				errormsg+='<br> Click <a href='+cifurl+"?apikey="+cifapikey+' target="_blank">here</a> to open API.';
+				CIF_CLIENT.showError(errormsg,$(this));
+			}
+			else {
 				CIF_CLIENT.showError('error retrieving results for "'+origterm+'"',$(this));
 			}
+			window.querycount--;
 			CIF_CLIENT.loadingHide();
-			$("#searchbox").show();
+			
 		}
 	});
 }
 CIF_CLIENT.loadingHide=function(){
-	window.querycount--;
 	$("#remainingqueries").html(window.querycount+' queries remaining');
 	if (window.querycount<1) {
 		$("#loadinggif").hide();
