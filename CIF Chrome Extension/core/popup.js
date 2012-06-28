@@ -27,4 +27,5 @@ $(document).ready(function() {
 		return false;
 	});
 	CIF_CLIENT.prepSearchFilters();
+	CIF_CLIENT.showVersion();
 });

@@ -161,3 +161,13 @@ CIF_CLIENT.getFilters=function(){
 	}
 	return filters;
 }	
+CIF_CLIENT.showVersion=function(){
+	$.ajax({
+		type: "GET",
+		url:'../manifest.json', 
+		dataType: "json",
+		success: function(data){
+			$("#version").html("v"+data['version']);
+		}
+	});
+}

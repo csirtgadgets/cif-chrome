@@ -157,9 +157,12 @@ CIF_CLIENT.parseDataInput=function(){
 		} 
 	}
 	var urlRegex = /(https?:\/\/[^\s]+)/;
-	var urlfound=false;
-	var ipordomainfound=false;
-	var emailfound=false;
+	var typesfound= {};
+	typesfound['url']=false;
+	typesfound['ipordomain']=false;
+	typesfound['email']=false;
+	typesfound['uid']=false;
+
 	$("#detectedentries").empty();
 	$("#protocol-tr, #portlist-tr").show();
 	$("#portlist").val('');
@@ -167,7 +170,7 @@ CIF_CLIENT.parseDataInput=function(){
 	$("option[value='']",$("#protocol")).attr('selected',true);
 	for (i in points){
 		if (urlRegex.test(points[i])){
-			urlfound=true;
+			typesfound['url']=true;
 			var copy=points[i];
 			if (points[i].substring(0,7)=='http://'){
 				$("#portlist").val('80');
@@ -198,17 +201,33 @@ CIF_CLIENT.parseDataInput=function(){
 			$("#naoption").attr('selected',true);
 			$("#portlist").val('');
 			$("#protocol-tr, #portlist-tr").hide();
-			emailfound=true;
+			typesfound['email']=true;
 			$("#detectedentries").append("<li><b>Email:</b> "+points[i]+"</li>");
-		} 
+		}
+		else if (points[i].match(/^[a-fA-F0-9]{32}$/) || points[i].match(/^[a-fA-F0-9]{40}$/) 
+				|| points[i].match(/^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/)){
+			typesfound['uid']=true;
+			$("#detectedentries").append("<li><b>SHA1/MD5/UUID:</b> "+points[i]+"</li>");
+		}
 		else {
 			$("#protocol-tr, #portlist-tr").show();
-			ipordomainfound=true;
+			typesfound['ipordomain']=true;
 			$("#detectedentries").append("<li><b>Hostname/IP:</b> "+points[i]+"</li>");
 		}
 	}
 	window.datapoints=points;
-	if ((urlfound && ipordomainfound) || (urlfound && emailfound) || (emailfound && ipordomainfound)){
+	var toomany=false;
+	var onefound=false;
+	for (i in typesfound){
+		if (typesfound[i]==true){
+			if (!onefound){
+				onefound=true;
+			} else {
+				toomany=true;
+			}
+		}
+	}
+	if (toomany){
 		$("#submitbutton").attr("disabled","disabled");
 		$("#mixedContentWarning").show();
 		$("#datapoints").css('border-color', 'red');
