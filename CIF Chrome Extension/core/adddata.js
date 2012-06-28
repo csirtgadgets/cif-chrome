@@ -139,8 +139,20 @@ CIF_CLIENT.populateProtocols=function(){
 		url:'Protocol-Numbers.xml', 
 		dataType: "xml",
 		success: function(data){
+			var popularprotocols = new Array('1','6','17');
 			$(data).find("record").each(function(){
-				$("#protocol").append("<option value='"+$(this).find('value').text()+"'>"+$(this).find('value').text()+". "+$(this).find('name').text()+"   ("+$(this).find('description').text()+")</option>");
+				if ($.inArray($(this).find('value').text(),popularprotocols)!=-1){
+					$("#protocol").append("<option value='"+$(this).find('value').text()+"'>"+$(this).find('value').text()+". "+$(this).find('name').text()+"   ("+$(this).find('description').text()+")</option>");
+				}
+			});
+			$("#protocol").append("<option value='moreplease'>(Click this for more)</option>");
+			$("#protocol").change(function(){
+				if ($(this).val()=='moreplease'){
+					$("#protocol").html('');
+					$(data).find("record").each(function(){
+						$("#protocol").append("<option value='"+$(this).find('value').text()+"'>"+$(this).find('value').text()+". "+$(this).find('name').text()+"   ("+$(this).find('description').text()+")</option>");
+					});
+				}
 			});
 		}
 	});

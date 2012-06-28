@@ -134,7 +134,7 @@ CIF_CLIENT.runQuery=function(string,filterobj,cifurl,cifapikey,logQuery,fieldset
 				var errormsg='Error retrieving results for "'+origterm+'".';
 				errormsg+='<br> If you are using a self-signed certificate, you will have to open the API in a tab once during each browsing session to accept the certificate.';
 				errormsg+='<br/>Otherwise, you need to install the certificate into your browser to avoid this issue.';
-				errormsg+='<br> Click <a href='+cifurl+"?apikey="+cifapikey+' target="_blank">here</a> to open API.';
+				errormsg+='<br> Click <a href='+cifurl+"?apikey="+cifapikey+' target="_blank">here</a> to open the API.';
 				CIF_CLIENT.showError(errormsg,$(this));
 			}
 			else {
