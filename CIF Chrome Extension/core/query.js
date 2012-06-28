@@ -49,27 +49,7 @@ CIF_CLIENT.runQuerySet=function(){
 	}
 	CIF_CLIENT.loadingHide();
 }
-CIF_CLIENT.prepSearchBox=function(){
-    options = JSON.parse(localStorage["cifapiprofiles"]);
-	for (i in options){
-		if (options[i]['isDefault']){
-			$('#serverselect').append('<option value="'+i+'" selected>'+options[i]['name']+'</option>');
-		} else {
-			$('#serverselect').append('<option value="'+i+'">'+options[i]['name']+'</option>');
-		}
-	}
-	$("#theform").submit(function(){ 
-		query = { 'query':$("#querystring").val().trim(),
-				  'type':'formquery',
-				  'filters': CIF_CLIENT.getFilters(),
-				  'server':$("#serverselect option:selected").val(),
-				  'logquery':$("#logquery").is(':checked')
-				 };
-		localStorage['query']=JSON.stringify(query);
-		CIF_CLIENT.runQuerySet(); 
-		return false;
-	});
-}
+
 
 CIF_CLIENT.runQuery=function(string,filterobj,cifurl,cifapikey,logQuery,fieldset){
 	var cifquery;

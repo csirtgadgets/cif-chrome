@@ -171,3 +171,32 @@ CIF_CLIENT.showVersion=function(){
 		}
 	});
 }
+CIF_CLIENT.prepSearchBox=function(){
+    options = JSON.parse(localStorage["cifapiprofiles"]);
+	for (i in options){
+		if (options[i]['isDefault']){
+			$('#serverselect').append('<option value="'+i+'" selected>'+options[i]['name']+'</option>');
+		} else {
+			$('#serverselect').append('<option value="'+i+'">'+options[i]['name']+'</option>');
+		}
+	}
+	$('#serverselect').change(function(){
+		if (CIF_CLIENT.getServerLogSetting($(this).val())){
+			$("#logquery").attr('checked',true);
+		} else {
+			$("#logquery").removeAttr('checked');
+		}
+	}).change();
+	
+	$("#theform").submit(function(){ 
+		query = { 'query':$("#querystring").val().trim(),
+				  'type':'formquery',
+				  'filters': CIF_CLIENT.getFilters(),
+				  'server':$("#serverselect option:selected").val(),
+				  'logquery':$("#logquery").is(':checked')
+				 };
+		localStorage['query']=JSON.stringify(query);
+		CIF_CLIENT.switchToQueryPageAndRun(); 
+		return false;
+	});
+}
