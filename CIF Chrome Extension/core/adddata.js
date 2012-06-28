@@ -108,7 +108,7 @@ CIF_CLIENT.prepServerBox=function(){
 CIF_CLIENT.resetForm=function(){
 	$("#datapoints").val('');
 	$("#datapoints").keyup();
-	$("#description").val('');
+	$("#description").val('unknown');
 	$("option").removeAttr('selected');
 }
 CIF_CLIENT.showError=function(string){
