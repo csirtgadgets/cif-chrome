@@ -8,6 +8,7 @@ Change Log
 0.89
   * added alternative id and alternative id restriction to data submission page
   * added version check
+  * added 'tweet this' link
 
 0.88
   * popup inherits logging settings from options page

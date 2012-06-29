@@ -151,7 +151,9 @@ CIF_CLIENT.parseResponse=function(data){
 	$("#submitbutton").removeAttr("disabled");
 	$("#submissionstatus").html('');
 	for (i in data['data']){
-		$("#submissionstatus").append('Observation <b>'+window.dataToSend[i]['address']+'</b> submitted with ID <b>'+data['data'][i]+'</b><br/>');
+		var tweettext=encodeURIComponent("Submitted "+window.dataToSend[i]['address']+" to CIF");
+		var tweetbutton='<a href="http://twitter.com/intent/tweet?text='+tweettext+'" target="_blank"><img alt="Tweet this" title="Tweet this" src="images/tt-micro3.png"/></a>';
+		$("#submissionstatus").append('Observation <b>'+window.dataToSend[i]['address']+'</b> submitted with ID <b>'+data['data'][i]+'</b>. '+tweetbutton+'<br/>');
 	}
 }
 CIF_CLIENT.addObservedGroups=function(){
