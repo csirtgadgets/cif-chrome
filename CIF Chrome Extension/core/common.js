@@ -6,6 +6,7 @@ CIF_CLIENT.populateRestrictions=function(){
 	restrictions = CIF_CLIENT.getRestrictions();
 	for (i in restrictions){
 		$("#restriction").append('<option value="'+restrictions[i]+'">'+restrictions[i]+'</option>');
+		$("#altidrestriction").append('<option value="'+restrictions[i]+'">'+restrictions[i]+'</option>');
 	}
 }
 CIF_CLIENT.getServerLogSetting=function(server){
@@ -167,9 +168,28 @@ CIF_CLIENT.showVersion=function(){
 		url:'../manifest.json', 
 		dataType: "json",
 		success: function(data){
-			$("#version").html("v"+data['version']);
+			if (localStorage['latestversion']!=undefined 
+			 && localStorage['latestversion']==localStorage['myversion']){
+				$("#version").html("v"+data['version']);
+			} else {
+				$("#version").html("v"+data['version']+"(latest is v"+localStorage['latestversion']+")");
+			}
+			localStorage['myversion']=data['version'];
 		}
 	});
+	var lastcheck=localStorage['lastudpatecheck'];
+	var ts = Math.round((new Date()).getTime() / 1000);
+	if (lastcheck==undefined || lastcheck<(ts-86400)){
+		localStorage['lastudpatecheck']=ts;
+		$.ajax({
+			type: "GET",
+			url:'https://raw.github.com/collectiveintel/cif-client-chrome/master/CIF%20Chrome%20Extension/manifest.json', 
+			dataType: "json",
+			success: function(data){
+				localStorage['latestversion']=data['version'];
+			}
+		});
+	}
 }
 CIF_CLIENT.prepSearchBox=function(){
     options = JSON.parse(localStorage["cifapiprofiles"]);

@@ -9,6 +9,9 @@ $(document).ready(function() {
 	CIF_CLIENT.addObservedGroups();
 	CIF_CLIENT.parseDataInput();
 	CIF_CLIENT.prepServerBox();
+	$("#removealtid,#addaltid").click(function(){
+		CIF_CLIENT.togglealternativeidinput();
+	});
 	$("#datapoints").keyup(function(){
 		window.clearTimeout(window.keyuptimeoutid);
 		window.keyuptimeoutid=window.setTimeout(CIF_CLIENT.parseDataInput,1000, true);
@@ -28,6 +31,20 @@ $(document).ready(function() {
 if(!CIF_CLIENT){
     var CIF_CLIENT = {};
 }
+CIF_CLIENT.togglealternativeidinput=function(){
+	if ($("#removealtid").is(":visible")){
+		$("#altidrestriction-tr").hide();
+		$("#altid-tr").hide();	
+		$("#addaltid").show();
+		$("#removealtid").hide();
+		$("#altid").val('');
+	} else {
+		$("#altidrestriction-tr").show();
+		$("#altid-tr").show();
+		$("#addaltid").hide();
+		$("#removealtid").show();
+	}
+}
 CIF_CLIENT.severitynull=function(){
 	$("option",$("#severity")).remove();
 	$("#severity").append('<option value="null">Null</option>');
@@ -43,11 +60,15 @@ CIF_CLIENT.submitData=function(){
 		groups.push($(this).val());
 	});
 	if ($("#description").val().trim()==''){
-		showError("Please enter a description.");
+		CIF_CLIENT.showError("Please enter a description.");
 		return;
 	}
 	if (groups.length<1){
-		showError("Please select at least one group.");
+		CIF_CLIENT.showError("Please select at least one group.");
+		return;
+	}
+	if (window.datapoints.length==0 || $.trim(window.datapoints[0])==''){
+		CIF_CLIENT.showError("Please enter some data.");
 		return;
 	}
 	window.groupstosendto=groups;
@@ -55,13 +76,13 @@ CIF_CLIENT.submitData=function(){
 }
 CIF_CLIENT.sendToServer=function(){
 	$("#submissionstatus").html('<img src="ajax-loader.gif" id="loadinggif"/>');
-	var server=$("#serverselect option:selected").val();
+	var server=$("#serverselect").val();
 	var cifapikey = CIF_CLIENT.getServerKey(server);
 	var cifurl = CIF_CLIENT.getServerUrl(server);
 	var dataToSend = new Array();
 	for (i in window.datapoints){
 		for (j in window.groupstosendto){
-			dataToSend.push({'address':window.datapoints[i],
+			var individualentry={'address':window.datapoints[i],
 							'impact':$("#impact option:selected").val(),
 							'description':$("#description").val().trim(),
 							'portlist':$("#portlist").val().trim(),
@@ -71,7 +92,12 @@ CIF_CLIENT.sendToServer=function(){
 							'severity':$("#severity option:selected").val(),
 							'guid': window.groupstosendto[j],
 							'restriction':$("#restriction option:selected").val().toLowerCase(),
-							});
+							};
+			if ($("#altid").val().trim()!=''){
+				individualentry['alternativeid']=$("#altid").val().trim();
+				individualentry['alternativeid_restriction']=$("#restriction option:selected").val().toLowerCase();
+			}
+			dataToSend.push(individualentry);
 		}
 	}
 	window.dataToSend=dataToSend;
@@ -86,10 +112,13 @@ CIF_CLIENT.sendToServer=function(){
 		},
 		error: function(e){ 
 			if (e['status']==401){
-				showError("Error: Authorization required. Does your API key have write access?");
+				CIF_CLIENT.showError("Error: Authorization required. Does your API key have write access?");
 				//window.close();
-			} else {
-				showError('Internal Server Error: '+e['responseText']);
+			} else if (e['status']==0){ 
+				CIF_CLIENT.showError('Could not connect to the server. Try testing your server with a query.');
+			}
+			else {
+				CIF_CLIENT.showError('Internal Server Error: '+e['responseText']);
 			}
 			console.log(e);
 		}
@@ -108,8 +137,11 @@ CIF_CLIENT.prepServerBox=function(){
 CIF_CLIENT.resetForm=function(){
 	$("#datapoints").val('');
 	$("#datapoints").keyup();
+	if ($("#removealtid").is(":visible")){
+		CIF_CLIENT.togglealternativeidinput();
+	}
 	$("#description").val('unknown');
-	$("option").removeAttr('selected');
+	$("option",$("#protocol")).removeAttr('selected');
 }
 CIF_CLIENT.showError=function(string){
 	$("#submitbutton").removeAttr("disabled");
@@ -139,7 +171,7 @@ CIF_CLIENT.populateProtocols=function(){
 		url:'Protocol-Numbers.xml', 
 		dataType: "xml",
 		success: function(data){
-			var popularprotocols = new Array('1','6','17');
+			var popularprotocols = new Array('4','6','17');
 			$(data).find("record").each(function(){
 				if ($.inArray($(this).find('value').text(),popularprotocols)!=-1){
 					$("#protocol").append("<option value='"+$(this).find('value').text()+"'>"+$(this).find('value').text()+". "+$(this).find('name').text()+"   ("+$(this).find('description').text()+")</option>");

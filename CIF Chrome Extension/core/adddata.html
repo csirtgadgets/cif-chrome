@@ -26,20 +26,20 @@
   <h3>General Details</h3>
 	<table>
 	<tr>
-		<td><b>Server</b></td>
+		<td><b>Server:</b></td>
 		<td>
 			<select id="serverselect"></select>
 		</td>
 	</tr>
 	<tr>
-		<td><b>Data</b></td>
+		<td><b>Data:</b></td>
 		<td>
 			<input type="text" id="datapoints" size="100"/><span id="mixedContentWarning" style="color:red;display:none;"><b>Mixed content types are not supported.</b></span><br>
 			<i>multiple datapoints (max: 100) may be entered as comma-separated values. they will all share the same classifications below</i>
 		</td>
 	</tr>
 	<tr>
-		<td><b>Impact</b></td>
+		<td><b>Impact:</b></td>
 		<td>
 			<select id="impact">
 				<option value="botnet">Botnet</option>
@@ -57,14 +57,14 @@
 		</td>
 	</tr>
 	<tr>
-		<td><b>Description</b></td>
+		<td><b>Description:</b></td>
 		<td>
 			<input type="text" id="description" size="50" maxlength="140" value="unknown"/><br>
 			<i>short description (e.g. zues c&amp;c)</i>
 		</td>
 	</tr>
 	<tr>
-		<td><b>Confidence</b></td>
+		<td><b>Confidence:</b></td>
 		<td>
 			<select id="confidence">
 
@@ -74,7 +74,7 @@
 		</td>
 	</tr>
 	<tr id="severity-tr">
-		<td><b>Severity</b></td>
+		<td><b>Severity:</b></td>
 		<td>
 			<select id="severity">
 				<option value="null">Null</option>
@@ -85,19 +85,37 @@
 			<br/><i>Refer to the severity taxonomy <a href="http://code.google.com/p/collective-intelligence-framework/wiki/TaxonomySeverity" target="_blank">here</a></i>
 		</td>
 	</tr>
-	<tr id="protocol-tr">
-		<td>Protocol</td>
+	<tr id="protocol-tr" >
+		<td>Protocol:</td>
 		<td>
 			<select id="protocol">
 				<option value="" id="naoption">N/A</option>
 			</select>
 		</td>
 	</tr>
-	<tr id="portlist-tr">
-		<td>Portlist</td>
+	<tr id="portlist-tr" >
+		<td>Portlist:</td>
 		<td>
 			<input type="text" id="portlist" size="50" maxlength="140"/><br>
 			<i>e.g. 21,22,80-89</i>
+		</td>
+	</tr>
+	<tr><td>
+		<a href="#" id="addaltid">Add Alternative ID</a>
+		<a href="#" id="removealtid" style="display:none;">Remove Alternative ID</a>
+		</td>
+	<td></td></tr>
+	<tr id="altid-tr" style="display:none;">
+		<td>Alternative ID:</td>
+		<td>
+			<input type="text" id="altid" size="50" maxlength="140"/><br>
+		</td>
+	</tr>
+	<tr id="altidrestriction-tr" style="display:none;">
+		<td>Alt. ID Restriction:</td>
+		<td>
+			<select id="altidrestriction">
+			</select>
 		</td>
 	</tr>
 	</table>
@@ -105,7 +123,7 @@
 	<h3>Sharing Information</h3>
 	<table>
 	<tr>
-		<td><b>Groups</b></td>
+		<td><b>Groups:</b></td>
 		<td>
 			<div id="groupboxarea">
 			<input type="checkbox" class="groupbox" value="everyone"/>everyone<br>
@@ -114,7 +132,7 @@
 		</td>
 	</tr>
 	<tr>
-		<td><b>Restriction</b></td>
+		<td><b>Restriction:</b></td>
 		<td>
 			<select id="restriction">
 
