@@ -1,6 +1,6 @@
 $(document).ready(function() {
 	try{
-		var fromcontext=JSON.parse(localStorage["datatoadd"]);
+		var fromcontext=JSON.parse(CIF_CLIENT.getItem("datatoadd"));
 		$('#datapoints').val(fromcontext['data']);
 	} catch(err) {}
 	CIF_CLIENT.populateProtocols();
@@ -125,7 +125,7 @@ CIF_CLIENT.sendToServer=function(){
 	});
 }
 CIF_CLIENT.prepServerBox=function(){    
-	options = JSON.parse(localStorage["cifapiprofiles"]);
+	options = JSON.parse(CIF_CLIENT.getItem("cifapiprofiles"));
 	for (i in options){
 		if (options[i]['isDefault']){
 			$('#serverselect').append('<option value="'+i+'" selected>'+options[i]['name']+'</option>');
@@ -159,7 +159,7 @@ CIF_CLIENT.parseResponse=function(data){
 }
 CIF_CLIENT.addObservedGroups=function(){
 	try{
-		var observedgroups=JSON.parse(localStorage["observed_groups"]);
+		var observedgroups=JSON.parse(CIF_CLIENT.getItem("observed_groups"));
 		for (i in observedgroups){
 			if (observedgroups[i]['name']!="everyone"){
 				$("#groupboxarea").append('<input type="checkbox" id="datapoints" class="groupbox" value="'+observedgroups[i]['name']+'"/>'+observedgroups[i]['name']+'<br>');
@@ -168,29 +168,25 @@ CIF_CLIENT.addObservedGroups=function(){
 	} catch(err) {}
 }
 
-CIF_CLIENT.populateProtocols=function(){
-	$.ajax({
-		type: "GET",
-		url:'Protocol-Numbers.xml', 
-		dataType: "xml",
-		success: function(data){
-			var popularprotocols = new Array('4','6','17');
-			$(data).find("record").each(function(){
-				if ($.inArray($(this).find('value').text(),popularprotocols)!=-1){
-					$("#protocol").append("<option value='"+$(this).find('value').text()+"'>"+$(this).find('value').text()+". "+$(this).find('name').text()+"   ("+$(this).find('description').text()+")</option>");
-				}
-			});
-			$("#protocol").append("<option value='moreplease'>(Click this for more)</option>");
-			$("#protocol").change(function(){
-				if ($(this).val()=='moreplease'){
-					$("#protocol").html('');
-					$(data).find("record").each(function(){
-						$("#protocol").append("<option value='"+$(this).find('value').text()+"'>"+$(this).find('value').text()+". "+$(this).find('name').text()+"   ("+$(this).find('description').text()+")</option>");
-					});
-				}
-			});
+CIF_CLIENT.populateProtocols=function(moreplease){
+	moreplease = (typeof moreplease !== 'undefined') ? moreplease : false;
+	var protocoldata=JSON.parse(CIF_CLIENT.getItem("protocoldata"));
+	var popularprotocols = new Array('4','6','17');
+	$("#protocol").append('<option value="" id="naoption">N/A</option>');
+	for (i in protocoldata){
+		if ($.inArray(protocoldata[i]['proto'],popularprotocols)!=-1 || moreplease){
+			$("#protocol").append("<option value='"+protocoldata[i]['proto']+"'>"+protocoldata[i]['proto']+". "+protocoldata[i]['name']+"   ("+protocoldata[i]['desc']+")</option>");
 		}
-	});
+	}
+	if (!moreplease){
+		$("#protocol").append("<option value='moreplease'>(Click this for more)</option>");
+		$("#protocol").change(function(){
+			if ($(this).val()=='moreplease'){
+				$(this).html('');
+				CIF_CLIENT.populateProtocols(true);
+			}
+		});
+	}
 }
 
 CIF_CLIENT.parseDataInput=function(){

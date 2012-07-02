@@ -3,43 +3,53 @@
 <?xml-stylesheet type="text/css" href="chrome://global/skin/" ?>
 <?xml-stylesheet type="text/css"
   href="chrome://cifclient/skin/browserOverlay.css" ?>
-
+  
 <!DOCTYPE overlay SYSTEM
   "chrome://cifclient/locale/browserOverlay.dtd">
 
 <overlay id="cifclient-browser-overlay"
   xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
-
   <script type="application/x-javascript"
-    src="chrome://cifclient/content/browserOverlay.js" />
-
+    src="chrome://cifclient/content/common.js" />
+  <script type="application/x-javascript"
+    src="chrome://cifclient/content/browserDependent_functions.js" />
   <stringbundleset id="stringbundleset">
     <stringbundle id="cifclient-string-bundle"
       src="chrome://cifclient/locale/browserOverlay.properties" />
   </stringbundleset>
-
   <menubar id="main-menubar">
-    <menu id="cifclient-hello-menu" label="&cifclient.hello.label;"
-      accesskey="&cifclient.helloMenu.accesskey;" insertafter="helpMenu">
+    <menu id="cifclient-hello-menu" label="CIF Client" insertafter="helpMenu">
       <menupopup>
-        <menuitem id="cifclient-hello-menu-item"
-          label="&cifclient.hello.label;"
-          accesskey="&cifclient.helloItem.accesskey;"
-          oncommand="XULSchoolChrome.BrowserOverlay.sayHello(event);" />
+		<menuitem id="cifclient-hello-menu-itemt1"
+          label="Run a Query"
+          oncommand="CIF_CLIENT.BrowserOverlay.openQueryPage(event);" />			
+	    <menuitem id="cifclient-hello-menu-itemt2"
+          label="Submit Data"
+          oncommand="CIF_CLIENT.BrowserOverlay.openDataPage(event);" />
+		<menuitem id="cifclient-hello-menu-itemt3"
+          label="Settings"
+          oncommand="CIF_CLIENT.BrowserOverlay.openSettings(event);" />
       </menupopup>
     </menu>
   </menubar>
 
   <vbox id="appmenuSecondaryPane">
-    <menu id="cifclient-hello-menu-2" label="&cifclient.hello.label;"
-      accesskey="&cifclient.helloMenu.accesskey;"
-      insertafter="appmenu_addons">
+    <menu id="cifclient-hello-menu-2" label="CIF Client" insertafter="appmenu_addons">
       <menupopup>
-        <menuitem id="cifclient-hello-menu-item-2"
-          label="&cifclient.hello.label;"
-          accesskey="&cifclient.helloItem.accesskey;"
-          oncommand="XULSchoolChrome.BrowserOverlay.sayHello(event);" />
+		<menuitem id="cifclient-hello-menu-item1"
+          label="Run a Query"
+          oncommand="CIF_CLIENT.BrowserOverlay.openQueryPage(event);" />			
+	    <menuitem id="cifclient-hello-menu-item2"
+          label="Submit Data"
+          oncommand="CIF_CLIENT.BrowserOverlay.openDataPage(event);" />
+		<menuitem id="cifclient-hello-menu-item3"
+          label="Settings"
+          oncommand="CIF_CLIENT.BrowserOverlay.openSettings(event);" />
       </menupopup>
     </menu>
   </vbox>
+  <popup id="contentAreaContextMenu">
+	<menuitem id="searchcifforselection" label="Search CIF" oncommand="CIF_CLIENT.BrowserOverlay.CopenQueryPage(event);"/>
+	<menuitem id="addselectiontocif" label="Add to CIF" oncommand="CIF_CLIENT.BrowserOverlay.CopenDataPage(event);"/>
+  </popup>
 </overlay>

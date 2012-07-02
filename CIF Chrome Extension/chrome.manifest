@@ -1,5 +1,4 @@
 content   cifclient                content/
 skin      cifclient  classic/1.0   skin/
 locale    cifclient  en-US         locale/en-US/
-
 overlay chrome://browser/content/browser.xul  chrome://cifclient/content/browserOverlay.xul

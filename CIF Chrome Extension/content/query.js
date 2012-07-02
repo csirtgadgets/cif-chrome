@@ -21,8 +21,15 @@ $(document).ready(function() {
 CIF_CLIENT.runQuerySet=function(){
 	$('body').animate({scrollTop:0}, 'medium');
 	//window.scrollTo(0, 0);
-	var query=JSON.parse(localStorage["query"]);
-	CIF_CLIENT.makeMeVisible("query");
+	var query=JSON.parse(CIF_CLIENT.getItem("query"));
+	if (query===null){
+		query={
+			'query':'',
+			'logquery':false,
+			'type':'formquery'
+		};
+	}
+	CIF_CLIENT.makeMeVisible();
 	$("#loadinggif").show();
 	var queries=query['query'].replace(/(\r\n|\n|\r| )/gm,',').split(',');
 	var cleanedqueries = new Array();
@@ -186,13 +193,15 @@ CIF_CLIENT.parseDataToBody=function(data,fieldset){
 	CIF_CLIENT.recordObservedGroups(data['data']['feed']['group_map']);
 	CIF_CLIENT.parseEntries(data['data']['feed']['entry'],fieldset);
 	$('.showinfo',fieldset).click(function(){
-		$('.addinfo',$(this).parent()).slideDown();
+		//$('.addinfo',$(this).parent()).slideDown();
+		$('.addinfo',$(this).parent()).show();
 		$(this).hide();
 		$('.hideinfo',$(this).parent()).show();
 		return false;
 	});
 	$('.hideinfo',fieldset).click(function(){
-		$('.addinfo',$(this).parent()).slideUp();
+		//$('.addinfo',$(this).parent()).slideUp();
+		$('.addinfo',$(this).parent()).hide();
 		$(this).hide();
 		$('.showinfo',$(this).parent()).show();
 		return false;
@@ -223,7 +232,7 @@ CIF_CLIENT.parseDataToBody=function(data,fieldset){
 				      'server':$(this).attr('server'),
 					   'logquery':$("#logquery").is(':checked')
 					};
-			localStorage['query']=JSON.stringify(query);
+			CIF_CLIENT.storeItem('query',JSON.stringify(query));
 			CIF_CLIENT.runQuerySet();
 			return false;
 		});
@@ -335,7 +344,8 @@ CIF_CLIENT.parseAdditionalIncidentData=function(Incident){
 CIF_CLIENT.translateGroup=function(guid){
 	if (typeof window.group_map[guid] != 'undefined') return window.group_map[guid];
 	try{
-		var existing = JSON.parse(localStorage["observed_groups"]);
+		var existing = JSON.parse(CIF_CLIENT.getItem("observed_groups"));
+		if (existing===null) existing=new Array();
 	} catch(err) {
 		var existing = new Array();
 	}
@@ -345,8 +355,9 @@ CIF_CLIENT.translateGroup=function(guid){
 	return guid;
 }
 CIF_CLIENT.translateProtocol=function(number){
-	for (i in window.protocoldata){
-		if (number==window.protocoldata[i]['proto']) return window.protocoldata[i]['name'];
+	var protocoldata=JSON.parse(CIF_CLIENT.getItem("protocoldata"));
+	for (i in protocoldata){
+		if (number==protocoldata[i]['proto']) return protocoldata[i]['name'];
 	}
 	return number;
 }
@@ -369,7 +380,8 @@ CIF_CLIENT.recordObservedGroups=function(groups){
 		observed.push({'name':groups[i],'guid':i});
 	}
 	try{
-		var existing = JSON.parse(localStorage["observed_groups"]);
+		var existing = JSON.parse(CIF_CLIENT.getItem("observed_groups"));
+		if (existing===null) existing = new Array();
 	} catch(err) {
 		var existing = new Array();
 	}
@@ -385,7 +397,7 @@ CIF_CLIENT.recordObservedGroups=function(groups){
 		}
 	}
 	var combined=existing.concat(uniques);
-	localStorage['observed_groups']=JSON.stringify(combined);
+	CIF_CLIENT.storeItem('observed_groups',JSON.stringify(combined));
 }
 CIF_CLIENT.poorinflate=function(data){
 	var res=RawDeflate.inflate(data);

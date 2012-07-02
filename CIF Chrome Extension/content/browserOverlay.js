@@ -16,6 +16,6 @@ XULSchoolChrome.BrowserOverlay = {
     let stringBundle = document.getElementById("cifclient-string-bundle");
     let message = stringBundle.getString("cifclient.greeting.label");
 
-    window.alert(message);
+	gBrowser.selectedTab = gBrowser.addTab('chrome://cifclient/content/settings.html');
   }
 };

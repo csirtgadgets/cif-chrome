@@ -16,11 +16,11 @@ CIF_CLIENT.save_options=function() {
 			options.push(set);
 		}
 	});
-	localStorage["cifapiprofiles"] = JSON.stringify(options);
+	CIF_CLIENT.storeItem("cifapiprofiles",JSON.stringify(options));
 	/*
 	var restrictions=$("#restrictionsnames").val().trim().split("\n");
 	if (restrictions.length>0){
-		localStorage['restrictions']=JSON.stringify(restrictions);
+		CIF_CLIENT.storeItem('restrictions',JSON.stringify(restrictions));
 	}
 	*/
 	var confidences=$("#confidencevalues").val().split("\n");
@@ -31,7 +31,7 @@ CIF_CLIENT.save_options=function() {
 		tosave.push({'numeric':parts[0],'word':parts[1]});
 	}
 	if (tosave.length>0){
-		localStorage['confidencemap']=JSON.stringify(tosave);
+		CIF_CLIENT.storeItem('confidencemap',JSON.stringify(tosave));
 	}
 	// Update status to let user know options were saved.
 	$("#status").html("Options Saved.").show().delay(1000).fadeOut('slow');
@@ -39,7 +39,7 @@ CIF_CLIENT.save_options=function() {
 // Restores select box state to saved value from localStorage.
 CIF_CLIENT.restore_options=function() {
   try {
-	  options = JSON.parse(localStorage["cifapiprofiles"]);
+	  options = JSON.parse(CIF_CLIENT.getItem("cifapiprofiles"));
 	  for (i in options){
 		CIF_CLIENT.addProfileRow(options[i]['name'],options[i]['url'],options[i]['key'],options[i]['isDefault'],options[i]['logQueries']);
 	  }

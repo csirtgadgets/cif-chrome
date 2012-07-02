@@ -5,7 +5,7 @@ $(document).ready(function() {
 		query = { 'data':$("#querystring").val().trim(),
 				  'type':'contextmenuadd'
 				 };
-		localStorage['datatoadd']=JSON.stringify(query);
+		CIF_CLIENT.storeItem('datatoadd',JSON.stringify(query));
 		CIF_CLIENT.makeNewPage("content/adddata.html");
 		return false;
 	});

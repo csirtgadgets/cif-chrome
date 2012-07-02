@@ -8,7 +8,7 @@
 	"default_popup": "content/popup.html"
   },
   "background": {
-    "scripts": ["contextmenus.js"]
+    "scripts": ["content/contextmenus.js"]
   },
   "icons": {
 	"16": "content/ciflogo.png",

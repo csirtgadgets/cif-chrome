@@ -1,7 +1,37 @@
 if(!CIF_CLIENT){
     var CIF_CLIENT = {};
 }
+//need to determine how local storage will work depending on the browser
+CIF_CLIENT.getStorageContext=function(){
+	var storage;
+	try {//see if we are in firefox
+		var appInfo = Components.classes["@mozilla.org/xre/app-info;1"].getService(Components.interfaces.nsIXULAppInfo);
+	} catch(err){}
+	if (typeof appInfo != 'undefined'){ //if this is defined, we are in firefox
+		var url = "http://cifclientff.ren-isac.net.local"; //need a context for localstorage in firefox
+		var ios = Components.classes["@mozilla.org/network/io-service;1"]
+				  .getService(Components.interfaces.nsIIOService);
+		var ssm = Components.classes["@mozilla.org/scriptsecuritymanager;1"]
+				  .getService(Components.interfaces.nsIScriptSecurityManager);
+		var dsm = Components.classes["@mozilla.org/dom/storagemanager;1"]
+				  .getService(Components.interfaces.nsIDOMStorageManager);
 
+		var uri = ios.newURI(url, "", null);
+		var principal = ssm.getCodebasePrincipal(uri);
+		storage = dsm.getLocalStorageForPrincipal(principal, "");
+	} else {
+		storage = localStorage;
+	}
+	return storage;
+}
+CIF_CLIENT.storeItem=function(key,value){
+    var storage=CIF_CLIENT.getStorageContext();
+    return storage.setItem(key, value);
+}
+CIF_CLIENT.getItem=function(key){
+	var storage=CIF_CLIENT.getStorageContext();
+	return storage.getItem(key);
+}
 CIF_CLIENT.populateRestrictions=function(){
 	restrictions = CIF_CLIENT.getRestrictions();
 	for (i in restrictions){
@@ -10,26 +40,26 @@ CIF_CLIENT.populateRestrictions=function(){
 	}
 }
 CIF_CLIENT.getServerLogSetting=function(server){
-	servers = JSON.parse(localStorage["cifapiprofiles"]);
+	servers = JSON.parse(CIF_CLIENT.getItem("cifapiprofiles"));
 	return servers[server]['logQueries'];
 }
 CIF_CLIENT.getServerName=function(server){
-	servers = JSON.parse(localStorage["cifapiprofiles"]);
+	servers = JSON.parse(CIF_CLIENT.getItem("cifapiprofiles"));
 	return servers[server]['name'];
 }
 CIF_CLIENT.getDefaultServer=function(){
-	servers = JSON.parse(localStorage["cifapiprofiles"]);
+	servers = JSON.parse(CIF_CLIENT.getItem("cifapiprofiles"));
 	for (i in servers){
 		if (servers[i]['isDefault']) return i;
 	}
 	return 0;
 }
 CIF_CLIENT.getServerUrl=function(server){
-	servers = JSON.parse(localStorage["cifapiprofiles"]);
+	servers = JSON.parse(CIF_CLIENT.getItem("cifapiprofiles"));
 	return servers[server]['url'];
 }
 CIF_CLIENT.getServerKey=function(server){
-	servers = JSON.parse(localStorage["cifapiprofiles"]);
+	servers = JSON.parse(CIF_CLIENT.getItem("cifapiprofiles"));
 	return servers[server]['key'];
 }
 
@@ -45,7 +75,8 @@ CIF_CLIENT.uri_escape=function( text, re ) {
 }
 CIF_CLIENT.settingsCheck=function(){
     try{
-		options = JSON.parse(localStorage["cifapiprofiles"]);
+		options = JSON.parse(CIF_CLIENT.getItem("cifapiprofiles"));
+		if (options===null) options=new Array();
 	} catch(err) {
 		options = new Array();
 	}
@@ -56,7 +87,8 @@ CIF_CLIENT.settingsCheck=function(){
 }
 CIF_CLIENT.getRestrictions=function(){
 	try {
-		restrictions = JSON.parse(localStorage['restrictions']);
+		restrictions = JSON.parse(CIF_CLIENT.getItem('restrictions'));
+		if (restrictions===null) restrictions = CIF_CLIENT.defaultRestrictions();
 	} catch(err){
 		restrictions = CIF_CLIENT.defaultRestrictions();
 	}
@@ -65,7 +97,8 @@ CIF_CLIENT.getRestrictions=function(){
 }
 CIF_CLIENT.getConfidenceMap=function(){
   try {
-	confidencemap = JSON.parse(localStorage['confidencemap']);
+	confidencemap = JSON.parse(CIF_CLIENT.getItem('confidencemap'));
+	if (confidencemap===null) confidencemap = CIF_CLIENT.defaultConfidence();
   } catch(err){
 	confidencemap = CIF_CLIENT.defaultConfidence();
   }
@@ -88,14 +121,20 @@ CIF_CLIENT.defaultConfidence=function(){
 	return confidencemap;
 }
 CIF_CLIENT.populateProtocolTranslations=function(){
+	CIF_CLIENT.protodata=new Array();
 	$.ajax({
 		type: "GET",
 		url:'Protocol-Numbers.xml', 
 		dataType: "xml",
 		success: function(data){
+			CIF_CLIENT.protodata=new Array();
 			$(data).find("record").each(function(){
-				window.protocoldata.push({'proto':$(this).find('value').text(), 'name':$(this).find('name').text(), 'desc':$(this).find('description').text()});
+				CIF_CLIENT.protodata.push({'proto':$(this).find('value').text(), 'name':$(this).find('name').text(), 'desc':$(this).find('description').text()});
 			});
+			CIF_CLIENT.storeItem('protocoldata',JSON.stringify(CIF_CLIENT.protodata));
+		},
+		error: function (e){
+			this.success($.parseXML(e['responseText']));
 		}
 	});
 }
@@ -168,31 +207,31 @@ CIF_CLIENT.showVersion=function(){
 		url:'../manifest.json', 
 		dataType: "json",
 		success: function(data){
-			if (localStorage['latestversion']!=undefined 
-			 && localStorage['latestversion']==localStorage['myversion']){
+			if (CIF_CLIENT.getItem('latestversion')!=undefined 
+			 && CIF_CLIENT.getItem('latestversion')==CIF_CLIENT.getItem('myversion')){
 				$("#version").html("v"+data['version']);
 			} else {
-				$("#version").html("v"+data['version']+"(latest is v"+localStorage['latestversion']+")");
+				$("#version").html("v"+data['version']+"(latest is v"+CIF_CLIENT.getItem('latestversion')+")");
 			}
-			localStorage['myversion']=data['version'];
+			CIF_CLIENT.storeItem('myversion',data['version']);
 		}
 	});
-	var lastcheck=localStorage['lastudpatecheck'];
+	var lastcheck=CIF_CLIENT.getItem('lastudpatecheck');
 	var ts = Math.round((new Date()).getTime() / 1000);
 	if (lastcheck==undefined || lastcheck<(ts-86400)){
-		localStorage['lastudpatecheck']=ts;
+		CIF_CLIENT.storeItem('lastudpatecheck',ts);
 		$.ajax({
 			type: "GET",
 			url:'https://raw.github.com/collectiveintel/cif-client-chrome/master/CIF%20Chrome%20Extension/manifest.json', 
 			dataType: "json",
 			success: function(data){
-				localStorage['latestversion']=data['version'];
+				CIF_CLIENT.storeItem('latestversion',data['version']);
 			}
 		});
 	}
 }
 CIF_CLIENT.prepSearchBox=function(){
-    options = JSON.parse(localStorage["cifapiprofiles"]);
+    options = JSON.parse(CIF_CLIENT.getItem("cifapiprofiles"));
 	for (i in options){
 		if (options[i]['isDefault']){
 			$('#serverselect').append('<option value="'+i+'" selected>'+options[i]['name']+'</option>');
@@ -215,7 +254,7 @@ CIF_CLIENT.prepSearchBox=function(){
 				  'server':$("#serverselect option:selected").val(),
 				  'logquery':$("#logquery").is(':checked')
 				 };
-		localStorage['query']=JSON.stringify(query);
+		CIF_CLIENT.storeItem('query',JSON.stringify(query));
 		CIF_CLIENT.switchToQueryPageAndRun(); 
 		return false;
 	});
