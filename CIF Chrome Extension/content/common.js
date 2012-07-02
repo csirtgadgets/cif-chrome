@@ -50,7 +50,7 @@ CIF_CLIENT.settingsCheck=function(){
 		options = new Array();
 	}
 	if (options.length<1 || options == null){
-		CIF_CLIENT.switchToPage('core/settings.html');
+		CIF_CLIENT.switchToPage('content/settings.html');
 	}
 	return;
 }

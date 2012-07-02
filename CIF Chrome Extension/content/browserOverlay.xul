@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+
+<?xml-stylesheet type="text/css" href="chrome://global/skin/" ?>
+<?xml-stylesheet type="text/css"
+  href="chrome://cifclient/skin/browserOverlay.css" ?>
+
+<!DOCTYPE overlay SYSTEM
+  "chrome://cifclient/locale/browserOverlay.dtd">
+
+<overlay id="cifclient-browser-overlay"
+  xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+
+  <script type="application/x-javascript"
+    src="chrome://cifclient/content/browserOverlay.js" />
+
+  <stringbundleset id="stringbundleset">
+    <stringbundle id="cifclient-string-bundle"
+      src="chrome://cifclient/locale/browserOverlay.properties" />
+  </stringbundleset>
+
+  <menubar id="main-menubar">
+    <menu id="cifclient-hello-menu" label="&cifclient.hello.label;"
+      accesskey="&cifclient.helloMenu.accesskey;" insertafter="helpMenu">
+      <menupopup>
+        <menuitem id="cifclient-hello-menu-item"
+          label="&cifclient.hello.label;"
+          accesskey="&cifclient.helloItem.accesskey;"
+          oncommand="XULSchoolChrome.BrowserOverlay.sayHello(event);" />
+      </menupopup>
+    </menu>
+  </menubar>
+
+  <vbox id="appmenuSecondaryPane">
+    <menu id="cifclient-hello-menu-2" label="&cifclient.hello.label;"
+      accesskey="&cifclient.helloMenu.accesskey;"
+      insertafter="appmenu_addons">
+      <menupopup>
+        <menuitem id="cifclient-hello-menu-item-2"
+          label="&cifclient.hello.label;"
+          accesskey="&cifclient.helloItem.accesskey;"
+          oncommand="XULSchoolChrome.BrowserOverlay.sayHello(event);" />
+      </menupopup>
+    </menu>
+  </vbox>
+</overlay>

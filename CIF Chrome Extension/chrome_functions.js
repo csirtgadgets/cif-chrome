@@ -25,10 +25,10 @@ CIF_CLIENT.switchToPage=function(pageName){
 		} 
 	}
 	chrome.tabs.create({url: pageName},function(tab){
-		if (pageName=="core/query.html"){
+		if (pageName=="content/query.html"){
 			window.cifquerytabid=tab.id;
 		}
-		else if (pageName=="core/settings.html"){
+		else if (pageName=="content/settings.html"){
 			window.cifsettingstabid=tab.id;
 		}
 	});
@@ -44,11 +44,11 @@ CIF_CLIENT.switchToQueryPageAndRun=function(){
 	var views = chrome.extension.getViews({'type':'tab'});
 	for (var i = 0; i < views.length; i++) {
 		var view = views[i];
-		if (view.location.href == chrome.extension.getURL('core/query.html')) {
+		if (view.location.href == chrome.extension.getURL('content/query.html')) {
 		  view.CIF_CLIENT.runQuerySet();
 		  return;
 		} 
 	}
-	chrome.tabs.create({url: "core/query.html"});
+	chrome.tabs.create({url: "content/query.html"});
 	return;
 }

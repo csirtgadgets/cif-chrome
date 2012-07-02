@@ -9,12 +9,12 @@ CIF_CLIENT.queryClick=function(info, tab) {
 	localStorage['query']=JSON.stringify(query);
 	var views = chrome.extension.getViews({'type':'tab'});
 	for (i in views) {
-		if (views[i].location.href == chrome.extension.getURL('core/query.html')) {
+		if (views[i].location.href == chrome.extension.getURL('content/query.html')) {
 		  views[i].CIF_CLIENT.runQuerySet();
 		  return;
 		} 
 	}
-	chrome.tabs.create({url: "core/query.html"},function(tab){
+	chrome.tabs.create({url: "content/query.html"},function(tab){
 		window.cifquerytabid=tab.id;
 	}); 
 }
@@ -23,7 +23,7 @@ CIF_CLIENT.addClick=function(info, tab){
 				  'type':'contextmenuadd'
 				 };
 	localStorage['datatoadd']=JSON.stringify(query);
-	chrome.tabs.create({url: "core/adddata.html"});
+	chrome.tabs.create({url: "content/adddata.html"});
 }
 
 var id = chrome.contextMenus.create({"title": "Query CIF Server for '%s'",

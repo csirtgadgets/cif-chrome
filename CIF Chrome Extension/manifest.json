@@ -4,17 +4,17 @@
   "manifest_version": 2,
   "description": "Client for a collective intelligence framework server",
   "browser_action": {
-    "default_icon": "core/favicon_1.ico",
-	"default_popup": "core/popup.html"
+    "default_icon": "content/favicon_1.ico",
+	"default_popup": "content/popup.html"
   },
   "background": {
     "scripts": ["contextmenus.js"]
   },
   "icons": {
-	"16": "core/ciflogo.png",
-	"48": "core/ciflogo.png",
-	"128": "core/ciflogo.png"
+	"16": "content/ciflogo.png",
+	"48": "content/ciflogo.png",
+	"128": "content/ciflogo.png"
   },
-  "options_page": "core/settings.html",
+  "options_page": "content/settings.html",
   "permissions": [ "http://*/*", "https://*/*", "contextMenus","tabs"]
 }
