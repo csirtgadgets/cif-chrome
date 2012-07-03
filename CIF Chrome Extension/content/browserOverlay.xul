@@ -3,6 +3,8 @@
 <?xml-stylesheet type="text/css" href="chrome://global/skin/" ?>
 <?xml-stylesheet type="text/css"
   href="chrome://cifclient/skin/browserOverlay.css" ?>
+<?xml-stylesheet type="text/css"
+  href="chrome://cifclient/content/button.css"?>
   
 <!DOCTYPE overlay SYSTEM
   "chrome://cifclient/locale/browserOverlay.dtd">
@@ -13,10 +15,15 @@
     src="chrome://cifclient/content/common.js" />
   <script type="application/x-javascript"
     src="chrome://cifclient/content/browserDependent_functions.js" />
+  <script type="application/javascript"
+    src="chrome://cifclient/content/button.js"/>	
+	
   <stringbundleset id="stringbundleset">
     <stringbundle id="cifclient-string-bundle"
       src="chrome://cifclient/locale/browserOverlay.properties" />
   </stringbundleset>
+  
+  
   <menubar id="main-menubar">
     <menu id="cifclient-hello-menu" label="CIF Client" insertafter="helpMenu">
       <menupopup>
@@ -52,4 +59,37 @@
 	<menuitem id="searchcifforselection" label="Search CIF" oncommand="CIF_CLIENT.BrowserOverlay.CopenQueryPage(event);"/>
 	<menuitem id="addselectiontocif" label="Add to CIF" oncommand="CIF_CLIENT.BrowserOverlay.CopenDataPage(event);"/>
   </popup>
+  <popupset>
+        <menupopup id="cifclient_menu_popup">
+            <menuitem label="Query Page" oncommand="CIF_CLIENT.openQueryPage();" />
+			<menuitem label="Data Submission Page" oncommand="gBrowser.selectedTab = gBrowser.addTab('chrome://cifclient/content/adddata.html');" />
+            <menuitem label="Settings" oncommand="gBrowser.selectedTab = gBrowser.addTab('chrome://cifclient/content/settings.html');" />
+        </menupopup>
+
+        <panel id="cifclient_popup" noautohide="false" noautofocus="true">
+            <iframe width="270px" height="200px" src="chrome://cifclient/content/popup.html"></iframe>
+        </panel>
+  </popupset>
+  
+  
+  <!-- Firefox -->
+<toolbarpalette id="BrowserToolbarPalette">
+  <toolbarbutton id="custom-button-1"/>
+  </toolbarpalette>
+
+<!-- Thunderbird mail -->
+<toolbarpalette id="MailToolbarPalette">
+  <toolbarbutton id="custom-button-1"/>
+  </toolbarpalette>
+  
+  <!-- button details -->
+<toolbarbutton id="custom-button-1"
+  label="CIF Client"
+  tooltiptext="Collective Intelligence Framework Client"
+  oncommand="document.getElementById('cifclient_popup').openPopup(document.getElementById('custom-button-1'), 'after_start', 0, 0, false, false);"
+  context="cifclient_menu_popup"
+  class="toolbarbutton-1 chromeclass-toolbar-additional custombutton"
+  />
+  
+  
 </overlay>

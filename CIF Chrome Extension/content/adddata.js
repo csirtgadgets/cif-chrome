@@ -3,6 +3,7 @@ $(document).ready(function() {
 		var fromcontext=JSON.parse(CIF_CLIENT.getItem("datatoadd"));
 		$('#datapoints').val(fromcontext['data']);
 	} catch(err) {}
+	CIF_CLIENT.settingsCheck();
 	CIF_CLIENT.populateProtocols();
 	CIF_CLIENT.populateRestrictions();
 	CIF_CLIENT.populateConfidenceValues();

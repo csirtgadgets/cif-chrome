@@ -7,6 +7,7 @@ $(document).ready(function() {
 				 };
 		CIF_CLIENT.storeItem('datatoadd',JSON.stringify(query));
 		CIF_CLIENT.makeNewPage("content/adddata.html");
+		CIF_CLIENT.closePanel();
 		return false;
 	});
 	CIF_CLIENT.prepSearchBox();

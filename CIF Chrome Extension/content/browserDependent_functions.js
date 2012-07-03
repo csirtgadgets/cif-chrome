@@ -8,8 +8,28 @@ if (typeof appInfo != 'undefined'){ //if this is defined, we are in firefox
     /*
 	 * All of the functions specific to Firefox
 	 */
+	function getgBrowser(){
+		var wm = Components.classes["@mozilla.org/appshell/window-mediator;1"].
+		getService(Components.interfaces.nsIWindowMediator);
+		gBrowser = wm.getMostRecentWindow("mail:3pane");
+		gBrowser.addTab=function(url){
+			try {
+				var browser = window.opener.getBrowser();
+				browser.selectedTab = browser.addTab(url);
+				window.opener.focus();
+			} catch (err) {
+				var eps = Components.classes["@mozilla.org/uriloader/external-protocol-service;1"].
+				getService(Components.interfaces.nsIExternalProtocolService);
+				var ios = Components.classes["@mozilla.org/network/io-service;1"].
+				getService(Components.interfaces.nsIIOService);
+				eps.loadURI(ios.newURI(url, null, null));
+			}
+		}
+		return gBrowser;
+	}
 	CIF_CLIENT.BrowserOverlay = {
 	  openDataPage : function(aEvent) {
+		if (typeof gBrowser=='undefined') gBrowser=getgBrowser();
 		gBrowser.selectedTab = gBrowser.addTab('chrome://cifclient/content/adddata.html');
 	  },
 	  CopenDataPage : function(aEvent){
@@ -21,7 +41,7 @@ if (typeof appInfo != 'undefined'){ //if this is defined, we are in firefox
 	  },
 
       openQueryPage : function(aEvent) {
-		gBrowser.selectedTab = gBrowser.addTab('chrome://cifclient/content/popup.html');
+		CIF_CLIENT.switchToPage("content/query.html");
 	  },
 	  CopenQueryPage : function(aEvent){
 		query = { 'query':CIF_CLIENT.BrowserOverlay.getselectedtext(),
@@ -33,6 +53,7 @@ if (typeof appInfo != 'undefined'){ //if this is defined, we are in firefox
 	  
 	
 	  openSettings : function(aEvent) {
+	  	if (typeof gBrowser=='undefined') gBrowser=getgBrowser();
 		gBrowser.selectedTab = gBrowser.addTab('chrome://cifclient/content/settings.html');
 	  },
 	  checkForSelection : function(aEvent) {
@@ -54,9 +75,18 @@ if (typeof appInfo != 'undefined'){ //if this is defined, we are in firefox
 			 .getService(Components.interfaces.nsIWindowMediator);
 		var mainWindow = wm.getMostRecentWindow("navigator:browser");
 		var tabBrowser = mainWindow.getBrowser();
-
-		var selectedText = tabBrowser.contentWindow.getSelection();
-		return selectedText.toString();
+		if (tabBrowser.contentWindow.getSelection){
+			var selectedText = tabBrowser.contentWindow.getSelection();
+			return selectedText.toString();
+		} else if (tabBrowser.contentWindow.document.getSelection){
+			var selectedText = tabBrowser.contentWindow.document.getSelection();
+			return selectedText.toString();
+		} else if (tabBrowser.contentWindow.document.selection){
+			var selectedText = tabBrowser.contentWindow.document.selection.createRange().text;
+			return selectedText;
+		} else {
+			return null;
+		}
 	  }
 	};
 	window.addEventListener("load", function load(event){  
@@ -110,6 +140,7 @@ if (typeof appInfo != 'undefined'){ //if this is defined, we are in firefox
                        .rootTreeItem
                        .QueryInterface(Components.interfaces.nsIInterfaceRequestor)
                        .getInterface(Components.interfaces.nsIDOMWindow);
+		if (typeof mainWindow.gBrowser=='undefined') mainWindow.gBrowser=getgBrowser();
 		return mainWindow;
 	}
 	CIF_CLIENT.makeNewPage=function(pageName){
@@ -118,12 +149,21 @@ if (typeof appInfo != 'undefined'){ //if this is defined, we are in firefox
 		return;
 	}
 	CIF_CLIENT.switchToQueryPageAndRun=function(){
+		CIF_CLIENT.storeItem('runquery','true');
 		existing=CIF_CLIENT.switchToPage("content/query.html");
-		if (existing){
-		   var mainWindow=CIF_CLIENT.getmainwindow();
-		   mainWindow.gBrowser.selectedBrowser.contentWindow.wrappedJSObject.CIF_CLIENT.runQuerySet();
-		}
+		var mainWindow=CIF_CLIENT.getmainwindow();
+		mainWindow.gBrowser.selectedBrowser.contentWindow.wrappedJSObject.CIF_CLIENT.runQuerySet();
 		return;
+	}
+	CIF_CLIENT.openQueryPage=function(){
+		CIF_CLIENT.switchToPage("content/query.html");
+	}
+	CIF_CLIENT.closePanel=function(){
+		try{
+			var mainWindow=CIF_CLIENT.getmainwindow();
+			var panel = mainWindow.document.getElementById ("cifclient_popup");
+			panel.hidePopup ();
+		} catch (err) {}
 	}
 } else {
     /*
@@ -170,7 +210,11 @@ if (typeof appInfo != 'undefined'){ //if this is defined, we are in firefox
 			  return;
 			} 
 		}
+		CIF_CLIENT.storeItem('runquery','true');
 		chrome.tabs.create({url: "content/query.html"});
 		return;
+	}
+	CIF_CLIENT.closePanel=function(){
+		return;//doesn't need to do anything in chrome
 	}
 }

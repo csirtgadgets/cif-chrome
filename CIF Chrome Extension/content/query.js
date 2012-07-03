@@ -13,7 +13,10 @@ $(document).ready(function() {
 	CIF_CLIENT.settingsCheck();
 	CIF_CLIENT.populateProtocolTranslations();
 	CIF_CLIENT.prepSearchBox();
-	CIF_CLIENT.runQuerySet(); 
+	if (CIF_CLIENT.getItem('runquery')=='true'){
+		CIF_CLIENT.storeItem('runquery','false');
+		CIF_CLIENT.runQuerySet();
+	}
 	$("#searchbox").show();
 	CIF_CLIENT.prepSearchFilters();
 });
@@ -44,7 +47,9 @@ CIF_CLIENT.runQuerySet=function(){
 	if (query['type']=='formquery'){
 		server=query['server'];
 		logQuery=query['logquery'];
-		filters=query['filters'];
+		if (typeof query['filters'] != "undefined"){
+			filters=query['filters'];
+		}
 	} else {
 		server=CIF_CLIENT.getDefaultServer();
 		logQuery=CIF_CLIENT.getServerLogSetting(server);
@@ -61,6 +66,9 @@ CIF_CLIENT.runQuerySet=function(){
 CIF_CLIENT.runQuery=function(string,filterobj,cifurl,cifapikey,logQuery,fieldset){
 	var cifquery;
 	var origterm=string;
+	if (string.substring(0,7)=='hxxp://' || string.substring(0,8)=='hxxps://'){
+		string=string.replace('hxxp','http');
+	}
 	if (string.substring(0,7)=='http://' || string.substring(0,8)=='https://'){
 		
 		/* remove trailing slash*/
@@ -76,7 +84,6 @@ CIF_CLIENT.runQuery=function(string,filterobj,cifurl,cifapikey,logQuery,fieldset
 		/* lower case */
 		string=string.toLowerCase();
 		/* sha1 hex */
-		//alert(string);
 		string=CryptoJS.SHA1(string);
 		window.searchhashmap[string]=origterm;
 	} 
@@ -121,7 +128,6 @@ CIF_CLIENT.runQuery=function(string,filterobj,cifurl,cifapikey,logQuery,fieldset
 		dataType: "json",
 		context: fieldset,
 		success: function(data){
-			//alert(data);
 			window.querycount--;
 			CIF_CLIENT.loadingHide();
 			if (data['message']=='no records') {
@@ -234,7 +240,7 @@ CIF_CLIENT.parseDataToBody=function(data,fieldset){
 					};
 			CIF_CLIENT.storeItem('query',JSON.stringify(query));
 			CIF_CLIENT.runQuerySet();
-			return false;
+			return false;			
 		});
 	});
 	$('.results',fieldset).dataTable({
@@ -267,7 +273,6 @@ CIF_CLIENT.parseEntries=function(data,fieldset){
 }
 
 CIF_CLIENT.parseIODEFentry=function(data,fieldset){
-	//alert();
 	var ulchunk="<tr>";
 	ulchunk+=CIF_CLIENT.tdwrap(CIF_CLIENT.extractItem('restriction',data['Incident'])); //restriction
 	var address=CIF_CLIENT.extractItem('EventData,Flow,System,Node,Address,content',data['Incident']);

@@ -5,7 +5,12 @@ cif chrome plugin
 
 Change Log
 =================
+0.96
+  * backend changes to make compatible with firefox
 
+0.90
+  * bug fix for related events
+  
 0.89
   * added alternative id and alternative id restriction to data submission page
   * added version check

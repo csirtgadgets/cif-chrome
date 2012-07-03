@@ -1,4 +1,10 @@
 content   cifclient                content/
 skin      cifclient  classic/1.0   skin/
 locale    cifclient  en-US         locale/en-US/
+style chrome://global/content/customizeToolbar.xul chrome://cifclient/content/button.css
+
+#firefox
 overlay chrome://browser/content/browser.xul  chrome://cifclient/content/browserOverlay.xul
+
+# Thunderbird mail
+overlay	chrome://messenger/content/messenger.xul chrome://cifclient/content/browserOverlay.xul

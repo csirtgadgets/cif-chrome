@@ -82,6 +82,7 @@ CIF_CLIENT.settingsCheck=function(){
 	}
 	if (options.length<1 || options == null){
 		CIF_CLIENT.switchToPage('content/settings.html');
+		window.close();
 	}
 	return;
 }
@@ -246,7 +247,6 @@ CIF_CLIENT.prepSearchBox=function(){
 			$("#logquery").removeAttr('checked');
 		}
 	}).change();
-	
 	$("#theform").submit(function(){ 
 		query = { 'query':$("#querystring").val().trim(),
 				  'type':'formquery',
@@ -254,8 +254,9 @@ CIF_CLIENT.prepSearchBox=function(){
 				  'server':$("#serverselect option:selected").val(),
 				  'logquery':$("#logquery").is(':checked')
 				 };
+		CIF_CLIENT.closePanel();
 		CIF_CLIENT.storeItem('query',JSON.stringify(query));
-		CIF_CLIENT.switchToQueryPageAndRun(); 
+		CIF_CLIENT.switchToQueryPageAndRun();
 		return false;
 	});
 }
