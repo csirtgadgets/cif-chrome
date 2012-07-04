@@ -75,18 +75,18 @@ if (typeof appInfo != 'undefined'){ //if this is defined, we are in firefox
 			 .getService(Components.interfaces.nsIWindowMediator);
 		var mainWindow = wm.getMostRecentWindow("navigator:browser");
 		var tabBrowser = mainWindow.getBrowser();
+		var selectedtext;
 		if (tabBrowser.contentWindow.getSelection){
-			var selectedText = tabBrowser.contentWindow.getSelection();
-			return selectedText.toString();
+			selectedText = tabBrowser.contentWindow.getSelection().toString();
 		} else if (tabBrowser.contentWindow.document.getSelection){
-			var selectedText = tabBrowser.contentWindow.document.getSelection();
-			return selectedText.toString();
+			selectedText = tabBrowser.contentWindow.document.getSelection().toString();
 		} else if (tabBrowser.contentWindow.document.selection){
-			var selectedText = tabBrowser.contentWindow.document.selection.createRange().text;
-			return selectedText;
+			selectedText = tabBrowser.contentWindow.document.selection.createRange().text;
 		} else {
 			return null;
 		}
+		selectedText=selectedText.replace(/(\r\n|\n|\r| )/gm,' ');
+		return selectedText;
 	  }
 	};
 	window.addEventListener("load", function load(event){  
@@ -151,8 +151,10 @@ if (typeof appInfo != 'undefined'){ //if this is defined, we are in firefox
 	CIF_CLIENT.switchToQueryPageAndRun=function(){
 		CIF_CLIENT.storeItem('runquery','true');
 		existing=CIF_CLIENT.switchToPage("content/query.html");
-		var mainWindow=CIF_CLIENT.getmainwindow();
-		mainWindow.gBrowser.selectedBrowser.contentWindow.wrappedJSObject.CIF_CLIENT.runQuerySet();
+		if (existing){
+			var mainWindow=CIF_CLIENT.getmainwindow();
+			mainWindow.gBrowser.selectedBrowser.contentWindow.wrappedJSObject.CIF_CLIENT.runQuerySet();
+		}
 		return;
 	}
 	CIF_CLIENT.openQueryPage=function(){

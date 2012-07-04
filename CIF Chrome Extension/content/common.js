@@ -83,8 +83,9 @@ CIF_CLIENT.settingsCheck=function(){
 	if (options.length<1 || options == null){
 		CIF_CLIENT.switchToPage('content/settings.html');
 		window.close();
+		return false;
 	}
-	return;
+	return true;
 }
 CIF_CLIENT.getRestrictions=function(){
 	try {
@@ -203,20 +204,36 @@ CIF_CLIENT.getFilters=function(){
 	return filters;
 }	
 CIF_CLIENT.showVersion=function(){
-	$.ajax({
-		type: "GET",
-		url:'../manifest.json', 
-		dataType: "json",
-		success: function(data){
-			if (CIF_CLIENT.getItem('latestversion')!=undefined 
-			 && CIF_CLIENT.getItem('latestversion')==CIF_CLIENT.getItem('myversion')){
-				$("#version").html("v"+data['version']);
-			} else {
-				$("#version").html("v"+data['version']+"(latest is v"+CIF_CLIENT.getItem('latestversion')+")");
+	try {
+		// Firefox 4 and later; Mozilla 2 and later
+		Components.utils.import("resource://gre/modules/AddonManager.jsm");
+		AddonManager.getAddonByID("cifclient@ren-isac.net", function(addon) {
+				CIF_CLIENT.storeItem('myversion',addon.version);
+				if (CIF_CLIENT.getItem('latestversion')!=undefined 
+				 && parseFloat(CIF_CLIENT.getItem('latestversion'))<=parseFloat(CIF_CLIENT.getItem('myversion'))){
+					$("#version").html("v"+CIF_CLIENT.getItem('myversion'));
+				} else {
+					$("#version").html("v"+CIF_CLIENT.getItem('myversion')+"(latest is v"+CIF_CLIENT.getItem('latestversion')+")");
+				}
+		});
+	}
+	catch (ex) {
+
+		$.ajax({
+			type: "GET",
+			url:'../manifest.json', 
+			dataType: "json",
+			success: function(data){
+				CIF_CLIENT.storeItem('myversion',data['version']);
+				if (CIF_CLIENT.getItem('latestversion')!=undefined 
+				 && parseFloat(CIF_CLIENT.getItem('latestversion'))<=parseFloat(CIF_CLIENT.getItem('myversion'))){
+					$("#version").html("v"+data['version']);
+				} else {
+					$("#version").html("v"+data['version']+"(latest is v"+CIF_CLIENT.getItem('latestversion')+")");
+				}
 			}
-			CIF_CLIENT.storeItem('myversion',data['version']);
-		}
-	});
+		});
+	}
 	var lastcheck=CIF_CLIENT.getItem('lastudpatecheck');
 	var ts = Math.round((new Date()).getTime() / 1000);
 	if (lastcheck==undefined || lastcheck<(ts-86400)){

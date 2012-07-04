@@ -5,6 +5,10 @@ cif chrome plugin
 
 Change Log
 =================
+
+0.97
+  * bug fixes for firefox version and right-click query in chrome version
+
 0.96
   * backend changes to make compatible with firefox
 

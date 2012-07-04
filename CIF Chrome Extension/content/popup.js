@@ -1,5 +1,8 @@
 $(document).ready(function() {
-	CIF_CLIENT.settingsCheck();
+	if (!CIF_CLIENT.settingsCheck()){
+		CIF_CLIENT.closePanel();
+		return;
+	}
 	
 	$("#datasubmissionlink").click(function(){
 		query = { 'data':$("#querystring").val().trim(),

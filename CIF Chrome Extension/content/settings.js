@@ -118,14 +118,16 @@ CIF_CLIENT.test_settings=function(clickedbutton){
 		
 			if (e['status']==401){
 				$(".teststatus",clickedbutton.parent().parent()).html('401 authorization error. check your api key');
-			}
-			if (e['status']==0){
+			} else if (e['status']==0){
+				$(".teststatus",clickedbutton.parent().parent()).html('Could not connect to that address.<br/><i>'+window.visitme+'</i>');
+			} else if (e['status']==404){
+				$(".teststatus",clickedbutton.parent().parent()).html('404 error. make sure that you have the correct path to the API');
+			} else if (e['status']==200){
+				$(".teststatus",clickedbutton.parent().parent()).html('bad response. is that the path to a CIF API?');
+			} else {
 				$(".teststatus",clickedbutton.parent().parent()).html('Could not connect to that address.<br/><i>'+window.visitme+'</i>');
 			}
-			if (e['status']==404){
-				$(".teststatus",clickedbutton.parent().parent()).html('404 error. make sure that you have the correct path to the API');
-			}
-			console.log(e);
+			//console.log(e);
 		});
 	} catch (err) {
 		$(".teststatus",clickedbutton.parent().parent()).html('could not connect with those settings');

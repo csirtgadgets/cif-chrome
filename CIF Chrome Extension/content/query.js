@@ -11,6 +11,7 @@ window.group_map = new Array();
 $(document).ready(function() {
 	window.protocoldata = new Array();
 	CIF_CLIENT.settingsCheck();
+	CIF_CLIENT.showVersion();
 	CIF_CLIENT.populateProtocolTranslations();
 	CIF_CLIENT.prepSearchBox();
 	if (CIF_CLIENT.getItem('runquery')=='true'){
@@ -57,7 +58,11 @@ CIF_CLIENT.runQuerySet=function(){
 	cifapikey = CIF_CLIENT.getServerKey(server);
 	cifurl = CIF_CLIENT.getServerUrl(server);
 	for (i in queries){
-		CIF_CLIENT.runQuery($.trim(queries[i]),filters,cifurl,cifapikey,logQuery);
+		queries[i]=$.trim(queries[i]);
+		if (queries[i].substring(0,7)=='hxxp://' || queries[i].substring(0,8)=='hxxps://'){
+			queries[i]=queries[i].replace('hxxp','http');
+		}
+		CIF_CLIENT.runQuery(queries[i],filters,cifurl,cifapikey,logQuery);
 	}
 	CIF_CLIENT.loadingHide();
 }
@@ -66,9 +71,6 @@ CIF_CLIENT.runQuerySet=function(){
 CIF_CLIENT.runQuery=function(string,filterobj,cifurl,cifapikey,logQuery,fieldset){
 	var cifquery;
 	var origterm=string;
-	if (string.substring(0,7)=='hxxp://' || string.substring(0,8)=='hxxps://'){
-		string=string.replace('hxxp','http');
-	}
 	if (string.substring(0,7)=='http://' || string.substring(0,8)=='https://'){
 		
 		/* remove trailing slash*/

@@ -14,6 +14,7 @@ CIF_CLIENT.queryClick=function(info, tab) {
 		  return;
 		} 
 	}
+	localStorage['runquery']='true';
 	chrome.tabs.create({url: "content/query.html"},function(tab){
 		window.cifquerytabid=tab.id;
 	}); 

@@ -66,8 +66,8 @@
             <menuitem label="Settings" oncommand="gBrowser.selectedTab = gBrowser.addTab('chrome://cifclient/content/settings.html');" />
         </menupopup>
 
-        <panel id="cifclient_popup" noautohide="false" noautofocus="true">
-            <iframe width="270px" height="200px" src="chrome://cifclient/content/popup.html"></iframe>
+        <panel id="cifclient_popup" noautohide="false" noautofocus="true" onpopupshowing="document.getElementById('popupframe').loadURI('chrome://cifclient/content/popup.html');">
+			<browser id='popupframe' width="270px" height="285px" src="" flex="1"/>
         </panel>
   </popupset>
   
