@@ -1,13 +1,8 @@
 if(!CIF_CLIENT){
     var CIF_CLIENT = {};
 }
-var server;
-var cifapikey;
-var cifurl;
-var logQuery;
-window.querycount=0;
+CIF_CLIENT.querycount=0;
 window.searchhashmap = {};
-window.group_map = new Array();
 $(document).ready(function() {
 	window.protocoldata = new Array();
 	CIF_CLIENT.settingsCheck();
@@ -43,8 +38,10 @@ CIF_CLIENT.runQuerySet=function(){
 		}
 	}
 	queries=cleanedqueries;
-	window.querycount+=queries.length;
+	CIF_CLIENT.querycount+=queries.length;
 	var filters={};
+	var server;
+	var logQuery;
 	if (query['type']=='formquery'){
 		server=query['server'];
 		logQuery=query['logquery'];
@@ -55,20 +52,20 @@ CIF_CLIENT.runQuerySet=function(){
 		server=CIF_CLIENT.getDefaultServer();
 		logQuery=CIF_CLIENT.getServerLogSetting(server);
 	}
-	cifapikey = CIF_CLIENT.getServerKey(server);
-	cifurl = CIF_CLIENT.getServerUrl(server);
+	var cifapikey = CIF_CLIENT.getServerKey(server);
+	var cifurl = CIF_CLIENT.getServerUrl(server);
 	for (i in queries){
 		queries[i]=$.trim(queries[i]);
 		if (queries[i].substring(0,7)=='hxxp://' || queries[i].substring(0,8)=='hxxps://'){
 			queries[i]=queries[i].replace('hxxp','http');
 		}
-		CIF_CLIENT.runQuery(queries[i],filters,cifurl,cifapikey,logQuery);
+		CIF_CLIENT.runQuery(queries[i],filters,cifurl,cifapikey,logQuery,server);
 	}
 	CIF_CLIENT.loadingHide();
 }
 
 
-CIF_CLIENT.runQuery=function(string,filterobj,cifurl,cifapikey,logQuery,fieldset){
+CIF_CLIENT.runQuery=function(string,filterobj,cifurl,cifapikey,logQuery,server){
 	var cifquery;
 	var origterm=string;
 	if (string.substring(0,7)=='http://' || string.substring(0,8)=='https://'){
@@ -121,6 +118,7 @@ CIF_CLIENT.runQuery=function(string,filterobj,cifurl,cifapikey,logQuery,fieldset
 	  <legend>Results for <b>'+origterm+'</b>'+prettyfilters+'</legend></fieldset>\
 	 ');
 	fieldset=$('.resultsfield',$("#stagingarea")).first();
+	fieldset.attr('server',server);
 	if (cifurl.charAt(cifurl.length-1)!='/'){
 		cifurl+='/';
 	}
@@ -130,7 +128,7 @@ CIF_CLIENT.runQuery=function(string,filterobj,cifurl,cifapikey,logQuery,fieldset
 		dataType: "json",
 		context: fieldset,
 		success: function(data){
-			window.querycount--;
+			CIF_CLIENT.querycount--;
 			CIF_CLIENT.loadingHide();
 			if (data['message']=='no records') {
 				CIF_CLIENT.showError('no results for "'+origterm+'"',$(this));
@@ -155,18 +153,18 @@ CIF_CLIENT.runQuery=function(string,filterobj,cifurl,cifapikey,logQuery,fieldset
 			else {
 				CIF_CLIENT.showError('error retrieving results for "'+origterm+'"',$(this));
 			}
-			window.querycount--;
+			CIF_CLIENT.querycount--;
 			CIF_CLIENT.loadingHide();
 			
 		}
 	});
 }
 CIF_CLIENT.loadingHide=function(){
-	$("#remainingqueries").html(window.querycount+' queries remaining');
-	if (window.querycount<1) {
+	$("#remainingqueries").html(CIF_CLIENT.querycount+' queries remaining');
+	if (CIF_CLIENT.querycount<1) {
 		$("#loadinggif").hide();
 		$("#remainingqueries").html('');
-		window.querycount=0;
+		CIF_CLIENT.querycount=0;
 	}
 }
 CIF_CLIENT.showError=function(errorstring,fieldset){
@@ -194,10 +192,9 @@ CIF_CLIENT.parseDataToBody=function(data,fieldset){
 	  </tr></thead><tbody></tbody>\
 	  </table>\
 	');
-	$(".servername",fieldset).html("<b>Server Name:</b> "+CIF_CLIENT.getServerName(server));
+	$(".servername",fieldset).html("<b>Server Name:</b> "+CIF_CLIENT.getServerName(fieldset.attr('server')));
 	$(".restriction",fieldset).html("<b>Feed Restriction:</b> "+data['data']['feed']['restriction']);
 	$(".detecttime",fieldset).html("<b>Time:</b> "+data['data']['feed']['restriction']);
-	window.group_map=data['data']['feed']['group_map'];
 	CIF_CLIENT.recordObservedGroups(data['data']['feed']['group_map']);
 	CIF_CLIENT.parseEntries(data['data']['feed']['entry'],fieldset);
 	$('.showinfo',fieldset).click(function(){
@@ -233,7 +230,7 @@ CIF_CLIENT.parseDataToBody=function(data,fieldset){
 	$('.relatedevent',fieldset).each(function(){
 		$(this).attr('title',"Click to query for related incident '"+$(this).attr('href')+"'");
 		$(this).attr('alt',$(this).attr('title'));
-		$(this).attr('server',server);
+		$(this).attr('server',$(this).parent().parent().parent().parent().parent().attr('server'));
 		$(this).click(function(){
 			query = { 'query':$(this).attr('href'),
 					  'type':'formquery',
@@ -349,7 +346,6 @@ CIF_CLIENT.parseAdditionalIncidentData=function(Incident){
 	return output;
 }
 CIF_CLIENT.translateGroup=function(guid){
-	if (typeof window.group_map[guid] != 'undefined') return window.group_map[guid];
 	try{
 		var existing = JSON.parse(CIF_CLIENT.getItem("observed_groups"));
 		if (existing===null) existing=new Array();
