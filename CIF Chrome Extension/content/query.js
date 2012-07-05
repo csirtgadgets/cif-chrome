@@ -359,6 +359,8 @@ CIF_CLIENT.translateGroup=function(guid){
 	for (i in existing){
 		if (existing[i]['guid']==guid) return existing[i]['name'];
 	}
+	existing.push({'name':guid,'guid':guid});
+	CIF_CLIENT.storeItem('observed_groups',JSON.stringify(existing));
 	return guid;
 }
 CIF_CLIENT.translateProtocol=function(number){
@@ -397,7 +399,10 @@ CIF_CLIENT.recordObservedGroups=function(groups){
 	for (i in observed){
 		exists=false;
 		for (j in existing){
-			if (observed[i]['name']==existing[j]['name']) exists=true;
+			if (observed[i]['guid']==existing[j]['guid']) {
+				exists=true;
+				existing[j]['name']==observed[i]['name'];//update with any newly observed names
+			}
 		}
 		if (!exists){
 			uniques.push(observed[i]);
