@@ -1,8 +1,3 @@
-if(!CIF_CLIENT){
-    var CIF_CLIENT = {};
-}
-CIF_CLIENT.querycount=0;
-window.searchhashmap = {};
 $(document).ready(function() {
 	window.protocoldata = new Array();
 	CIF_CLIENT.settingsCheck();
@@ -17,9 +12,13 @@ $(document).ready(function() {
 	CIF_CLIENT.prepSearchFilters();
 });
 
+if(!CIF_CLIENT){
+    var CIF_CLIENT = {};
+}
+CIF_CLIENT.querycount=0;
+CIF_CLIENT.searchhashmap = {};
 CIF_CLIENT.runQuerySet=function(){
 	$('body').animate({scrollTop:0}, 'medium');
-	//window.scrollTo(0, 0);
 	var query=JSON.parse(CIF_CLIENT.getItem("query"));
 	if (query===null){
 		query={
@@ -84,7 +83,7 @@ CIF_CLIENT.runQuery=function(string,filterobj,cifurl,cifapikey,logQuery,server){
 		string=string.toLowerCase();
 		/* sha1 hex */
 		string=CryptoJS.SHA1(string);
-		window.searchhashmap[string]=origterm;
+		CIF_CLIENT.searchhashmap[string]=origterm;
 	} 
 	cifquery=string;
 	
@@ -174,8 +173,8 @@ CIF_CLIENT.showError=function(errorstring,fieldset){
 
 CIF_CLIENT.parseDataToBody=function(data,fieldset){
 	feeddesc=data['data']['feed']['description'];
-	if (typeof window.searchhashmap[feeddesc.replace("search ","")] != 'undefined'){
-		feeddesc=window.searchhashmap[feeddesc.replace("search ","")];
+	if (typeof CIF_CLIENT.searchhashmap[feeddesc.replace("search ","")] != 'undefined'){
+		feeddesc=CIF_CLIENT.searchhashmap[feeddesc.replace("search ","")];
 	} 
 	//fieldset.append('<legend>Results for <b>'+feeddesc+'</b></legend>');
 	fieldset.append('\

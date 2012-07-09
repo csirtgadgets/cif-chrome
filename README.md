@@ -17,6 +17,9 @@ How to Install
 
 Change Log
 =================
+0.99
+  * fixed some formatting issues with the popup
+
 0.98
   * update to watch for new groups in results that don't appear in group_map
 

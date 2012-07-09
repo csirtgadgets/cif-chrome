@@ -209,7 +209,7 @@ CIF_CLIENT.showVersion=function(){
 		Components.utils.import("resource://gre/modules/AddonManager.jsm");
 		AddonManager.getAddonByID("cifclient@ren-isac.net", function(addon) {
 				CIF_CLIENT.storeItem('myversion',addon.version);
-				if (CIF_CLIENT.getItem('latestversion')!=undefined 
+				if (CIF_CLIENT.getItem('latestversion')!=undefined && CIF_CLIENT.getItem('latestversion')!=null
 				 && parseFloat(CIF_CLIENT.getItem('latestversion'))<=parseFloat(CIF_CLIENT.getItem('myversion'))){
 					$("#version").html("v"+CIF_CLIENT.getItem('myversion'));
 				} else {
@@ -218,14 +218,13 @@ CIF_CLIENT.showVersion=function(){
 		});
 	}
 	catch (ex) {
-
 		$.ajax({
 			type: "GET",
 			url:'../manifest.json', 
 			dataType: "json",
 			success: function(data){
 				CIF_CLIENT.storeItem('myversion',data['version']);
-				if (CIF_CLIENT.getItem('latestversion')!=undefined 
+				if (CIF_CLIENT.getItem('latestversion')!=undefined && CIF_CLIENT.getItem('latestversion')!=null
 				 && parseFloat(CIF_CLIENT.getItem('latestversion'))<=parseFloat(CIF_CLIENT.getItem('myversion'))){
 					$("#version").html("v"+data['version']);
 				} else {

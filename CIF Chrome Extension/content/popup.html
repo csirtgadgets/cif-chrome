@@ -16,8 +16,8 @@
   <form id="theform">
   Server: <select id="serverselect"></select><br/>
   Data: <input type="text" id="querystring" value="" size="25">
-  <input type="submit" value="Search">Log Query: <input type="checkbox" id="logquery" checked>
-  [<a href="#" id="showfilters">+</a><a href="#" id="hidefilters" style="display:none;">-</a>]
+  Log Query: <input type="checkbox" id="logquery" checked>
+  [<a href="#" id="showfilters">+</a><a href="#" id="hidefilters" style="display:none;">-</a>]<br/>
   <fieldset id="additionalfilters" style="display:none;">
   <legend>Search Filters</legend>
   <input type="checkbox" id="useseverity"> Severity: 			
@@ -31,7 +31,8 @@
   <input type="checkbox" id="userestriction"> Restriction: <select id="restriction" disabled></select><br/>
   <input type="checkbox" id="uselimit"> Limit: <input type="text" id="limit" size="5" disabled/>
   </fieldset>
+  <input type="submit" value="Search"><button id="datasubmissionlink">Data Submission Form</button>
   </form>
-  <button id="datasubmissionlink">Data Submission Form</button>
+  
   </body>
 </html>
