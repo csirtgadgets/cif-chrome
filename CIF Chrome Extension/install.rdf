@@ -7,7 +7,7 @@
     <em:id>cifclient@ren-isac.net</em:id>
     <em:name>CIF Client</em:name>
     <em:description>Client for Collective Intelligence Framework Servers</em:description>
-    <em:version>0.99</em:version>
+    <em:version>1.0</em:version>
     <em:creator>REN-ISAC</em:creator>
     <em:homepageURL>http://code.google.com/p/collective-intelligence-framework/</em:homepageURL>
     <em:type>2</em:type>

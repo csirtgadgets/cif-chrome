@@ -226,6 +226,19 @@ if (typeof appInfo != 'undefined'){ //if this is not undefined, we are in firefo
 			panel.hidePopup ();
 		} catch (err) {}
 	}
+	
+	/* popuplate the query box in popup.html with the current page's url */
+	CIF_CLIENT.populateQueryStringWithCurrentURL=function(){
+		var mainWindow = window.QueryInterface(Components.interfaces.nsIInterfaceRequestor)
+                   .getInterface(Components.interfaces.nsIWebNavigation)
+                   .QueryInterface(Components.interfaces.nsIDocShellTreeItem)
+                   .rootTreeItem
+                   .QueryInterface(Components.interfaces.nsIInterfaceRequestor)
+                   .getInterface(Components.interfaces.nsIDOMWindow);
+			$("#querystring").val(mainWindow.getBrowser().selectedBrowser.contentWindow.location.href);
+		
+	}
+	
 } else {
     /*
 	 * All of the functions specific to Chrome
@@ -288,4 +301,12 @@ if (typeof appInfo != 'undefined'){ //if this is not undefined, we are in firefo
 	CIF_CLIENT.closePanel=function(){
 		return;//doesn't need to do anything in chrome
 	}
+	
+	/* popuplate the query box in popup.html with the current page's url */
+	CIF_CLIENT.populateQueryStringWithCurrentURL=function(){
+		chrome.tabs.getSelected(null, function(tab) {
+			$("#querystring").val(tab.url);
+		});
+	}
+	
 }

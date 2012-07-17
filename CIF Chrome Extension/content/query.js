@@ -268,6 +268,27 @@ CIF_CLIENT.parseEntries=function(data,fieldset){
 	for (i in data){
 		CIF_CLIENT.parseIODEFentry(data[i],fieldset);
 	}
+	$('.description',fieldset).each(function(){
+		$(this).attr('longmessage',$(this).html());
+		$(this).attr('shortmessage',$(this).html().substring(0,140));
+		$(this).html('<span class="shortdesc"></span><span class="longdesc" style="display:none;"></span>');
+		$('.shortdesc',$(this)).html($(this).attr('shortmessage'));
+		$('.longdesc',$(this)).html($(this).attr('longmessage'));
+		$('.longdesc',$(this)).prepend('<a href="#" class="lessdescription">[collapse]</a>');
+		$('.lessdescription',$('.longdesc',$(this))).click(function(){
+				$('.shortdesc',$(this).parent().parent()).show();
+				$(this).parent().hide();
+				return false;
+			});
+		if ($(this).attr('longmessage').length>140){
+			$('.shortdesc',$(this)).append('<a href="#" class="moredescription">...</a>');
+			$('.moredescription',$('.shortdesc',$(this))).click(function(){
+				$('.longdesc',$(this).parent().parent()).show();
+				$(this).parent().hide();
+				return false;
+			});
+		}
+	});
 }
 
 CIF_CLIENT.parseIODEFentry=function(data,fieldset){
@@ -287,7 +308,7 @@ CIF_CLIENT.parseIODEFentry=function(data,fieldset){
 	ulchunk+=CIF_CLIENT.tdwrap(CIF_CLIENT.extractItem('Assessment,Impact,content',data['Incident']));//impact
 	ulchunk+=CIF_CLIENT.tdwrap(CIF_CLIENT.extractItem('Assessment,Impact,severity',data['Incident'])); //severity
 	ulchunk+=CIF_CLIENT.tdwrap(CIF_CLIENT.extractItem('Assessment,Confidence,content',data['Incident'])); //confidence
-	ulchunk+=CIF_CLIENT.tdwrap(CIF_CLIENT.extractItem('Description',data['Incident']));//description
+	ulchunk+=CIF_CLIENT.tdwrap(CIF_CLIENT.extractItem('Description',data['Incident']),'description');//description
 	ulchunk+=CIF_CLIENT.tdwrap(CIF_CLIENT.getRelatedEventLink(data['Incident'])+CIF_CLIENT.parseAdditionalIncidentData(data['Incident']));//additional incident data
 	ulchunk+=CIF_CLIENT.tdwrap(CIF_CLIENT.parseAdditionalObjectData(data['Incident']));//additional address data
 	altid=CIF_CLIENT.extractItem('AlternativeID,IncidentID,content',data['Incident']);
@@ -309,8 +330,9 @@ CIF_CLIENT.extractItem=function(path,data){
 	}
 	return datapath;
 }
-CIF_CLIENT.tdwrap=function(string){
-	return "<td>"+string+"</td>";
+CIF_CLIENT.tdwrap=function(string,tdclass){
+	if (!tdclass)	return "<td>"+string+"</td>";
+	return "<td class='"+tdclass+"'>"+string+"</td>";
 }
 CIF_CLIENT.parseAdditionalObjectData=function(Incident){
 	var output='<a href="#" class="showinfo objectshow">Show Data</a><a href="#" class="hideinfo objecthide" style="display:none;">Hide Data</a>';

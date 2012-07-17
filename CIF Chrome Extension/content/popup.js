@@ -16,4 +16,8 @@ $(document).ready(function() {
 	CIF_CLIENT.prepSearchBox();
 	CIF_CLIENT.prepSearchFilters();
 	CIF_CLIENT.showVersion();
+	$("#getCurrentURL").click(function(){
+		CIF_CLIENT.populateQueryStringWithCurrentURL();//this is a browser dependant function. see browserDependent_functions.js	
+		return false;
+	});
 });

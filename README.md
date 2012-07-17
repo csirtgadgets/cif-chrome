@@ -17,6 +17,10 @@ How to Install
 
 Change Log
 =================
+1.0
+  * support for longer descriptions
+  * button in popup to populate the query box with the URL of the current page
+  
 0.99
   * fixed some formatting issues with the popup
 
