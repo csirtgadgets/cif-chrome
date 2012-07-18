@@ -210,6 +210,7 @@ CIF_CLIENT.showVersion=function(){
 		AddonManager.getAddonByID("cifclient@ren-isac.net", function(addon) {
 				CIF_CLIENT.storeItem('myversion',addon.version);
 				if (CIF_CLIENT.getItem('latestversion')!=undefined && CIF_CLIENT.getItem('latestversion')!=null
+				 && CIF_CLIENT.getItem('latestversion')!='null'
 				 && parseFloat(CIF_CLIENT.getItem('latestversion'))<=parseFloat(CIF_CLIENT.getItem('myversion'))){
 					$("#version").html("v"+CIF_CLIENT.getItem('myversion'));
 				} else {
