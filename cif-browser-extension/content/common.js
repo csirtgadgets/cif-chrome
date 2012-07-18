@@ -218,7 +218,7 @@ CIF_CLIENT.showVersion=function(){
 				}
 		});
 	}
-	catch (ex) {
+	catch (ex) { //above throws an error if not firefox.
 		$.ajax({
 			type: "GET",
 			url:'../manifest.json', 
