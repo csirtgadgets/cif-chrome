@@ -58,4 +58,4 @@ How to Build
 
 #### Chrome
   * In Chrome, go to *Tools->Extensions* and click on *Load unpacked extension...*. Open the "CIF Chrome Extension" directory.
-  * Under *Tools->Extensions* and click on *Pack extension...* and point it to the "CIF Chrome Extension" directory.
+  * To re-pack it for distribution as a crx, click *Tools->Extensions* and click on *Pack extension...* and point it to the "CIF Chrome Extension" directory.
