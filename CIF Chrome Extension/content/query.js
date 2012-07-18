@@ -118,6 +118,7 @@ CIF_CLIENT.runQuery=function(string,filterobj,cifurl,cifapikey,logQuery,server){
 	 ');
 	fieldset=$('.resultsfield',$("#stagingarea")).first();
 	fieldset.attr('server',server);
+	fieldset.attr('origterm',origterm);
 	if (cifurl.charAt(cifurl.length-1)!='/'){
 		cifurl+='/';
 	}
@@ -130,7 +131,7 @@ CIF_CLIENT.runQuery=function(string,filterobj,cifurl,cifapikey,logQuery,server){
 			CIF_CLIENT.querycount--;
 			CIF_CLIENT.loadingHide();
 			if (data['message']=='no records') {
-				CIF_CLIENT.showError('no results for "'+origterm+'"',$(this));
+				CIF_CLIENT.showError('no results for "'+$(this).attr('origterm')+'"',$(this));
 			}
 			else {
 				CIF_CLIENT.parseDataToBody(data,$(this));
@@ -140,17 +141,17 @@ CIF_CLIENT.runQuery=function(string,filterobj,cifurl,cifapikey,logQuery,server){
 		error: function(e){ 
 			var errorstring;
 			if (e['status']==404){
-				CIF_CLIENT.showError('no results for "'+origterm+'"',$(this));
+				CIF_CLIENT.showError('no results for "'+$(this).attr('origterm')+'"',$(this));
 				//window.close();
 			} else if (e['status']==0) {				
-				var errormsg='Error retrieving results for "'+origterm+'".';
+				var errormsg='Error retrieving results for "'+$(this).attr('origterm')+'".';
 				errormsg+='<br> If you are using a self-signed certificate, you will have to open the API in a tab once during each browsing session to accept the certificate.';
 				errormsg+='<br/>Otherwise, you need to install the certificate into your browser to avoid this issue.';
 				errormsg+='<br> Click <a href='+cifurl+"?apikey="+cifapikey+' target="_blank">here</a> to open the API.';
 				CIF_CLIENT.showError(errormsg,$(this));
 			}
 			else {
-				CIF_CLIENT.showError('error retrieving results for "'+origterm+'"',$(this));
+				CIF_CLIENT.showError('error retrieving results for "'+$(this).attr('origterm')+'"',$(this));
 			}
 			CIF_CLIENT.querycount--;
 			CIF_CLIENT.loadingHide();
