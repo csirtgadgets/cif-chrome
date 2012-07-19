@@ -1,7 +1,7 @@
 /* specifies the style for the popup button used in firefox */
 #custom-button-1,
 #wrapper-custom-button-1
-  {list-style-image: url("chrome://cifclient/content/button-1.png");}
+  {list-style-image: url("chrome://cifclient/content/images/button-1.png");}
 
 
 .custombutton                  

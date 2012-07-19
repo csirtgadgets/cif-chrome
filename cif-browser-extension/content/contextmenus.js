@@ -65,7 +65,7 @@ var id2 = chrome.contextMenus.create({"title": "Add '%s' to CIF",
 CIF_CLIENT.iconindex = 1;
 CIF_CLIENT.iconParty=function(){
 	if (iconindex>4) iconindex=1;
-	chrome.browserAction.setIcon({'path':"favicon_"+CIF_CLIENT.iconindex+".ico"});
+	chrome.browserAction.setIcon({'path':"images/favicon_"+CIF_CLIENT.iconindex+".ico"});
 	CIF_CLIENT.iconindex++;
 	window.setTimeout(CIF_CLIENT.iconParty, 10000, true);
 }									 

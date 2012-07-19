@@ -76,7 +76,7 @@ CIF_CLIENT.submitData=function(){
 	CIF_CLIENT.sendToServer();
 }
 CIF_CLIENT.sendToServer=function(){
-	$("#submissionstatus").html('<img src="ajax-loader.gif" id="loadinggif"/>');
+	$("#submissionstatus").html('<img src="images/ajax-loader.gif" id="loadinggif"/>');
 	var server=$("#serverselect").val();
 	var cifapikey = CIF_CLIENT.getServerKey(server);
 	var cifurl = CIF_CLIENT.getServerUrl(server);
@@ -96,25 +96,23 @@ CIF_CLIENT.sendToServer=function(){
 							};
 			if ($("#altid").val().trim()!=''){
 				individualentry['alternativeid']=$("#altid").val().trim();
-				individualentry['alternativeid_restriction']=$("#restriction option:selected").val().toLowerCase();
+				individualentry['alternativeid_restriction']=$("#altidrestriction option:selected").val().toLowerCase();
 			}
 			dataToSend.push(individualentry);
 		}
 	}
 	window.dataToSend=dataToSend;
-	$.ajax({
-		type: "POST",
-		url: cifurl+"/"+"?apikey="+cifapikey+"&fmt=json", 
-		data: JSON.stringify(dataToSend),
-		dataType: "json",
-		success: function(data){
+	cif_connector.post({
+		url:cifurl,
+		apikey:cifapikey,
+		entries:dataToSend,
+		successFunction: function(data){
 			CIF_CLIENT.parseResponse(data);
 			CIF_CLIENT.resetForm();
 		},
-		error: function(e){ 
+		errorFunction: function(e){ 
 			if (e['status']==401){
 				CIF_CLIENT.showError("Error: Authorization required. Does your API key have write access?");
-				//window.close();
 			} else if (e['status']==0){ 
 				CIF_CLIENT.showError('Could not connect to the server. Try testing your server with a query.');
 			}
@@ -153,7 +151,7 @@ CIF_CLIENT.parseResponse=function(data){
 	$("#submissionstatus").html('');
 	for (i in data['data']){
 		var tweettext=encodeURIComponent("Submitted "+window.dataToSend[i]['address']+" to CIF");
-		var tweetbutton='<a href="http://twitter.com/intent/tweet?text='+tweettext+'" target="_blank"><img alt="Tweet this" title="Tweet this" src="images/tt-micro3.png"/></a>';
+		var tweetbutton='<a href="http://twitter.com/intent/tweet?text='+tweettext+'" target="_blank"><img alt="Tweet this" title="Tweet this" src="./images/tt-micro3.png"/></a>';
 		tweetbutton=''; //disable twitter for future work
 		$("#submissionstatus").append('Observation <b>'+window.dataToSend[i]['address']+'</b> submitted with ID <b>'+data['data'][i]+'</b> '+tweetbutton+'<br/>');
 	}

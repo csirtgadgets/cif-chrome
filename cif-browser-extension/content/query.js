@@ -109,10 +109,7 @@ CIF_CLIENT.runQuery=function(string,filterobj,cifurl,cifapikey,logQuery,server){
 	if (prettyfilters!=''){
 		prettyfilters=" [<b>Filters</b>: "+prettyfilters+"]";
 	}
-	var noLog='';
-	if (!logQuery){
-		noLog='&nolog=1';
-	}
+
 	$("#stagingarea").prepend('<fieldset class="resultsfield">\
 	  <legend>Results for <b>'+origterm+'</b>'+prettyfilters+'</legend></fieldset>\
 	 ');
@@ -122,12 +119,15 @@ CIF_CLIENT.runQuery=function(string,filterobj,cifurl,cifapikey,logQuery,server){
 	if (cifurl.charAt(cifurl.length-1)!='/'){
 		cifurl+='/';
 	}
-	$.ajax({
-		type: "GET",
-		url: cifurl+cifquery+"?apikey="+cifapikey+"&fmt=json"+noLog+filters, 
-		dataType: "json",
-		context: fieldset,
-		success: function(data){
+	cif_connector.query({
+		url:cifurl,
+		query:cifquery,
+		apikey:cifapikey,
+		filters:filters,
+		log:logQuery,
+		context:fieldset,
+		successFunction: function(data){
+			console.log($(this));
 			CIF_CLIENT.querycount--;
 			CIF_CLIENT.loadingHide();
 			if (data['message']=='no records') {
@@ -138,11 +138,10 @@ CIF_CLIENT.runQuery=function(string,filterobj,cifurl,cifapikey,logQuery,server){
 				$(this).prependTo("#queries");
 			}
 		},
-		error: function(e){ 
+		errorFunction: function(e){ 
 			var errorstring;
 			if (e['status']==404){
 				CIF_CLIENT.showError('no results for "'+$(this).attr('origterm')+'"',$(this));
-				//window.close();
 			} else if (e['status']==0) {				
 				var errormsg='Error retrieving results for "'+$(this).attr('origterm')+'".';
 				errormsg+='<br> If you are using a self-signed certificate, you will have to open the API in a tab once during each browsing session to accept the certificate.';
@@ -155,7 +154,6 @@ CIF_CLIENT.runQuery=function(string,filterobj,cifurl,cifapikey,logQuery,server){
 			}
 			CIF_CLIENT.querycount--;
 			CIF_CLIENT.loadingHide();
-			
 		}
 	});
 }
