@@ -1,5 +1,9 @@
 Change Log
 =================
+1.1
+  * separated backend code into separate files for network calls to prepare for API change
+  * cleaned up images directory
+
 1.0
   * support for longer descriptions
   * button in popup to populate the query box with the URL of the current page
