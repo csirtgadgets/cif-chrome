@@ -240,7 +240,7 @@ CIF_CLIENT.showVersion=function(){
 		CIF_CLIENT.storeItem('lastudpatecheck',ts);
 		$.ajax({
 			type: "GET",
-			url:'https://raw.github.com/collectiveintel/cif-client-chrome/master/CIF%20Chrome%20Extension/manifest.json', 
+			url:'https://raw.github.com/collectiveintel/cif-client-chrome/master/cif-browser-extension/manifest.json', 
 			dataType: "json",
 			success: function(data){
 				CIF_CLIENT.storeItem('latestversion',data['version']);
