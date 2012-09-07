@@ -6,8 +6,8 @@ cif chrome plugin and firefox plugin
 How to Install
 =================
 #### Chrome
-  * Using Chrome, open the *CIF Chrome Extension.crx* to install it.
-  * Click on the CIF icon to enter your server settings.
+  * Using Chrome, visit https://chrome.google.com/webstore/detail/bimiihlcdmbjjpbmnkiaaiolfneljdne and click "Add to Chrome" to install it.
+  * Click on the CIF icon in the upper-right to enter your server settings.
 
 
 #### Firefox
