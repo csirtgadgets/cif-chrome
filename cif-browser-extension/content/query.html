@@ -41,7 +41,8 @@
 			font-size: 75%;
 		}
 		
-		
+		td { word-wrap:break-word; }
+		th { word-wrap:break-word; }
 		
 
 
@@ -124,9 +125,10 @@ tr.odd td.sorting_1 {
     </div>
 
     <div class="container-fluid">
-      <div class="row-fluid">
-        <div class="span3">
-          <div class="well sidebar-nav">
+<div class="row-fluid">
+	<div class="span3">
+          
+		  <div class="well sidebar-nav">
             <ul class="nav nav-list">
              <div id="searchbox" style="display:none;">
 				<fieldset >
@@ -156,7 +158,10 @@ tr.odd td.sorting_1 {
             </ul>
           </div><!--/.well -->
         </div><!--/span-->
-        <div class="span9">
+		</div>
+	  <div class="row-fluid">
+
+        <div class="span12">
           <div class="well" style="min-height:100px;">
 			<div id="stagingarea" style="display:none;"></div>
 			<div class="alert alert-block" id="loadinggif" style="display:none;"><img src="images/ajax-loader.gif" /><b id="remainingqueries"></b></div>
