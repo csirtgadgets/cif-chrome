@@ -179,8 +179,8 @@ CIF_CLIENT.parseDataToBody=function(data,fieldset){
 	//fieldset.append('<legend>Results for <b>'+feeddesc+'</b></legend>');
 	fieldset.append('\
 	  <span class="servername"></span><br/><span class="restriction"></span><br/><span class="detecttime"></span><br/>\
-	  <span class="exportlinks"><b>Export:</b><a href="#" class="btn-small btn tablebutton">Text Table</a> <a href="#" class="btn-small btn csvbutton">CSV</a></span><pre class="csv" style="display:none;"></pre><pre class="texttable" style="display:none;"></pre>\
-	  <table class="results"><thead>\
+	  <span class="exportlinks"><b>Export:</b> <a href="#" class="btn-small btn tablebutton">Text Table</a> <a href="#" class="btn-small btn csvbutton">CSV</a></span><pre class="csv" style="display:none;"></pre><pre class="texttable" style="display:none;"></pre>\
+	  <table class="table table-bordered table-condensed results table-hover"><thead>\
 	  <tr>\
 		  <th>restriction</th>\
 		  <th>address</th><th>protocol/ports</th>\
