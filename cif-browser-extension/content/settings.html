@@ -1,41 +1,112 @@
-<html>
-<head>
-<title>CIF Client Extension Options</title>
-<script src="jquery-1.7.2.min.js"></script>
-<script src="browserDependent_functions.js"></script>
-<script src="common.js"></script>
-<script src="settings.js"></script>
-</head>
-<body>
-<h3>Server Profiles</h3>
-<table id="profilestable" border="1">
-<tr>
-<th>Nickname</th><th>URL to CIF API</th><th>API Key</th><th>Actions</th><th>Test Results</th><th>Set as Default</th><th>Log Queries by Default</th>
-</tr>
-</table>
-<button id="addarow">Add Another Profile</button>
-<br>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Settings</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
 
-<h3>Taxonomy Customizations (<a href="#" id="showtax">Show</a><a href="#" id="hidetax" style="display:none;">Hide</a>)</h3>
-<div id="additional" style="display:none;">
-<table>
-<tr>
-<!--
-<td>
-<h4>Restictions</h4>
-<textarea id="restrictionsnames" rows="6" cols="30">Need-to-know</textarea>
-<br/><button id="def_restriction">Restore Defaults</button>
-</td>
--->
-<td>
-<h4>Confidence Intervals</h4>
-<textarea id="confidencevalues" rows="6" cols="30"></textarea>
-<br/><button id="def_confidence">Restore Defaults</button>
-</td>
-</tr>
-</table>
-</div>
-<button id="savebutton">Save</button>
-<h3 id="status"></h3>
+    <!-- Le styles -->
+    <link href="bootstrap/css/bootstrap.css" rel="stylesheet">
+    <style type="text/css">
+      body {
+        padding-top: 60px;
+        padding-bottom: 40px;
+      }
+      .sidebar-nav {
+        padding: 9px 0;
+      }
+    </style>
+    <link href="bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
+
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- JavaScript and HTML must be in separate files for security. -->
+	<script src="jquery-1.7.2.min.js"></script>
+	<script src="bootstrap/js/bootstrap.js"></script>
+	<script src="browserDependent_functions.js"></script>
+	<script src="common.js"></script>
+	<script src="settings.js"></script>
+</head>
+  <body>
+  
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </a>
+          <span class="brand" href="#">Collective Intelligence Framework</span>
+          <div class="nav-collapse collapse">
+            <p class="navbar-text pull-right">
+              <span id="version"></span>
+            </p>
+            <ul class="nav">
+              <li><a href="#" id="querypagelink">Query Server</a></li>
+              <li><a href="adddata.html">Submit Data</a></li>
+			  <li class="active"><a href="#">Settings</a></li>
+            </ul>
+          </div><!--/.nav-collapse -->
+        </div>
+      </div>
+    </div>
+	
+	<div class="container-fluid">
+      <div class="row-fluid">
+        
+        <div class="span12">
+          <div class="hero-unit">
+				<h3>Server Profiles</h3>
+				<table id="profilestable" border="1">
+				<tr>
+				<th>Nickname</th><th>URL to CIF API</th><th>API Key</th><th>Actions</th><th>Test Results</th><th>Options</th>
+				</tr>
+				</table>
+				<button id="addarow">Add Another Profile</button>
+				<br>
+
+				<h3>Taxonomy Customizations (<a href="#" id="showtax">Show</a><a href="#" id="hidetax" style="display:none;">Hide</a>)</h3>
+				<div id="additional" style="display:none;">
+				<table>
+				<tr>
+				<!--
+				<td>
+				<h4>Restictions</h4>
+				<textarea id="restrictionsnames" rows="6" cols="30">Need-to-know</textarea>
+				<br/><button id="def_restriction">Restore Defaults</button>
+				</td>
+				-->
+				<td>
+				<h4>Confidence Intervals</h4>
+				<textarea id="confidencevalues" rows="6" cols="30"></textarea>
+				<br/><button id="def_confidence">Restore Defaults</button>
+				</td>
+				</tr>
+				</table>
+				</div>
+				<button id="savebutton">Save</button>
+				<h3 id="status"></h3>
+          </div>
+          
+         
+        </div><!--/span-->
+      </div><!--/row-->
+
+      <hr>
+
+      <footer>
+        <p>Collective Intelligent Framework</p>
+      </footer>
+
+    </div><!--/.fluid-container-->
+	
+	
+
 </body>
 </html>

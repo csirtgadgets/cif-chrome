@@ -24,7 +24,7 @@ CIF_CLIENT.queryClick=function(info, tab) {
 	 */
 	var views = chrome.extension.getViews({'type':'tab'});
 	for (i in views) {
-		if (views[i].location.href == chrome.extension.getURL('content/query.html')) {
+		if (views[i].location.href.indexOf(chrome.extension.getURL('content/query.html')) == 0) {
 		  views[i].CIF_CLIENT.runQuerySet();
 		  return;
 		} 

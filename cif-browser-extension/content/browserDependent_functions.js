@@ -167,7 +167,7 @@ if (typeof appInfo != 'undefined'){ //if this is not undefined, we are in firefo
 			var numTabs = tabbrowser.browsers.length;
 			for (var index = 0; index < numTabs; index++) {
 				var currentBrowser = tabbrowser.getBrowserAtIndex(index);
-				if (url == currentBrowser.currentURI.spec) {
+				if (currentBrowser.currentURI.spec.indexOf(url) == 0) {
 					tabbrowser.selectedTab = tabbrowser.tabContainer.childNodes[index]; //switches to the tab
 					browserWin.focus(); //gives the window focus if another has it
 					found = true; //mark that it was found so a new one isn't launched below
@@ -260,7 +260,7 @@ if (typeof appInfo != 'undefined'){ //if this is not undefined, we are in firefo
 		var views = chrome.extension.getViews({'type':'tab'});
 		/* Check each tab's url to find the page we are looking for */
 		for (i in views) {
-			if (views[i].location.href == chrome.extension.getURL(pageName)) {
+			if (views[i].location.href.indexOf(chrome.extension.getURL(pageName)) == 0) {
 			  views[i].CIF_CLIENT.makeMeVisible();
 			  window.close();
 			  return;
@@ -285,12 +285,11 @@ if (typeof appInfo != 'undefined'){ //if this is not undefined, we are in firefo
 		/* loop through existing tabs to look for query page */
 		for (var i = 0; i < views.length; i++) {
 			var view = views[i];
-			if (view.location.href == chrome.extension.getURL('content/query.html')) {
+			if (view.location.href.indexOf(chrome.extension.getURL('content/query.html'))==0) {
 			  view.CIF_CLIENT.runQuerySet(); //trigger the query run on the existing query page
 			  return;
 			} 
 		}
-		
 		/* make a new page if one doesn't exist and leave flag for it to run the query */
 		CIF_CLIENT.storeItem('runquery','true');
 		chrome.tabs.create({url: "content/query.html"});

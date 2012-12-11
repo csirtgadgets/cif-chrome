@@ -109,10 +109,11 @@ CIF_CLIENT.runQuery=function(string,filterobj,cifurl,cifapikey,logQuery,server){
 	if (prettyfilters!=''){
 		prettyfilters=" [<b>Filters</b>: "+prettyfilters+"]";
 	}
-
-	$("#stagingarea").prepend('<fieldset class="resultsfield">\
+	var barid = 'searchres-'+origterm+Math.random();
+	$("#stagingarea").prepend('<hr><fieldset class="resultsfield" id="'+barid+'">\
 	  <legend>Results for <b>'+origterm+'</b>'+prettyfilters+'</legend></fieldset>\
 	 ');
+	$('<li><a href="#'+barid+'">'+origterm+'</a></li>').insertAfter("#resultsheader");
 	fieldset=$('.resultsfield',$("#stagingarea")).first();
 	fieldset.attr('server',server);
 	fieldset.attr('origterm',origterm);
@@ -177,7 +178,8 @@ CIF_CLIENT.parseDataToBody=function(data,fieldset){
 	} 
 	//fieldset.append('<legend>Results for <b>'+feeddesc+'</b></legend>');
 	fieldset.append('\
-	  <span class="servername"></span><br/><span class="restriction"></span><br/><span class="detecttime"></span>\
+	  <span class="servername"></span><br/><span class="restriction"></span><br/><span class="detecttime"></span><br/>\
+	  <span class="exportlinks"><b>Export:</b><a href="#" class="btn-small btn tablebutton">Text Table</a> <a href="#" class="btn-small btn csvbutton">CSV</a></span><pre class="csv" style="display:none;"></pre><pre class="texttable" style="display:none;"></pre>\
 	  <table class="results"><thead>\
 	  <tr>\
 		  <th>restriction</th>\
@@ -188,13 +190,59 @@ CIF_CLIENT.parseDataToBody=function(data,fieldset){
 		  <th>Additional Data<br/><span class="smallfont">(<a href="#" class="expandall object">Expand</a>/<a href="#" class="collapseall object">Collapse</a> all)</span></th>\
 		  <th>alternativeid [restriction]</th>\
 	  </tr></thead><tbody></tbody>\
-	  </table>\
+	  </table><hr><hr>\
 	');
 	$(".servername",fieldset).html("<b>Server Name:</b> "+CIF_CLIENT.getServerName(fieldset.attr('server')));
 	$(".restriction",fieldset).html("<b>Feed Restriction:</b> "+data['data']['feed']['restriction']);
-	$(".detecttime",fieldset).html("<b>Time:</b> "+data['data']['feed']['restriction']);
+	$(".detecttime",fieldset).html("<b>Time:</b> "+data['data']['feed']['detecttime']);
 	CIF_CLIENT.recordObservedGroups(data['data']['feed']['group_map']);
-	CIF_CLIENT.parseEntries(data['data']['feed']['entry'],fieldset);
+	var entries = CIF_CLIENT.parseEntries(data['data']['feed']['entry'],fieldset);
+	
+	/* code to build CSV and text table */
+	var texttable="";
+	var csv="";
+	var columnlengths = {}; //need to find widest character for each column in text table
+	for (i in entries){
+		if (i==0){ //need the headers first time through
+			for (j in entries[i]){
+				csv+=j+','; 
+				columnlengths[j]=j.length;
+			}
+			csv+="\n";
+		}
+		for (j in entries[i]){
+			csv+=entries[i][j]+',';
+			columnlengths[j]=(entries[i][j].length>columnlengths[j])?entries[i][j].length:columnlengths[j];
+		}
+		csv+="\n";
+	}
+	//now we build the text table this time through
+	for (i in entries){
+		if (i==0){ //need the headers first time through
+			for (j in entries[i]){
+				texttable+='  '+j+new Array(columnlengths[j]-j.length+1).join(' ')+'  |';
+			}
+			texttable+="\n"+new Array(texttable.length+1).join('-');
+			texttable+="\n";
+			
+		}
+		for (j in entries[i]){
+			texttable+='  '+entries[i][j]+new Array(columnlengths[j]-entries[i][j].length+1).join(' ')+'  |';
+			
+		}
+		texttable+="\n";
+	}
+	/* end of code to build CSV and text table */
+	
+	$('.csv',fieldset).html(csv);
+	$('.texttable',fieldset).html(texttable);
+	
+	$('.tablebutton',fieldset).click(function(){
+		$('.texttable',$(this).parent().parent()).toggle('slow');
+	});
+	$('.csvbutton',fieldset).click(function(){
+		$('.csv',$(this).parent().parent()).toggle('slow');
+	});
 	$('.showinfo',fieldset).click(function(){
 		//$('.addinfo',$(this).parent()).slideDown();
 		$('.addinfo',$(this).parent()).show();
@@ -247,25 +295,26 @@ CIF_CLIENT.parseDataToBody=function(data,fieldset){
 	});
 }
 CIF_CLIENT.parseEntries=function(data,fieldset){
+	var entries = new Array();
 	if (data.length==1){
 		if ((typeof data[0])=="string"){
 			var deflated=CIF_CLIENT.poorinflate(window.atob(data[0].replace(/(\r\n|\n|\r|)/gm,'')));
 			if (deflated==''){
 				fieldset.prepend("<h3>This client doesn't support feeds.</h3>");
 				$('.results,.restriction,.servername,.detecttime,br',fieldset).remove();
-				return;
+				return entries;
 			} else {
 				data=JSON.parse(deflated);
 			}
 			if (data==null || data.length==0){
 				fieldset.prepend("<h3>This client doesn't support feeds.</h3>");
 				$('.results,.restriction,.servername,.detecttime,br',fieldset).remove();
-				return;
+				return entries;
 			}
 		}
 	}
 	for (i in data){
-		CIF_CLIENT.parseIODEFentry(data[i],fieldset);
+		entries.push(CIF_CLIENT.parseIODEFentry(data[i],fieldset));
 	}
 	$('.description',fieldset).each(function(){
 		$(this).attr('longmessage',$(this).html());
@@ -288,35 +337,46 @@ CIF_CLIENT.parseEntries=function(data,fieldset){
 			});
 		}
 	});
+	return entries;
 }
 
 CIF_CLIENT.parseIODEFentry=function(data,fieldset){
+	var entry = {};
+	entry.restriction=CIF_CLIENT.extractItem('restriction',data['Incident'])	
+	entry.address=CIF_CLIENT.extractItem('EventData,Flow,System,Node,Address,content',data['Incident']);
+	if (entry.address=='') entry.address=CIF_CLIENT.extractItem('EventData,Flow,System,Node,Address',data['Incident']);
+	entry.protocol=CIF_CLIENT.translateProtocol(CIF_CLIENT.extractItem('EventData,Flow,System,Service,ip_protocol',data['Incident']));
+	entry.ports=CIF_CLIENT.extractItem('EventData,Flow,System,Service,Portlist',data['Incident']);
+	entry.detecttime=CIF_CLIENT.extractItem('DetectTime',data['Incident']);
+	entry.impact = CIF_CLIENT.extractItem('Assessment,Impact,content',data['Incident']);
+	entry.severity = CIF_CLIENT.extractItem('Assessment,Impact,severity',data['Incident']);
+	entry.confidence = CIF_CLIENT.extractItem('Assessment,Confidence,content',data['Incident']);
+	entry.description = CIF_CLIENT.extractItem('Description',data['Incident']);
+	entry.altid = CIF_CLIENT.extractItem('AlternativeID,IncidentID,content',data['Incident']);
+	
 	var ulchunk="<tr>";
-	ulchunk+=CIF_CLIENT.tdwrap(CIF_CLIENT.extractItem('restriction',data['Incident'])); //restriction
-	var address=CIF_CLIENT.extractItem('EventData,Flow,System,Node,Address,content',data['Incident']);
-	if (address=='') address=CIF_CLIENT.extractItem('EventData,Flow,System,Node,Address',data['Incident']);
-	ulchunk+=CIF_CLIENT.tdwrap(address);//address
-	var protocol=CIF_CLIENT.translateProtocol(CIF_CLIENT.extractItem('EventData,Flow,System,Service,ip_protocol',data['Incident']));
-	var ports=CIF_CLIENT.extractItem('EventData,Flow,System,Service,Portlist',data['Incident']);
-	if (protocol!='' && ports!=''){
-		ulchunk+=CIF_CLIENT.tdwrap(protocol+" / "+ports);//only need the slash separator if they are both not empty
+	ulchunk+=CIF_CLIENT.tdwrap(entry.restriction); //restriction
+	ulchunk+=CIF_CLIENT.tdwrap(entry.address);//address
+	if (entry.protocol!='' && entry.ports!=''){
+		ulchunk+=CIF_CLIENT.tdwrap(entry.protocol+" / "+entry.ports);//only need the slash separator if they are both not empty
 	} else {
-		ulchunk+=CIF_CLIENT.tdwrap(protocol+" "+ports);//protocol and ports
+		ulchunk+=CIF_CLIENT.tdwrap(entry.protocol+" "+entry.ports);//protocol and ports
 	}
-	ulchunk+=CIF_CLIENT.tdwrap(CIF_CLIENT.extractItem('DetectTime',data['Incident'])); //detection time
-	ulchunk+=CIF_CLIENT.tdwrap(CIF_CLIENT.extractItem('Assessment,Impact,content',data['Incident']));//impact
-	ulchunk+=CIF_CLIENT.tdwrap(CIF_CLIENT.extractItem('Assessment,Impact,severity',data['Incident'])); //severity
-	ulchunk+=CIF_CLIENT.tdwrap(CIF_CLIENT.extractItem('Assessment,Confidence,content',data['Incident'])); //confidence
-	ulchunk+=CIF_CLIENT.tdwrap(CIF_CLIENT.extractItem('Description',data['Incident']),'description');//description
+	ulchunk+=CIF_CLIENT.tdwrap(entry.detecttime); //detection time
+	ulchunk+=CIF_CLIENT.tdwrap(entry.impact);//impact
+	ulchunk+=CIF_CLIENT.tdwrap(entry.severity); //severity
+	ulchunk+=CIF_CLIENT.tdwrap(entry.confidence); //confidence
+	ulchunk+=CIF_CLIENT.tdwrap(entry.description,'description');//description
 	ulchunk+=CIF_CLIENT.tdwrap(CIF_CLIENT.getRelatedEventLink(data['Incident'])+CIF_CLIENT.parseAdditionalIncidentData(data['Incident']));//additional incident data
 	ulchunk+=CIF_CLIENT.tdwrap(CIF_CLIENT.parseAdditionalObjectData(data['Incident']));//additional address data
-	altid=CIF_CLIENT.extractItem('AlternativeID,IncidentID,content',data['Incident']);
+	altid=entry.altid;
 	if (altid!='') altid="<a href='"+altid+"' target='_blank'>"+altid+"</a>";
 	altidrestriction=CIF_CLIENT.extractItem('AlternativeID,IncidentID,restriction',data['Incident']);
 	if (altidrestriction!="") altid+=' ['+altidrestriction+']';
 	ulchunk+=CIF_CLIENT.tdwrap(altid);//alternative id and restriction
 	ulchunk+="</tr>";
 	$('tbody',$(".results",fieldset)).append(ulchunk);
+	return entry;
 }
 CIF_CLIENT.extractItem=function(path,data){
 	var arr=path.split(',');

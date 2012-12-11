@@ -1,10 +1,33 @@
-<!doctype html>
-<html>
+<!DOCTYPE html>
+<html lang="en">
   <head>
-    <title>Add Data</title>
+    <meta charset="utf-8">
+    <title>Submit Data</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le styles -->
+    <link href="bootstrap/css/bootstrap.css" rel="stylesheet">
+    <style type="text/css">
+      body {
+        padding-top: 60px;
+        padding-bottom: 40px;
+      }
+      .sidebar-nav {
+        padding: 9px 0;
+      }
+    </style>
+    <link href="bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
+
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
 
     <!-- JavaScript and HTML must be in separate files for security. -->
 	<script src="jquery-1.7.2.min.js"></script>
+	<script src="bootstrap/js/bootstrap.js"></script>
 	<script src="sha1.js"></script>
 	<script src="cif-connector.js"></script>
 	<script src="browserDependent_functions.js"></script>
@@ -17,31 +40,59 @@
 	</style>
   </head>
   <body>
-  <div style="float:right;">
-  <h3>Parsed Items</h3>
-  <ul id="detectedentries">
   
-  </ul>
-  </div>
+  <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </a>
+          <span class="brand" href="#">Collective Intelligence Framework</span>
+          <div class="nav-collapse collapse">
+            <p class="navbar-text pull-right">
+              <span id="version"></span>
+            </p>
+            <ul class="nav">
+              <li><a href="#" id="querypagelink">Query Server</a></li>
+              <li class="active"><a href="#">Submit Data</a></li>
+			  <li ><a href="settings.html">Settings</a></li>
+            </ul>
+          </div><!--/.nav-collapse -->
+        </div>
+      </div>
+    </div>
+	
+	<div class="container-fluid">
+      <div class="row-fluid">
+        
+        <div class="span9">
+		
+          <div class="hero-unit">
+
   <h2>Document the Observation</h2>
-  <h3>General Details</h3>
-	<table>
-	<tr>
-		<td><b>Server:</b></td>
-		<td>
-			<select id="serverselect"></select>
-		</td>
-	</tr>
-	<tr>
-		<td><b>Data:</b></td>
-		<td>
-			<input type="text" id="datapoints" size="100"/><span id="mixedContentWarning" style="color:red;display:none;"><b>Mixed content types are not supported.</b></span><br>
-			<i>multiple datapoints (max: 100) may be entered as comma-separated values. they will all share the same classifications below</i>
-		</td>
-	</tr>
-	<tr>
-		<td><b>Impact:</b></td>
-		<td>
+  <form class="form-horizontal">
+	<h3>General Details</h3>
+	<div class="control-group">
+		<label class="control-label" for="serverselect">Server</label>
+		<div class="controls">
+		  <select id="serverselect"></select>
+		</div>
+	</div>
+
+	<div class="control-group">
+		<label class="control-label" for="datapoints">Data</label>
+		<div class="controls">
+		  <textarea id="datapoints" rows="1" cols="40"></textarea><span id="mixedContentWarning" style="color:red;display:none;"><b>Mixed content types are not supported.</b></span><br>
+			<i>multiple datapoints (max: 1000) may be entered as comma-separated values. they will all share the same classifications below</i>
+		</div>
+	</div>	
+	
+
+	<div class="control-group">
+		<label class="control-label" for="impact">Impact</label>
+		<div class="controls">
 			<select id="impact">
 				<option value="botnet">Botnet</option>
 				<option value="malware/exploit">Malware / Exploit</option>
@@ -55,29 +106,29 @@
 			</select>
 			<br>
 			<i>Refer to the impact taxonomy <a href="http://code.google.com/p/collective-intelligence-framework/wiki/TaxonomyImpact" target="_blank">here</a></i>
-		</td>
-	</tr>
-	<tr>
-		<td><b>Description:</b></td>
-		<td>
-			<textarea id="description" rows="1" cols="40">unknown</textarea><br>
+		</div>
+	</div>
+	
+	<div class="control-group">
+		<label class="control-label" for="description">Description</label>
+		<div class="controls">
+		  	<textarea id="description" rows="1" cols="40">unknown</textarea><br>
 			<i>description (e.g. zues c&amp;c)</i>
-		</td>
-	</tr>
-	<tr>
-		<td><b>Confidence:</b></td>
-		<td>
-			<select id="confidence">
-
-			</select>
+		</div>
+	</div>
+	
+	<div class="control-group">
+		<label class="control-label" for="confidence">Confidence</label>
+		<div class="controls">
+			<select id="confidence"></select>
 			<br>
 			<i>Refer to the confidence taxonomy <a href="http://code.google.com/p/collective-intelligence-framework/wiki/TaxonomyConfidence" target="_blank">here</a></i>
-		</td>
-	</tr>
-	
-	<tr id="severity-tr">
-		<td><b>Severity:</b></td>
-		<td>
+		</div>
+	</div>
+
+	<div class="control-group" id="severity-tr">
+		<label class="control-label" for="severity">Severity</label>
+		<div class="controls">
 			<select id="severity">
 				<option value="null">Null</option>
 				<option value="low">Low</option>
@@ -85,65 +136,89 @@
 				<option value="high">High</option>
 			</select>
 			<br/><i>Refer to the severity taxonomy <a href="http://code.google.com/p/collective-intelligence-framework/wiki/TaxonomySeverity" target="_blank">here</a></i>
-		</td>
-	</tr>
-	<tr id="protocol-tr" >
-		<td>Protocol:</td>
-		<td>
+		</div>
+	</div>
+	
+	<div class="control-group" id="protocol-tr">
+		<label class="control-label" for="protocol">Protocol</label>
+		<div class="controls">
 			<select id="protocol"></select>
-		</td>
-	</tr>
-	<tr id="portlist-tr" >
-		<td>Portlist:</td>
-		<td>
+		</div>
+	</div>
+	
+	
+	<div class="control-group" id="portlist-tr" >
+		<label class="control-label" for="portlist">Portlist</label>
+		<div class="controls">
 			<input type="text" id="portlist" size="50" maxlength="140"/><br>
 			<i>e.g. 21,22,80-89</i>
-		</td>
-	</tr>
-	<tr><td>
+		</div>
+	</div>
+	
+	<div class="control-group">
 		<a href="#" id="addaltid">Add Alternative ID</a>
 		<a href="#" id="removealtid" style="display:none;">Remove Alternative ID</a>
-		</td>
-	<td></td></tr>
-	<tr id="altid-tr" style="display:none;">
-		<td>Alternative ID:</td>
-		<td>
+	</div>
+
+	<div class="control-group" id="altid-tr" style="display:none;">
+		<label class="control-label" for="altid">Alternative ID</label>
+		<div class="controls">
 			<input type="text" id="altid" size="50" maxlength="140"/><br>
-		</td>
-	</tr>
-	<tr id="altidrestriction-tr" style="display:none;">
-		<td>Alt. ID Restriction:</td>
-		<td>
-			<select id="altidrestriction">
-			</select>
-		</td>
-	</tr>
-	</table>
+		</div>
+	</div>
+	
+	<div class="control-group" id="altidrestriction-tr" style="display:none;">
+		<label class="control-label" for="altidrestriction">Alt. ID Restriction</label>
+		<div class="controls">
+			<select id="altidrestriction"></select>
+		</div>
+	</div>
+	
 	
 	<h3>Sharing Information</h3>
-	<table>
-	<tr>
-		<td><b>Groups:</b></td>
-		<td>
+	
+	<div class="control-group">
+		<label class="control-label" for="groupbox">Groups</label>
+		<div class="controls">
 			<div id="groupboxarea">
 			<input type="checkbox" class="groupbox" value="everyone"/>everyone<br>
 			</div>
 			<i>select at least one</i>
-		</td>
-	</tr>
-	<tr>
-		<td><b>Restriction:</b></td>
-		<td>
-			<select id="restriction">
-
-			</select>
-		</td>
-	</tr>
-	</table>
+		</div>
+	</div>
+	<div class="control-group">
+		<label class="control-label" for="restriction">Restriction</label>
+		<div class="controls">
+			<select id="restriction"></select>
+		</div>
+	</div>
+	
   <!--<img src="images/ajax-loader.gif" id="loadinggif"/>-->
-  <button id="submitbutton">Submit</button>
-  <div id="submissionstatus">
-  
-  </div>
+  <button id="submitbutton" class="btn btn-primary">Submit</button>
+  <div id="submissionstatus"></div>
+  </form>
+           </div>
+          
+         
+        </div><!--/span-->
+
+	<div class="span3">
+          <div class="well sidebar-nav">
+            <span class="nav-header">Parsed Items</span>
+			<ul id="detectedentries" class="nav nav-list">
+            </ul>
+          </div><!--/.well -->
+        </div><!--/span-->
+	</div><!--/row-->
+
+      <hr>
+
+      <footer>
+        <p>Collective Intelligent Framework</p>
+      </footer>
+
+    </div><!--/.fluid-container-->
+	
+	
   </body>
 </html>

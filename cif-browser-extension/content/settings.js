@@ -34,7 +34,7 @@ CIF_CLIENT.save_options=function() {
 		CIF_CLIENT.storeItem('confidencemap',JSON.stringify(tosave));
 	}
 	// Update status to let user know options were saved.
-	$("#status").html("Options Saved.").show().delay(1000).fadeOut('slow');
+	$("#status").html("<div class='alert alert-block alert-success'>Options Saved.</div>").show().delay(1000).fadeOut('slow');
 }
 // Restores select box state to saved value from localStorage.
 CIF_CLIENT.restore_options=function() {
@@ -63,13 +63,13 @@ CIF_CLIENT.restore_options=function() {
 
 CIF_CLIENT.addProfileRow=function(name,url,key,isDefault,logQueries){
 	toappend='<tr class="profilerow">\
-<td><input type="text" class="nameinput" size=28 placeholder="e.g. My CIF Server"/></td>\
-<td><input type="text" class="urlinput" size=50 placeholder="e.g. https://example.org/api/"/></td>\
-<td><input type="text" class="keyinput" size=40 placeholder="e.g. 012345678-1234-abcd-4321-dcba00000000"/></td>\
-<td><button class="testbutton">Test Connection</button><button class="deletebutton">Delete</button></td>\
+<td><input type="text" class="nameinput input-medium"  placeholder="e.g. My CIF Server"/></td>\
+<td><input type="text" class="urlinput input-xlarge" placeholder="e.g. https://example.org/api/"/></td>\
+<td><input type="text" class="keyinput input-xlarge" placeholder="e.g. 012345678-1234-abcd-4321-dcba00000000"/></td>\
+<td><button class="testbutton btn btn-small">Test Connection</button> <button class="deletebutton btn btn-danger btn-small">Delete</button></td>\
 <td class="teststatus" ></td>\
-<td><input type="radio" class="defaultradioinput" name="isdefault" disabled/></td>\
-<td><input type="checkbox" class="logqueriesinput" checked/></td>\
+<td><span class="label">Default Server:</span> <input type="radio" class="defaultradioinput" name="isdefault" disabled/><br/>\
+<span class="label">Log Queries by Default:</span> <input type="checkbox" class="logqueriesinput" checked/></td>\
 </tr>';
 	$("#profilestable").append(toappend);
 	$(".nameinput").last().val(name);
@@ -111,26 +111,27 @@ CIF_CLIENT.test_settings=function(clickedbutton){
 	try{
 		$.getJSON(cifurl+cifquery+"?apikey="+cifapikey+"&fmt=json",function(data) {
 			if (data['status']==200){
-				$(".teststatus",clickedbutton.parent().parent()).html('connection successful');
+				$(".teststatus",clickedbutton.parent().parent()).html('<span class="label label-success">connection successful</span>');
 			}
 		}).error(function(xhr,status,error){ 
 			e=xhr;
-		
+			var errmsg='';
 			if (e['status']==401){
-				$(".teststatus",clickedbutton.parent().parent()).html('401 authorization error. check your api key');
+				errmsg='401 authorization error. check your api key';
 			} else if (e['status']==0){
-				$(".teststatus",clickedbutton.parent().parent()).html('Could not connect to that address.<br/><i>'+window.visitme+'</i>');
+				errmsg='Could not connect to that address.<br/><i>'+window.visitme+'</i>';
 			} else if (e['status']==404){
-				$(".teststatus",clickedbutton.parent().parent()).html('404 error. make sure that you have the correct path to the API');
+				errmsg='404 error. make sure that you have the correct path to the API';
 			} else if (e['status']==200){
-				$(".teststatus",clickedbutton.parent().parent()).html('bad response. is that the path to a CIF API?');
+				errmsg='bad response. is that the path to a CIF API?';
 			} else {
-				$(".teststatus",clickedbutton.parent().parent()).html('Could not connect to that address.<br/><i>'+window.visitme+'</i>');
+				errmsg='Could not connect to that address.<br/><i>'+window.visitme+'</i>';
 			}
+			$(".teststatus",clickedbutton.parent().parent()).html('<span class="label label-important">'+errmsg+'</span>');
 			//console.log(e);
 		});
 	} catch (err) {
-		$(".teststatus",clickedbutton.parent().parent()).html('could not connect with those settings');
+		$(".teststatus",clickedbutton.parent().parent()).html('<span class="label label-important">could not connect with those settings</span>');
 	}
 }
 $(document).ready(function() {

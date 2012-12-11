@@ -76,7 +76,7 @@ CIF_CLIENT.submitData=function(){
 	CIF_CLIENT.sendToServer();
 }
 CIF_CLIENT.sendToServer=function(){
-	$("#submissionstatus").html('<img src="images/ajax-loader.gif" id="loadinggif"/>');
+	$("#submissionstatus").html('<div class="alert">Submitting...<img src="images/ajax-loader.gif" id="loadinggif"/></div>');
 	var server=$("#serverselect").val();
 	var cifapikey = CIF_CLIENT.getServerKey(server);
 	var cifurl = CIF_CLIENT.getServerUrl(server);
@@ -153,7 +153,7 @@ CIF_CLIENT.parseResponse=function(data){
 		var tweettext=encodeURIComponent("Submitted "+window.dataToSend[i]['address']+" to CIF");
 		var tweetbutton='<a href="http://twitter.com/intent/tweet?text='+tweettext+'" target="_blank"><img alt="Tweet this" title="Tweet this" src="./images/tt-micro3.png"/></a>';
 		tweetbutton=''; //disable twitter for future work
-		$("#submissionstatus").append('Observation <b>'+window.dataToSend[i]['address']+'</b> submitted with ID <b>'+data['data'][i]+'</b> '+tweetbutton+'<br/>');
+		$("#submissionstatus").append('<div class="alert alert-success">Observation <b>'+window.dataToSend[i]['address']+'</b> submitted with ID <b>'+data['data'][i]+'</b> '+tweetbutton+'<br/></div>');
 	}
 }
 CIF_CLIENT.addObservedGroups=function(){
@@ -188,12 +188,13 @@ CIF_CLIENT.populateProtocols=function(moreplease){
 	}
 }
 
+//parses the input field to determine the entry types
 CIF_CLIENT.parseDataInput=function(){
 	var points=$("#datapoints").val().replace(/(\r\n|\n|\r| )/gm,',').split(',');
 	var sorted_arr = points.sort();
 	points = [];
 	for (i in sorted_arr) {
-		if (i>100) continue;
+		if (i>1000) continue; //sets maximum number of data points that can be submitted at once
 		if ((sorted_arr[i + 1] != sorted_arr[i]) && $.trim(sorted_arr[i])!='') {
 			points.push($.trim(sorted_arr[i]));
 		} 

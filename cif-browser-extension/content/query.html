@@ -1,10 +1,33 @@
-<!doctype html>
-<html>
+<!DOCTYPE html>
+<html lang="en">
   <head>
+    <meta charset="utf-8">
     <title>CIF Query</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le styles -->
+    <link href="bootstrap/css/bootstrap.css" rel="stylesheet">
+    <style type="text/css">
+      body {
+        padding-top: 60px;
+        padding-bottom: 40px;
+      }
+      .sidebar-nav {
+        padding: 9px 0;
+      }
+    </style>
+    <link href="bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
+
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
 
     <!-- JavaScript and HTML must be in separate files for security. -->
 	<script src="jquery-1.7.2.min.js"></script>
+	<script src="bootstrap/js/bootstrap.js"></script>
 	<script src="jquery.dataTables.min.js"></script>
 	<script src="sha1.js"></script>
 	<script src="cif-connector.js"></script>
@@ -74,44 +97,114 @@ tr.odd td.sorting_1 {
 	background-color: rgb(255, 255, 120);
 }
 
+.sidebar-nav-fixed {
+    position:fixed;
+    top:60px;
+    width:21.97%;
+}
+
+@media (max-width: 767px) {
+    .sidebar-nav-fixed {
+        position:static;
+        width:auto;
+    }
+}
+
+@media (max-width: 979px) {
+    .sidebar-nav-fixed {
+        top:70px;
+    }
+}
 
 	
 	</style>
 
 
   </head>
-  <body>
-  <div id="version" style="float:right;"></div>
-  <div id="searchbox" style="display:none;">
-    <fieldset style="width:400px;">
-	<legend><b>Run a New Query</b></legend>
-	<form id="theform">
-	Server: <select id="serverselect"></select><br/>
-	Query: <input type="text" id="querystring" value="" size="50"><br/>
-	<input type="submit" name="Submit">Log Query: <input type="checkbox" id="logquery" checked>
-	  [<a href="#" id="showfilters">+</a><a href="#" id="hidefilters" style="display:none;">-</a>]
-	  <fieldset id="additionalfilters" style="display:none;">
-	  <legend>Search Filters</legend>
-	  <input type="checkbox" id="useseverity"> Severity: 			
-				<select id="severity" disabled>
-					<option value="null">Null</option>
-					<option value="low">Low</option>
-					<option value="medium">Medium</option>
-					<option value="high">High</option>
-				</select><br/>
-	  <input type="checkbox" id="useconfidence"> Confidence: <input type="text" id="confidence" size="3" disabled/><br/>
-	  <input type="checkbox" id="userestriction"> Restriction: <select id="restriction" disabled></select><br/>
-	  <input type="checkbox" id="uselimit"> Limit: <input type="text" id="limit" size="5" disabled/>
-	  </fieldset>
-	</form>
-	</fieldset>
-  </div>
-  <div id="stagingarea" style="display:none;"></div>
-  <img src="images/ajax-loader.gif" id="loadinggif" style="display:none;"/><b id="remainingqueries"></b>
-  <div id="queries">
- 
+  <body id="thetopofthepage">
   
-  </div>
+      <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container-fluid">
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </a>
+          <span class="brand" href="#">Collective Intelligence Framework</span>
+          <div class="nav-collapse collapse">
+            <p class="navbar-text pull-right">
+              <a href="#thetopofthepage">[Top of Page]</a>
+			  <span id="version"></span>
+            </p>
+            <ul class="nav">
+              <li class="active"><a href="#" >Query Server</a></li>
+			  <li><a href="adddata.html">Submit Data</a></li>
+              <li><a href="settings.html">Settings</a></li>
+            </ul>
+          </div><!--/.nav-collapse -->
+        </div>
+      </div>
+    </div>
+
+    <div class="container-fluid">
+      <div class="row-fluid">
+        <div class="span3">
+          <div class="well sidebar-nav">
+            <ul class="nav nav-list">
+             <div id="searchbox" style="display:none;">
+				<fieldset >
+				<legend><b>Run a New Query</b></legend>
+				<form id="theform">
+				Server: <select id="serverselect"></select><br/>
+				Query: <input type="text" id="querystring" value="" size="50"><br/>
+				<input type="submit" name="Submit" class="btn btn-primary btn-small"> Log Query: <input type="checkbox" id="logquery" checked>
+				  [<a href="#" id="showfilters">+</a><a href="#" id="hidefilters" style="display:none;">-</a>]
+				  <fieldset id="additionalfilters" style="display:none;">
+				  <legend>Search Filters</legend>
+				  <input type="checkbox" id="useseverity"> Severity: 			
+							<select id="severity" disabled>
+								<option value="null">Null</option>
+								<option value="low">Low</option>
+								<option value="medium">Medium</option>
+								<option value="high">High</option>
+							</select><br/>
+				  <input type="checkbox" id="useconfidence"> Confidence: <input type="text" id="confidence" size="3" disabled/><br/>
+				  <input type="checkbox" id="userestriction"> Restriction: <select id="restriction" disabled></select><br/>
+				  <input type="checkbox" id="uselimit"> Limit: <input type="text" id="limit" size="5" disabled/>
+				  </fieldset>
+				</form>
+				</fieldset>
+			  </div>
+              <li class="nav-header" id="resultsheader">Query Results</li>
+            </ul>
+          </div><!--/.well -->
+        </div><!--/span-->
+        <div class="span9">
+          <div class="hero-unit" style="min-height:100px;">
+			<div id="stagingarea" style="display:none;"></div>
+			<div class="alert alert-block" id="loadinggif" style="display:none;"><img src="images/ajax-loader.gif" /><b id="remainingqueries"></b></div>
+			<div id="queries"></div>
+          </div>
+          
+            
+ 
+
+          
+        </div><!--/span-->
+      </div><!--/row-->
+
+      <hr>
+
+      <footer>
+        <p>Collective Intelligent Framework</p>
+      </footer>
+
+    </div><!--/.fluid-container-->
+  
+  
+  
+
 
   </body>
 </html>

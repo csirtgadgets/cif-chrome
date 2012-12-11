@@ -214,7 +214,8 @@ CIF_CLIENT.showVersion=function(){
 				 && parseFloat(CIF_CLIENT.getItem('latestversion'))<=parseFloat(CIF_CLIENT.getItem('myversion'))){
 					$("#version").html("v"+CIF_CLIENT.getItem('myversion'));
 				} else {
-					$("#version").html("v"+CIF_CLIENT.getItem('myversion')+"(latest is v"+CIF_CLIENT.getItem('latestversion')+")");
+					//$("#version").html("v"+CIF_CLIENT.getItem('myversion')+"(latest is v"+CIF_CLIENT.getItem('latestversion')+")");//don't need version checking
+					$("#version").html("v"+CIF_CLIENT.getItem('myversion'));
 				}
 		});
 	}
@@ -229,11 +230,13 @@ CIF_CLIENT.showVersion=function(){
 				 && parseFloat(CIF_CLIENT.getItem('latestversion'))<=parseFloat(CIF_CLIENT.getItem('myversion'))){
 					$("#version").html("v"+data['version']);
 				} else {
-					$("#version").html("v"+data['version']+"(latest is v"+CIF_CLIENT.getItem('latestversion')+")");
+					//$("#version").html("v"+data['version']+"(latest is v"+CIF_CLIENT.getItem('latestversion')+")"); //don't need version checking
+					$("#version").html("v"+data['version']);
 				}
 			}
 		});
 	}
+	return;//don't need version checking
 	var lastcheck=CIF_CLIENT.getItem('lastudpatecheck');
 	var ts = Math.round((new Date()).getTime() / 1000);
 	if (lastcheck==undefined || lastcheck<(ts-86400)){
@@ -277,3 +280,9 @@ CIF_CLIENT.prepSearchBox=function(){
 		return false;
 	});
 }
+$(document).ready(function() {
+  $("#querypagelink").click(function(){
+	CIF_CLIENT.switchToPage('content/query.html');
+	return false;
+  });
+});
