@@ -63,14 +63,14 @@ CIF_CLIENT.restore_options=function() {
 
 CIF_CLIENT.addProfileRow=function(name,url,key,isDefault,logQueries){
 	toappend='<tr class="profilerow">\
-<td><input type="text" class="nameinput input-medium"  placeholder="e.g. My CIF Server"/></td>\
-<td><input type="text" class="urlinput input-xlarge" placeholder="e.g. https://example.org/api/"/></td>\
-<td><input type="text" class="keyinput input-xlarge" placeholder="e.g. 012345678-1234-abcd-4321-dcba00000000"/></td>\
-<td><button class="testbutton btn btn-small">Test Connection</button> <button class="deletebutton btn btn-danger btn-small">Delete</button></td>\
-<td class="teststatus" ></td>\
-<td><span class="label">Default Server:</span> <input type="radio" class="defaultradioinput" name="isdefault" disabled/><br/>\
-<span class="label">Log Queries by Default:</span> <input type="checkbox" class="logqueriesinput" checked/></td>\
-</tr>';
+				<td><input type="text" class="nameinput input-medium"  placeholder="e.g. My CIF Server"/></td>\
+				<td><input type="text" class="urlinput input-xlarge" placeholder="e.g. https://example.org/api/"/></td>\
+				<td><input type="text" class="keyinput input-xlarge" placeholder="e.g. 012345678-1234-abcd-4321-dcba00000000"/></td>\
+				<td><button class="testbutton btn btn-small">Test Connection</button> <button class="deletebutton btn btn-danger btn-small">Delete</button></td>\
+				<td class="teststatus" ></td>\
+				<td><span class="label">Default Server:</span> <input type="radio" class="defaultradioinput" name="isdefault" disabled/><br/>\
+				<span class="label">Log Queries by Default:</span> <input type="checkbox" class="logqueriesinput" checked/></td>\
+				</tr>';
 	$("#profilestable").append(toappend);
 	$(".nameinput").last().val(name);
 	$(".urlinput").last().val(url);
@@ -123,6 +123,7 @@ CIF_CLIENT.test_settings=function(clickedbutton){
 			} else if (e['status']==404){
 				errmsg='404 error. make sure that you have the correct path to the API';
 			} else if (e['status']==200){
+				console.log(e);
 				errmsg='bad response. is that the path to a CIF API?';
 			} else {
 				errmsg='Could not connect to that address.<br/><i>'+window.visitme+'</i>';

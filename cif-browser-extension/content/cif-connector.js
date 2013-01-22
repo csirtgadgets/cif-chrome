@@ -13,7 +13,7 @@ var cif_connector = {
 		if (typeof args.log != 'undefined' && args.log===false) noLog='&nolog=1';
 		
 		var ajaxparams={type: "GET",dataType: "json"};
-		ajaxparams.url=args.url+args.query+"?apikey="+args.apikey+"&fmt=json"+noLog+args.filters;
+		ajaxparams.url=args.url+args.query+"?apikey="+args.apikey+"&fmt=json"+noLog+args.filters+"&query="+args.query;
 		if (typeof args.context != 'undefined') ajaxparams.context=args.context;
 		ajaxparams.success=function(received){
 								/* this doesn't do anything right now, but this would be a good place to modify the data 
@@ -26,7 +26,27 @@ var cif_connector = {
 								var scopedfunction=$.proxy(args.successFunction,$(this)); 
 								scopedfunction(received);
 						   };
-		ajaxparams.error=args.errorFunction;//function called on ajax failures (e.g 404's)
+		ajaxparams.error=function(xhr,status,error){ //function called on ajax failures (e.g 404's)
+			
+			/* if it's just a json error, it's because the new version doesn't return a json array, but individual json objects line separated */
+			if (xhr.status==200){
+				var received = {};
+				xhr.responseText=xhr.responseText.replace(/(\r\n|\n|\r)/gm,"").replace(/}{/g,"},{");
+				received.entries=jQuery.parseJSON("["+xhr.responseText+"]");
+				if (!received.entries || typeof received.entries == undefined || received.entries.length==0){
+					received.message='no records';
+				} else {
+					received.message='v1';
+					received.status=200;
+				}
+				var scopedfunction=$.proxy(args.successFunction,$(this)); 
+				scopedfunction(received);
+				//console.log(received);
+			} else {
+				var scopedfunction=$.proxy(args.errorFunction,$(this));
+				scopedfunction(xhr,status,error);
+			}
+		};
 		$.ajax(ajaxparams);
 	},
 	
