@@ -21,7 +21,14 @@ var cif_connector = {
 								 * google protocol buffer...
 								 * received=protoBufToJson(received);
 								 */
-								 
+								if (received==null){
+									received={};
+									received.message='no records';
+									received.entries=new Array();
+								}else if (received.data==null){//v1 responses don't contain everything in data
+									received.entries=new Array(received);
+									received.message='v1';								
+								}
 								//scopes $(this) for the success function to the context passed into the ajax call
 								var scopedfunction=$.proxy(args.successFunction,$(this)); 
 								scopedfunction(received);

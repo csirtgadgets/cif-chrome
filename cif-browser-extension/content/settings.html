@@ -68,9 +68,15 @@
 				<th>Nickname</th><th>URL to CIF API</th><th>API Key</th><th>Actions</th><th>Test Results</th><th>Options</th>
 				</tr>
 				</table>
-				<button id="addarow">Add Another Profile</button>
-				<br>
-
+				<button id="addarow" class="btn">Add Another Profile</button>
+				<hr>
+				
+				<h4>Query Preferences</h4>
+				<label class="checkbox">
+					<input type="checkbox" id="setting_openQueryInNewWindow"> Open queries in new tabs
+				</label>
+				
+				<hr>
 				<h4>Taxonomy Customizations (<a href="#" id="showtax">Show</a><a href="#" id="hidetax" style="display:none;">Hide</a>)</h4>
 				<div id="additional" style="display:none;">
 				<table>
@@ -85,12 +91,13 @@
 				<td>
 				<h5>Confidence Intervals</h5>
 				<textarea id="confidencevalues" rows="6" cols="30"></textarea>
-				<br/><button id="def_confidence">Restore Defaults</button>
+				<br/><button id="def_confidence" class="btn">Restore Defaults</button>
 				</td>
 				</tr>
 				</table>
 				</div>
-				<button id="savebutton">Save</button>
+				<hr>
+				<button id="savebutton" class="btn btn-primary">Save</button>
 				<h3 id="status"></h3>
           </div>
           

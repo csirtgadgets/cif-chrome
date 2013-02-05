@@ -23,6 +23,7 @@ CIF_CLIENT.save_options=function() {
 		CIF_CLIENT.storeItem('restrictions',JSON.stringify(restrictions));
 	}
 	*/
+
 	var confidences=$("#confidencevalues").val().split("\n");
 	var tosave= new Array();
 	for (i in confidences){
@@ -33,6 +34,11 @@ CIF_CLIENT.save_options=function() {
 	if (tosave.length>0){
 		CIF_CLIENT.storeItem('confidencemap',JSON.stringify(tosave));
 	}
+		
+	var miscOptions = {};
+	miscOptions.newTabOnquery=$('#setting_openQueryInNewWindow').is(':checked');
+	CIF_CLIENT.storeItem('miscOptions',JSON.stringify(miscOptions));
+	
 	// Update status to let user know options were saved.
 	$("#status").html("<div class='alert alert-block alert-success'>Options Saved.</div>").show().delay(1000).fadeOut('slow');
 }
@@ -56,7 +62,14 @@ CIF_CLIENT.restore_options=function() {
   for (i in restrictions){
 	$("#restrictionsnames").val($("#restrictionsnames").val()+restrictions[i]+"\n");
   }
-  
+  try{
+	miscOptions=JSON.parse(CIF_CLIENT.getItem("miscOptions"));
+	if (miscOptions.newTabOnquery){
+		$("#setting_openQueryInNewWindow").prop('checked',true);
+	}
+  } catch(err) {
+	console.log(err);
+  }
   CIF_CLIENT.addProfileRow('','','',false,true);
 }
 

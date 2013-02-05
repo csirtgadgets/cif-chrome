@@ -18,18 +18,27 @@ CIF_CLIENT.queryClick=function(info, tab) {
 				  'type':'contextmenuquery'
 				 };
 	localStorage['query']=JSON.stringify(query); //store the query for the query page to access
-	
-	/* check for existing query page 
-	 * if it exists, have it run the query
-	 */
-	var views = chrome.extension.getViews({'type':'tab'});
-	for (i in views) {
-		if (views[i].location.href.indexOf(chrome.extension.getURL('content/query.html')) == 0) {
-		  views[i].CIF_CLIENT.runQuerySet();
-		  return;
-		} 
+	var alwaysNewPages=false;
+	try {
+		miscOptions=JSON.parse(localStorage["miscOptions"]);
+		alwaysNewPages=miscOptions.newTabOnquery
+	} catch(err) {
+		console.log(err);
+		alert(err);
 	}
 	
+	if (!alwaysNewPages){
+		/* check for existing query page 
+		 * if it exists, have it run the query
+		 */
+		var views = chrome.extension.getViews({'type':'tab'});
+		for (i in views) {
+			if (views[i].location.href.indexOf(chrome.extension.getURL('content/query.html')) == 0) {
+			  views[i].CIF_CLIENT.runQuerySet();
+			  return;
+			} 
+		}
+	}
 	/* query page isn't open, open it and run the query */
 	localStorage['runquery']='true'; //tells the new query page to run the query in storage when launched
 	chrome.tabs.create({url: "content/query.html"}); 

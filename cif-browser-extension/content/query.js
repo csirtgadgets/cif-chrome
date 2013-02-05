@@ -130,7 +130,7 @@ CIF_CLIENT.runQuery=function(string,filterobj,cifurl,cifapikey,logQuery,server){
 		successFunction: function(data){
 			CIF_CLIENT.querycount--;
 			CIF_CLIENT.loadingHide();
-			if (data['message']=='no records') {
+			if (data==null || data['message']=='no records') {
 				CIF_CLIENT.showError('no results for "'+$(this).attr('origterm')+'"',$(this));
 			}
 			else {
@@ -421,7 +421,11 @@ CIF_CLIENT.parseV1entry=function(data,fieldset){
 		ulchunk+=CIF_CLIENT.tdwrap(data.protocol+" "+data.ports);//protocol and ports
 	}
 	ulchunk+=CIF_CLIENT.tdwrap(data.detecttime); //detection time
-	ulchunk+=CIF_CLIENT.tdwrap(data.impact);//impact
+	if (data.impact==null){
+		ulchunk+=CIF_CLIENT.tdwrap(data.assessment);//impact
+	} else {
+		ulchunk+=CIF_CLIENT.tdwrap(data.impact);//impact
+	}
 	ulchunk+=CIF_CLIENT.tdwrap(data.severity); //severity
 	ulchunk+=CIF_CLIENT.tdwrap(data.confidence); //confidence
 	ulchunk+=CIF_CLIENT.tdwrap(data.description,'description');//description

@@ -276,7 +276,11 @@ CIF_CLIENT.prepSearchBox=function(){
 				 };
 		CIF_CLIENT.closePanel();
 		CIF_CLIENT.storeItem('query',JSON.stringify(query));
-		CIF_CLIENT.switchToQueryPageAndRun();
+		if ($(this).hasClass('inwindow')){
+			CIF_CLIENT.switchToQueryPageAndRun('ignoreNewWindow');
+		} else {
+			CIF_CLIENT.switchToQueryPageAndRun();
+		}
 		return false;
 	});
 }

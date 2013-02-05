@@ -206,12 +206,26 @@ if (typeof appInfo != 'undefined'){ //if this is not undefined, we are in firefo
 	}
 	
 	/* switches to the query page or makes a new one if it doesn't exist and runs the query */
-	CIF_CLIENT.switchToQueryPageAndRun=function(){
+	CIF_CLIENT.switchToQueryPageAndRun=function(newWinPref){
 		CIF_CLIENT.storeItem('runquery','true');
-		existing=CIF_CLIENT.switchToPage("content/query.html");
-		if (existing){
-			var mainWindow=CIF_CLIENT.getmainwindow();
-			mainWindow.gBrowser.selectedBrowser.contentWindow.wrappedJSObject.CIF_CLIENT.runQuerySet();
+		var alwaysNewPages=false;
+		try {
+			miscOptions=JSON.parse(CIF_CLIENT.getItem("miscOptions"));
+			alwaysNewPages=miscOptions.newTabOnquery
+		} catch(err) {
+			console.log(err);
+		}
+		if (newWinPref=='ignoreNewWindow'){
+			alwaysNewPages=false;
+		}
+		if (alwaysNewPages){
+			CIF_CLIENT.makeNewPage("content/query.html");
+		} else {
+			existing=CIF_CLIENT.switchToPage("content/query.html");
+			if (existing){
+				var mainWindow=CIF_CLIENT.getmainwindow();
+				mainWindow.gBrowser.selectedBrowser.contentWindow.wrappedJSObject.CIF_CLIENT.runQuerySet();
+			}
 		}
 		return;
 	}
@@ -280,15 +294,28 @@ if (typeof appInfo != 'undefined'){ //if this is not undefined, we are in firefo
 	}
 	
 	/* switches to the query page or makes a new one if it doesn't exist and runs the query */
-	CIF_CLIENT.switchToQueryPageAndRun=function(){
+	CIF_CLIENT.switchToQueryPageAndRun=function(newWinPref){
 		var views = chrome.extension.getViews({'type':'tab'});
-		/* loop through existing tabs to look for query page */
-		for (var i = 0; i < views.length; i++) {
-			var view = views[i];
-			if (view.location.href.indexOf(chrome.extension.getURL('content/query.html'))==0) {
-			  view.CIF_CLIENT.runQuerySet(); //trigger the query run on the existing query page
-			  return;
-			} 
+		
+		var alwaysNewPages=false;
+		try {
+			miscOptions=JSON.parse(CIF_CLIENT.getItem("miscOptions"));
+			alwaysNewPages=miscOptions.newTabOnquery
+		} catch(err) {
+			console.log(err);
+		}
+		if (newWinPref=='ignoreNewWindow'){
+			alwaysNewPages=false;
+		}
+		if (!alwaysNewPages){
+			/* loop through existing tabs to look for query page */
+			for (var i = 0; i < views.length; i++) {
+				var view = views[i];
+				if (view.location.href.indexOf(chrome.extension.getURL('content/query.html'))==0) {
+				  view.CIF_CLIENT.runQuerySet(); //trigger the query run on the existing query page
+				  return;
+				} 
+			}
 		}
 		/* make a new page if one doesn't exist and leave flag for it to run the query */
 		CIF_CLIENT.storeItem('runquery','true');

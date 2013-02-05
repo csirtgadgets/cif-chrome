@@ -128,12 +128,12 @@ tr.odd td.sorting_1 {
 <div class="row-fluid">
 	<div class="span3">
           
-		  <div class="well sidebar-nav">
+		  <div class="well sidebar-nav" style="min-width:300px;">
             <ul class="nav nav-list">
              <div id="searchbox" style="display:none;">
 				<fieldset >
 				<legend><b>Run a New Query</b></legend>
-				<form id="theform">
+				<form id="theform" class='inwindow'>
 				Server: <select id="serverselect"></select><br/>
 				Query: <input type="text" id="querystring" value="" size="50"><br/>
 				<input type="submit" name="Submit" class="btn btn-primary btn-small"> Log Query: <input type="checkbox" id="logquery" checked>
@@ -162,7 +162,7 @@ tr.odd td.sorting_1 {
 	  <div class="row-fluid">
 
         <div class="span12">
-          <div class="well" style="min-height:100px;">
+          <div class="well" style="min-height:100px; min-width:600px; display: inline-block;">
 			<div id="stagingarea" style="display:none;"></div>
 			<div class="alert alert-block" id="loadinggif" style="display:none;"><img src="images/ajax-loader.gif" /><b id="remainingqueries"></b></div>
 			<div id="queries"></div>
