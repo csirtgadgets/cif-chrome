@@ -24,7 +24,6 @@ CIF_CLIENT.queryClick=function(info, tab) {
 		alwaysNewPages=miscOptions.newTabOnquery
 	} catch(err) {
 		console.log(err);
-		alert(err);
 	}
 	
 	if (!alwaysNewPages){
