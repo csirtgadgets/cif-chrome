@@ -449,13 +449,7 @@ CIF_CLIENT.parseIODEFentry=function(data,fieldset){
 	entry.address=CIF_CLIENT.extractItem('EventData,Flow,System,Node,Address,content',data['Incident']);
 	if (entry.address=='') entry.address=CIF_CLIENT.extractItem('EventData,Flow,System,Node,Address',data['Incident']);
 	entry.protocol=CIF_CLIENT.translateProtocol(CIF_CLIENT.extractItem('EventData,Flow,System,Service,ip_protocol',data['Incident']));
-	if (data.protocol!==null){
-		entry.protocol=CIF_CLIENT.translateProtocol(data.protocol);
-	}
 	entry.ports=CIF_CLIENT.extractItem('EventData,Flow,System,Service,Portlist',data['Incident']);
-	if (data.portlist!==null){
-		entry.ports=data.portlist;
-	}
 	entry.detecttime=CIF_CLIENT.extractItem('DetectTime',data['Incident']);
 	entry.impact = CIF_CLIENT.extractItem('Assessment,Impact,content',data['Incident']);
 	entry.severity = CIF_CLIENT.extractItem('Assessment,Impact,severity',data['Incident']);
