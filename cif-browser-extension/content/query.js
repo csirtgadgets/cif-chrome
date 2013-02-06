@@ -387,7 +387,7 @@ CIF_CLIENT.parseEntries=function(data,fieldset,version){
 	}
 	for (i in entries){
 		for (col in allcols){
-			if (typeof entries[i][col] == 'undefined'){
+			if (entries[i][col] == null){
 				entries[i][col] == '';
 			}
 		}
@@ -424,8 +424,13 @@ CIF_CLIENT.parseV1entry=function(data,fieldset){
 	for (j in data){
 		if (data[j]==null) data[j]=''; // convert null entries into blank entries
 	}
-	if (typeof data.protocol == 'undefined') data.protocol='';
+	if (typeof data.protocol == 'undefined'){
+		data.protocol='';
+	} else {
+		data.protocol=CIF_CLIENT.translateProtocol(data.protocol);
+	}
 	if (typeof data.portlist == 'undefined') data.portlist='';
+	
 	jQuery.extend(entry,data);
 	var ulchunk="<tr>";
 	ulchunk+=CIF_CLIENT.tdwrap(data.restriction); //restriction
@@ -614,15 +619,19 @@ CIF_CLIENT.buildTextTable=function(entries){
 	var columnlengths = {}; //need to find widest character for each column in text table
 	//first loop to find max widths
 	for (i in entries){
-		if (i==0){ //need the headers first time through
-			for (j in entries[i]){
+		for (j in entries[i]){
+			if (columnlengths[j]==null){
 				columnlengths[j]=j.length;
 			}
-		}
-		for (j in entries[i]){
 			columnlengths[j]=(entries[i][j].length>columnlengths[j])?entries[i][j].length:columnlengths[j];
 		}
 	}
+	var keys=[];
+	for (k in columnlengths){
+		keys.push(k);
+	}
+	keys.sort();
+	console.log(keys);
 	//now we build the text table this time through
 	for (i in entries){
 		if (i==0){ //need the headers first time through
@@ -632,7 +641,8 @@ CIF_CLIENT.buildTextTable=function(entries){
 			texttable+="\n"+new Array(texttable.length+1).join('-');
 			texttable+="\n";
 		}
-		for (j in entries[i]){
+		for (q in keys){
+			j=keys[q];
 			texttable+='  '+entries[i][j]+new Array(columnlengths[j]-entries[i][j].length+1).join(' ')+'  |';
 		}
 		texttable+="\n";
