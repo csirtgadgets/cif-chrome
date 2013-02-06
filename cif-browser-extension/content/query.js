@@ -635,7 +635,8 @@ CIF_CLIENT.buildTextTable=function(entries){
 	//now we build the text table this time through
 	for (i in entries){
 		if (i==0){ //need the headers first time through
-			for (j in entries[i]){
+			for (q in keys){
+				j=keys[q];
 				texttable+='  '+j+new Array(columnlengths[j]-j.length+1).join(' ')+'  |';
 			}
 			texttable+="\n"+new Array(texttable.length+1).join('-');
