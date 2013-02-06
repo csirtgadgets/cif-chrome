@@ -658,6 +658,9 @@ CIF_CLIENT.buildCSV=function(entries){
 		if (i==0){ //need the headers first time through
 			var ctr=0;
 			for (j in entries[i]){
+				if (j=='entries' || j=='message'){
+					continue;
+				}
 				csv+=j;
 				if (ctr<(Object.keys(entries[i]).length-1)){
 					csv+=',';
@@ -669,6 +672,9 @@ CIF_CLIENT.buildCSV=function(entries){
 		}
 		var ctr=0;
 		for (j in entries[i]){
+			if (j=='entries' || j=='message'){
+				continue;
+			}
 			csv+=entries[i][j];
 			if (ctr<(Object.keys(entries[i]).length-1)){
 				csv+=',';
