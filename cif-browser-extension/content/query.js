@@ -410,15 +410,15 @@ CIF_CLIENT.parseV1entry=function(data,fieldset){
 		if (data[j]==null) data[j]=''; // convert null entries into blank entries
 	}
 	if (typeof data.protocol == 'undefined') data.protocol='';
-	if (typeof data.ports == 'undefined') data.ports='';
+	if (typeof data.portlist == 'undefined') data.portlist='';
 	jQuery.extend(entry,data);
 	var ulchunk="<tr>";
 	ulchunk+=CIF_CLIENT.tdwrap(data.restriction); //restriction
 	ulchunk+=CIF_CLIENT.tdwrap(data.address);//address
-	if (data.protocol!='' && data.ports!=''){
-		ulchunk+=CIF_CLIENT.tdwrap(CIF_CLIENT.translateProtocol(data.protocol)+" / "+data.ports);//only need the slash separator if they are both not empty
+	if (data.protocol!='' && data.portlist!=''){
+		ulchunk+=CIF_CLIENT.tdwrap(CIF_CLIENT.translateProtocol(data.protocol)+" / "+data.portlist);//only need the slash separator if they are both not empty
 	} else {
-		ulchunk+=CIF_CLIENT.tdwrap(data.protocol+" "+data.ports);//protocol and ports
+		ulchunk+=CIF_CLIENT.tdwrap(data.protocol+" "+data.portlist);//protocol and ports
 	}
 	ulchunk+=CIF_CLIENT.tdwrap(data.detecttime); //detection time
 	if (data.impact==null){
