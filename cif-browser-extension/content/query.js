@@ -377,6 +377,21 @@ CIF_CLIENT.parseEntries=function(data,fieldset,version){
 			entries.push(CIF_CLIENT.parseV1entry(data[i],fieldset));
 		}
 	}
+	var allcols = new Array();
+	for (i in entries){
+		for (col in entries[i]){
+			if (allcols.indexOf(col)==-1){
+				allcols.push(col);
+			}
+		}
+	}
+	for (i in entries){
+		for (col in allcols){
+			if (typeof entries[i][col] == 'undefined'){
+				entries[i][col] == '';
+			}
+		}
+	}
 	
 	/* adds a click to expand function to hide long descriptions */
 	$('.description',fieldset).each(function(){
