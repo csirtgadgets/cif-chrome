@@ -1,40 +1,45 @@
-Change Log
-=================
-1.2
-  * integrated with bootstrap
+Revision History for cif-client-chrome
 
-1.1
-  * separated backend code into separate files for network calls to prepare for API change
-  * cleaned up images directory
+1.3 2013-XX-XX
+    - improved v1 support
+    - cleaned up some of the language/artifacts
+
+1.2 2012-12-01
+    - integrated with bootstrap
+    - integrated CIF v1 api support
+    
+1.1 2012
+    - separated backend code into separate files for network calls to prepare for API change
+    - cleaned up images directory
 
 1.0
-  * support for longer descriptions
-  * button in popup to populate the query box with the URL of the current page
+    - support for longer descriptions
+    - button in popup to populate the query box with the URL of the current page
   
 0.99
-  * fixed some formatting issues with the popup
+    - fixed some formatting issues with the popup
 
 0.98
-  * update to watch for new groups in results that don't appear in group_map
+    - update to watch for new groups in results that don't appear in group_map
 
 0.97
-  * bug fixes for firefox version and right-click query in chrome version
+    - bug fixes for firefox version and right-click query in chrome version
 
 0.96
-  * backend changes to make compatible with firefox
+    - backend changes to make compatible with firefox
 
 0.90
-  * bug fix for related events
+    - bug fix for related events
   
 0.89
-  * added alternative id and alternative id restriction to data submission page
-  * added version check
+    - added alternative id and alternative id restriction to data submission page
+    - added version check
 
 0.88
-  * popup inherits logging settings from options page
-  * description defaulted to unknown on data adding page
-  * most protocols on data adding page hidden by default
+    - popup inherits logging settings from options page
+    - description defaulted to unknown on data adding page
+    - most protocols on data adding page hidden by default
 
 0.87 
-  * added version number display in popup
-  * UUID/MD5/SHA1 detection on data input page
+    - added version number display in popup
+    - UUID/MD5/SHA1 detection on data input page

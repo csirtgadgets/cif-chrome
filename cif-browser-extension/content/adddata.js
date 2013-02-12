@@ -20,14 +20,6 @@ $(document).ready(function() {
 	$("#submitbutton").click(function(){
 		CIF_CLIENT.submitData();
 	});
-	$("#impact").change(function(){
-		if ($("#impact option:selected").val()=='whitelist'){
-			CIF_CLIENT.severitynull();
-		} else {
-			CIF_CLIENT.severitynotnull();
-		}
-	});
-	CIF_CLIENT.severitynotnull();
 });
 if(!CIF_CLIENT){
     var CIF_CLIENT = {};
@@ -84,13 +76,11 @@ CIF_CLIENT.sendToServer=function(){
 	for (i in window.datapoints){
 		for (j in window.groupstosendto){
 			var individualentry={'address':window.datapoints[i],
-							'impact':$("#impact option:selected").val(),
+							'assessment':$("#assessment option:selected").val(),
 							'description':$("#description").val().trim(),
 							'portlist':$("#portlist").val().trim(),
-							'source':'API Submission',
 							'protocol':$("#protocol option:selected").val(),
 							'confidence':$("#confidence option:selected").val(),
-							'severity':$("#severity option:selected").val(),
 							'guid': window.groupstosendto[j],
 							'restriction':$("#restriction option:selected").val().toLowerCase(),
 							};
@@ -255,7 +245,7 @@ CIF_CLIENT.parseDataInput=function(){
 		else {
 			$("#protocol-tr, #portlist-tr").show();
 			typesfound['ipordomain']=true;
-			$("#detectedentries").append("<li><b>Hostname/IP:</b> "+points[i]+"</li>");
+			$("#detectedentries").append("<li><b>address:</b> "+points[i]+"</li>");
 		}
 	}
 	window.datapoints=points;

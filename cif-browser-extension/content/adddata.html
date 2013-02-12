@@ -49,14 +49,14 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </a>
-          <span class="brand" href="#">Collective Intelligence Framework</span>
+          <span class="brand"><a href="http://collectiveintel.org" target=_blank>Collective Intelligence Framework</a></span>
           <div class="nav-collapse collapse">
             <p class="navbar-text pull-right">
               <span id="version"></span>
             </p>
             <ul class="nav">
-              <li><a href="#" id="querypagelink">Query Server</a></li>
-              <li class="active"><a href="#">Submit Data</a></li>
+              <li><a href="#" id="querypagelink">Query</a></li>
+              <li class="active"><a href="#">Submit</a></li>
 			  <li ><a href="settings.html">Settings</a></li>
             </ul>
           </div><!--/.nav-collapse -->
@@ -75,7 +75,7 @@
   <form class="form-horizontal">
 	<h4>General Details</h4>
 	<div class="control-group">
-		<label class="control-label" for="serverselect">Server</label>
+		<label class="control-label" for="serverselect">Instance</label>
 		<div class="controls">
 		  <select id="serverselect"></select>
 		</div>
@@ -84,28 +84,31 @@
 	<div class="control-group">
 		<label class="control-label" for="datapoints">Data</label>
 		<div class="controls">
-		  <textarea id="datapoints" rows="1" cols="40"></textarea><span id="mixedContentWarning" style="color:red;display:none;"><b>Mixed content types are not supported.</b></span><br>
-			<i>multiple datapoints (max: 1000) may be entered as comma-separated values. they will all share the same classifications below</i>
+		  <textarea id="datapoints" rows="1" cols="40"></textarea>
+		  <span id="mixedContentWarning" style="color:red;display:none;">
+		      <b>Mixed content types are not supported.</b>
+		  </span>
+	      <br><i>comma-seperated (max: 1000)<br>
 		</div>
 	</div>	
 	
 
 	<div class="control-group">
-		<label class="control-label" for="impact">Impact</label>
+		<label class="control-label" for="assessment">Assessment</label>
 		<div class="controls">
-			<select id="impact">
-				<option value="botnet">Botnet</option>
-				<option value="malware/exploit">Malware / Exploit</option>
-				<option value="phishing">Phishing</option>
-				<option value="networks">Networks</option>
-				<option value="nameserver">Nameserver</option>
-				<option value="fastflux">Fastflux</option>
-				<option value="scanner">Scanner</option>
-				<option value="spam">Spam</option>
-				<option value="whitelist">Whitelist</option>
+			<select id="assessment">
+				<option value="botnet">botnet</option>
+				<option value="malware">malware / exploit</option>
+				<option value="phishing">phishing</option>
+				<option value="fastflux">fastflux</option>
+				<option value="scanner">scanner</option>
+				<option value="spam">spam</option>
+				<option value="spamvirtizing">spamvirtizing</option>
+				<option value="suspicious">suspicious</option>
+				<option value="whitelist">Wwitelist</option>
 			</select>
 			<br>
-			<i>Refer to the impact taxonomy <a href="http://code.google.com/p/collective-intelligence-framework/wiki/TaxonomyImpact" target="_blank">here</a></i>
+			<i>Refer to the <a href="http://code.google.com/p/collective-intelligence-framework/wiki/FeedAssessments_v1" target="_blank">assessment definitions</a></i>
 		</div>
 	</div>
 	
@@ -113,7 +116,7 @@
 		<label class="control-label" for="description">Description</label>
 		<div class="controls">
 		  	<textarea id="description" rows="1" cols="40">unknown</textarea><br>
-			<i>description (e.g. zues c&amp;c)</i>
+			<i>description (e.g. zeus, spyeye, etc..)</i>
 		</div>
 	</div>
 	
@@ -121,21 +124,6 @@
 		<label class="control-label" for="confidence">Confidence</label>
 		<div class="controls">
 			<select id="confidence"></select>
-			<br>
-			<i>Refer to the confidence taxonomy <a href="http://code.google.com/p/collective-intelligence-framework/wiki/TaxonomyConfidence" target="_blank">here</a></i>
-		</div>
-	</div>
-
-	<div class="control-group" id="severity-tr">
-		<label class="control-label" for="severity">Severity</label>
-		<div class="controls">
-			<select id="severity">
-				<option value="null">Null</option>
-				<option value="low">Low</option>
-				<option value="medium">Medium</option>
-				<option value="high">High</option>
-			</select>
-			<br/><i>Refer to the severity taxonomy <a href="http://code.google.com/p/collective-intelligence-framework/wiki/TaxonomySeverity" target="_blank">here</a></i>
 		</div>
 	</div>
 	
