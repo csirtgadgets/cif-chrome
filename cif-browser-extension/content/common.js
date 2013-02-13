@@ -8,7 +8,7 @@ CIF_CLIENT.getStorageContext=function(){
 		var appInfo = Components.classes["@mozilla.org/xre/app-info;1"].getService(Components.interfaces.nsIXULAppInfo);
 	} catch(err){}
 	if (typeof appInfo != 'undefined'){ //if this is defined, we are in firefox
-		var url = "http://cifclientff.ren-isac.net.local"; //need a context for localstorage in firefox
+		var url = "http://cif-client-chrome.collectiveintel.net.local"; //need a context for localstorage in firefox
 		var ios = Components.classes["@mozilla.org/network/io-service;1"]
 				  .getService(Components.interfaces.nsIIOService);
 		var ssm = Components.classes["@mozilla.org/scriptsecuritymanager;1"]
@@ -207,7 +207,7 @@ CIF_CLIENT.showVersion=function(){
 	try {
 		// Firefox 4 and later; Mozilla 2 and later
 		Components.utils.import("resource://gre/modules/AddonManager.jsm");
-		AddonManager.getAddonByID("cifclient@ren-isac.net", function(addon) {
+		AddonManager.getAddonByID("support@collectiveintel.net", function(addon) {
 				CIF_CLIENT.storeItem('myversion',addon.version);
 				if (CIF_CLIENT.getItem('latestversion')!=undefined && CIF_CLIENT.getItem('latestversion')!=null
 				 && CIF_CLIENT.getItem('latestversion')!='null'
