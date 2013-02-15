@@ -12,50 +12,52 @@ var cif_connector = {
 		if (typeof args.filters == 'undefined') args.filters="";
 		if (typeof args.log != 'undefined' && args.log===false) noLog='&nolog=1';
 		
-		var ajaxparams={type: "GET",dataType: "json", accept: 'application/json'};
+		var ajaxparams={type: "GET",dataType: "text", accept: 'application/json', cache: false};
 		ajaxparams.url=args.url+args.query+"?apikey="+args.apikey+"&fmt=json"+noLog+args.filters+"&query="+args.query;
 		if (typeof args.context != 'undefined') ajaxparams.context=args.context;
 		ajaxparams.success=function(received){
-								/* this doesn't do anything right now, but this would be a good place to modify the data 
-								 * in the 'received' var if it were in some kind of special format like a 
-								 * google protocol buffer...
-								 * received=protoBufToJson(received);
+								/* 
+								 * Parses the received data into a data structure
 								 */
-								if (received==null){
-									received={};
-									received.message='no records';
-									received.entries=new Array();
-								}else if (received.data==null){//v1 responses don't contain everything in data
-									received.entries=new Array(received);
-									received.message='v1';								
+								var data = {};
+								// TODO
+								/* we should try to \n split this into an array and for-loop it 
+								 * KB: It's already in memory at this point. Splitting by line breaks into an array instead of making it into correct JSON
+								 *     and parsing it as an array results in the same memory cost.
+								 *	   Iterating over individual records at this point would require all of the downstream functions to be rewritten and other functions 
+								 *     would have to be created to prepare the initial table for the records and setup the sorting when done. In the current design, this function
+								 *	   is agnostic to the structure of the data, it just cleans responses and catches errors before passing the data to the original callback. 
+								 */
+								 
+								try {
+									data=jQuery.parseJSON($.trim(received));
+								} catch(err){
+									
+									//bad JSON. probably a v1 response, this encapsulates the individual JSON responses into one
+									received=received.replace(/(\r\n|\n|\r)/gm,"").replace(/}{/g,"},{");
+									try{
+										data.entries=jQuery.parseJSON("["+received+"]");
+										data.message='v1';
+									} catch(err) {
+										//not json
+									}
 								}
+								
+								if (typeof data.data == 'undefined'){
+									if (!data.entries || typeof data.entries == 'undefined' || data.entries.length==0){
+										data.message='no records';
+										data.entries = new Array();
+									}
+								} 
+								
 								//scopes $(this) for the success function to the context passed into the ajax call
 								var scopedfunction=$.proxy(args.successFunction,$(this)); 
-								scopedfunction(received);
-						   };
+								scopedfunction(data);
+						    };
 		ajaxparams.error=function(xhr,status,error){ //function called on ajax failures (e.g 404's)
-			
-			/* if it's just a json error, it's because the new version doesn't return a json array, but individual json objects line separated */
-			if (xhr.status==200){
-				var received = {};
-				// TODO
-				/* we should try to \n split this into an array and for-loop it */
-				xhr.responseText=xhr.responseText.replace(/(\r\n|\n|\r)/gm,"").replace(/}{/g,"},{");
-				received.entries=jQuery.parseJSON("["+xhr.responseText+"]");
-				if (!received.entries || typeof received.entries == undefined || received.entries.length==0){
-					received.message='no records';
-				} else {
-					received.message='v1';
-					received.status=200;
-				}
-				var scopedfunction=$.proxy(args.successFunction,$(this)); 
-				scopedfunction(received);
-				//console.log(received);
-			} else {
-				var scopedfunction=$.proxy(args.errorFunction,$(this));
-				scopedfunction(xhr,status,error);
-			}
-		};
+								var scopedfunction=$.proxy(args.errorFunction,$(this));
+								scopedfunction(xhr,status,error);
+							};
 		$.ajax(ajaxparams);
 	},
 	
