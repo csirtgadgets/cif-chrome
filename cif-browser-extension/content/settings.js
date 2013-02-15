@@ -75,17 +75,17 @@ CIF_CLIENT.restore_options=function() {
 
 
 CIF_CLIENT.addProfileRow=function(name,url,key,isDefault,logQueries){
-	toappend='<tr class="profilerow">\
-				<td><input type="text" class="nameinput input-medium"  placeholder="e.g. My CIF Server"/></td>\
-				<td><input type="text" class="urlinput input-xlarge" placeholder="e.g. https://example.org/api/"/></td>\
-				<td><input type="text" class="keyinput input-xlarge" placeholder="e.g. 012345678-1234-abcd-4321-dcba00000000"/></td>\
-				<td><button class="testbutton btn btn-small">Test Connection</button> 
-				    <button class="deletebutton btn btn-danger btn-small">Delete</button>
-				</td>\
-				<td class="teststatus" ></td>\
-				<td><span class="label">Default Server:</span> <input type="radio" class="defaultradioinput" name="isdefault" disabled/><br/>\
-				<span class="label">Log Queries by Default:</span> <input type="checkbox" class="logqueriesinput" checked/></td>\
-				</tr>';
+	toappend='<tr class="profilerow">';
+	toappend+='<td><input type="text" class="nameinput input-medium"  placeholder="e.g. My CIF Server"/></td>';
+	toappend+='<td><input type="text" class="urlinput input-xlarge" placeholder="e.g. https://example.org/api/"/></td>';
+	toappend+='<td><input type="text" class="keyinput input-xlarge" placeholder="e.g. 012345678-1234-abcd-4321-dcba00000000"/></td>';
+	toappend+='<td><button class="testbutton btn btn-small">Test Connection</button>';
+	toappend+='<button class="deletebutton btn btn-danger btn-small">Delete</button>';
+	toappend+='</td>';
+	toappend+='<td class="teststatus" ></td>';
+	toappend+='<td><span class="label">Default Server:</span> <input type="radio" class="defaultradioinput" name="isdefault" disabled/><br/>';
+	toappend+='<span class="label">Log Queries by Default:</span> <input type="checkbox" class="logqueriesinput" checked/></td>';
+	toappend+='</tr>';
 	$("#profilestable").append(toappend);
 	$(".nameinput").last().val(name);
 	$(".urlinput").last().val(url);
