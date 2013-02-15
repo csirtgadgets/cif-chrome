@@ -19,6 +19,7 @@ $(document).ready(function() {
 	});
 	$("#submitbutton").click(function(){
 		CIF_CLIENT.submitData();
+		return false;
 	});
 });
 if(!CIF_CLIENT){
