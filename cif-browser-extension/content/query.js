@@ -631,7 +631,6 @@ CIF_CLIENT.buildTextTable=function(entries){
 		keys.push(k);
 	}
 	keys.sort();
-	console.log(keys);
 	//now we build the text table this time through
 	for (i in entries){
 		if (i==0){ //need the headers first time through
