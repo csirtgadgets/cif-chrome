@@ -112,6 +112,7 @@ CIF_CLIENT.addProfileRow=function(name,url,key,isDefault,logQueries){
 		CIF_CLIENT.test_settings($(this));
 	});
 	$(".deletebutton").last().click(function(){
+		if (!confirm('Are you sure you want to delete this profile?')) return false;
 		$(this).parent().parent().remove();
 	});
 	if (!$("input[name='isdefault']:checked").val()) {
