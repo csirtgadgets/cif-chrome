@@ -79,8 +79,8 @@ CIF_CLIENT.addProfileRow=function(name,url,key,isDefault,logQueries){
 	toappend+='<td><input type="text" class="nameinput input-medium"  placeholder="e.g. My CIF Server"/></td>';
 	toappend+='<td><input type="text" class="urlinput input-xlarge" placeholder="e.g. https://example.org/api/"/></td>';
 	toappend+='<td><input type="text" class="keyinput input-xlarge" placeholder="e.g. 012345678-1234-abcd-4321-dcba00000000"/></td>';
-	toappend+='<td><button class="testbutton btn btn-small">Test Connection</button>';
-	toappend+='<button class="deletebutton btn btn-danger btn-small">Delete</button>';
+	toappend+='<td><button class="deletebutton btn btn-danger btn-small">Delete</button> ';
+	toappend+='<button class="testbutton btn btn-small btn-success">Test Connection</button>';
 	toappend+='</td>';
 	toappend+='<td class="teststatus" ></td>';
 	toappend+='<td><span class="label">Default Server:</span> <input type="radio" class="defaultradioinput" name="isdefault" disabled/><br/>';
