@@ -184,7 +184,6 @@ CIF_CLIENT.parseDataToBody=function(data,fieldset){
 		  <th>address</th><th>protocol/ports</th>\
 		  <th>reporttime</th>\
 		  <th>assessment</th>\
-		  <th>severity</th>\
 		  <th>confidence</th>\
 		  <th>description</th>\
 		  <th>Incident Meta Data <br/><span class="smallfont">(<a href="#" class="expandall incident">Expand</a>/<a href="#" class="collapseall incident">Collapse</a> all)</span></th>\
@@ -450,7 +449,6 @@ CIF_CLIENT.parseV1entry=function(data,fieldset){
 	} else {
 		ulchunk+=CIF_CLIENT.tdwrap(data.impact);//impact
 	}
-	ulchunk+=CIF_CLIENT.tdwrap(data.severity); //severity
 	ulchunk+=CIF_CLIENT.tdwrap(data.confidence); //confidence
 	ulchunk+=CIF_CLIENT.tdwrap(data.description,'description');//description
 	ulchunk+=CIF_CLIENT.tdwrap(data.relatedid);//additional incident data
