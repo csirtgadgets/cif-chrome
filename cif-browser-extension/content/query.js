@@ -182,7 +182,7 @@ CIF_CLIENT.parseDataToBody=function(data,fieldset){
 	  <tr>\
 		  <th>restriction</th>\
 		  <th>address</th><th>protocol/ports</th>\
-		  <th>detecttime</th>\
+		  <th>reporttime</th>\
 		  <th>assessment</th>\
 		  <th>severity</th>\
 		  <th>confidence</th>\
