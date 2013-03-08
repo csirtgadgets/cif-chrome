@@ -256,6 +256,7 @@ CIF_CLIENT.parseDataToBody=function(data,fieldset){
 		"bFilter": false,
 		"bPaginate": false,
 		"bInfo": false,
+		"aaSorting": [[3,'desc'], [7,'desc']]
 	});
 }
 
