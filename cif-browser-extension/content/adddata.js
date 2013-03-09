@@ -39,6 +39,18 @@ CIF_CLIENT.togglealternativeidinput=function(){
 		$("#removealtid").show();
 	}
 }
+
+CIF_CLIENT.toggleSharingInput=function(){
+    if ($("#removesharing").is(":visible")){
+        $("#removesharing").hide();
+        $("#sharing-tr").hide();  
+        $("#sharing").show();
+    } else {
+        $("#removesharing").show();
+        $("#sharing-tr").show();
+    }
+}
+
 CIF_CLIENT.severitynull=function(){
 	$("option",$("#severity")).remove();
 	$("#severity").append('<option value="null">Null</option>');
@@ -130,6 +142,7 @@ CIF_CLIENT.resetForm=function(){
 	if ($("#removealtid").is(":visible")){
 		CIF_CLIENT.togglealternativeidinput();
 	}
+
 	$("#description").val('unknown');
 	$("option",$("#protocol")).removeAttr('selected');
 }
@@ -277,6 +290,10 @@ CIF_CLIENT.parseDataInput=function(){
 CIF_CLIENT.populateConfidenceValues=function (){
 	cons = CIF_CLIENT.getConfidenceMap();
 	for (i in cons){
-		$("#confidence").append('<option value="'+cons[i]['numeric']+'">'+cons[i]['word']+'</option>');
+	    selected = '';
+	    if(cons[i]['numeric'] == '75'){
+	        selected = ' selected';
+	    }
+		$("#confidence").append('<option value="'+cons[i]['numeric']+'"'+selected+'>'+cons[i]['word']+'</option>');
 	}
 }

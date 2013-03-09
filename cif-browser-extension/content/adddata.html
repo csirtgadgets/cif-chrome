@@ -71,9 +71,9 @@
 		
           <div class="well">
 
-  <h3>Document the Observation</h3>
+  <legend>Document the Observation</legend>
   <form class="form-horizontal">
-	<h4>General Details</h4>
+	<legend>General Details</legend>
 	<div class="control-group">
 		<label class="control-label" for="serverselect">Instance</label>
 		<div class="controls">
@@ -105,7 +105,7 @@
 				<option value="spam">spam</option>
 				<option value="spamvirtizing">spamvirtizing</option>
 				<option value="suspicious">suspicious</option>
-				<option value="whitelist">Wwitelist</option>
+				<option value="whitelist">Whitelist</option>
 			</select>
 			<br>
 			<i>Refer to the <a href="http://code.google.com/p/collective-intelligence-framework/wiki/FeedAssessments_v1" target="_blank">assessment definitions</a></i>
@@ -143,27 +143,7 @@
 		</div>
 	</div>
 	
-	<div class="control-group">
-		<a href="#" id="addaltid">Add Alternative ID</a>
-		<a href="#" id="removealtid" style="display:none;">Remove Alternative ID</a>
-	</div>
-
-	<div class="control-group" id="altid-tr" style="display:none;">
-		<label class="control-label" for="altid">Alternative ID</label>
-		<div class="controls">
-			<input type="text" id="altid" size="50" maxlength="140"/><br>
-		</div>
-	</div>
-	
-	<div class="control-group" id="altidrestriction-tr" style="display:none;">
-		<label class="control-label" for="altidrestriction">Alt. ID Restriction</label>
-		<div class="controls">
-			<select id="altidrestriction"></select>
-		</div>
-	</div>
-	
-	
-	<h4>Sharing Information</h4>
+	<legend>Sharing Information</legend>
 	
 	<div class="control-group">
 		<label class="control-label" for="groupbox">Groups</label>
@@ -179,6 +159,26 @@
 			<select id="restriction"></select>
 		</div>
 	</div>
+	
+    <div class="control-group">
+        <a href="#" id="addaltid">[+ Alternative ID]</a>
+        <a href="#" id="removealtid" style="display:none;">[- Alternative ID]</a>
+    </div>
+    
+    <div class="control-group" id="altid-tr" style="display:none;">
+        <legend>Alternative ID</legend>
+        <label class="control-label" for="altid">Alternative ID</label>
+        <div class="controls">
+            <input type="text" id="altid" size="50" maxlength="140"/><br>
+        </div>
+    </div>
+    
+    <div class="control-group" id="altidrestriction-tr" style="display:none;">
+        <label class="control-label" for="altidrestriction">Alt. ID Restriction</label>
+        <div class="controls">
+            <select id="altidrestriction"></select>
+        </div>
+    </div>
 	
   <!--<img src="images/ajax-loader.gif" id="loadinggif"/>-->
   <button id="submitbutton" class="btn btn-primary">Submit</button>

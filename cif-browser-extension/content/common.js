@@ -35,8 +35,12 @@ CIF_CLIENT.getItem=function(key){
 CIF_CLIENT.populateRestrictions=function(){
 	restrictions = CIF_CLIENT.getRestrictions();
 	for (i in restrictions){
-		$("#restriction").append('<option value="'+restrictions[i]+'">'+restrictions[i]+'</option>');
-		$("#altidrestriction").append('<option value="'+restrictions[i]+'">'+restrictions[i]+'</option>');
+        selected = '';
+        if(restrictions[i] == 'default'){
+            selected = ' selected';
+        }
+		$("#restriction").append('<option value="'+restrictions[i]+'"'+selected+'>'+restrictions[i]+'</option>');
+		$("#altidrestriction").append('<option value="'+restrictions[i]+'"'+selected+'>'+restrictions[i]+'</option>');
 	}
 }
 CIF_CLIENT.getServerLogSetting=function(server){
@@ -116,7 +120,7 @@ CIF_CLIENT.defaultRestrictions=function(){
 }
 CIF_CLIENT.defaultConfidence=function(){
 	confidencemap = new Array();
-	confidencemap.push({'numeric':'41','word':'Not Confident'});
+	confidencemap.push({'numeric':'25','word':'Not Confident'});
 	confidencemap.push({'numeric':'75','word':'Somewhat Confident'});
 	confidencemap.push({'numeric':'85','word':'Very Confident'});
 	confidencemap.push({'numeric':'95','word':'Certain'});

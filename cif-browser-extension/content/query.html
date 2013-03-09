@@ -127,23 +127,49 @@ tr.odd td.sorting_1 {
     <div class="container-fluid">
 <div class="row-fluid">
 	<div class="span3">
-          
 		  <div class="well sidebar-nav" style="min-width:300px;">
             <ul class="nav nav-list">
              <div id="searchbox" style="display:none;">
 				<fieldset >
 				<legend><b>Run a New Query</b></legend>
 				<form id="theform" class='inwindow'>
-				Server: <select id="serverselect"></select><br/>
-				Query: <input type="text" id="querystring" value="" size="50"><br/>
-				<input type="submit" name="Submit" class="btn btn-primary btn-small"> Log Query: <input type="checkbox" id="logquery" checked>
-				  [<a href="#" id="showfilters">+</a><a href="#" id="hidefilters" style="display:none;">-</a>]
-				  <fieldset id="additionalfilters" style="display:none;">
-				  <legend>Search Filters</legend>
-				  <input type="checkbox" id="useconfidence"> Confidence: <input type="text" id="confidence" size="3" disabled/><br/>
-				  <input type="checkbox" id="userestriction"> Restriction: <select id="restriction" disabled></select><br/>
-				  <input type="checkbox" id="uselimit"> Limit: <input type="text" id="limit" size="5" disabled/>
-				  </fieldset>
+                    <table>
+                        <tr>
+				            <td>Server</td>
+				            <td><select id="serverselect"></select></td>
+				        </tr>
+				        <tr>
+				            <td>Query</td>
+				            <td><input type="text" id="querystring" value="" size="50"></td>
+				        </tr>
+				        <tr>
+				            <td>Log Query</td>
+				            <td><input type="checkbox" id="logquery" align="right" checked></td>
+				        </tr>
+				        <tr>
+				            <td>[<a href="#" id="showfilters">+ filters</a><a href="#" id="hidefilters" style="display:none;">- filters</a>]</td>
+				            <td></td>
+				        </tr>
+				    </table>
+				    <table id="additionalfilters" style="display:none;">
+                        <tr>
+                                    <td>Confidence</td>
+                                    <td><input type="text" id="confidence" size="3"></td>
+                                </tr>
+                                <tr>
+                                    <td>Restriction</td>
+                                    <td><select id="restriction"></select></td>
+                                </tr>
+                                <tr>
+                                    <td>Limit</td>
+                                    <td><input type="text" id="limit" size="5"></td>
+                                </tr>  
+                    </table>
+				        <tr>
+				            <td></td>
+				            <td><input type="submit" name="Submit" class="btn btn-primary btn-small"></td>
+				        </tr>
+				    </table>
 				</form>
 				</fieldset>
 			  </div>
