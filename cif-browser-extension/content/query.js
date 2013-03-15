@@ -94,14 +94,6 @@ CIF_CLIENT.runQuery=function(string,filterobj,cifurl,cifapikey,logQuery,server){
 		filters+='&limit='+encodeURIComponent(filterobj['limit']);
 		prettyfilters+="Limit: "+encodeURIComponent(filterobj['limit'])+" ";
 	}
-	if (typeof filterobj['restriction']!='undefined'){
-		filters+='&restriction='+encodeURIComponent(filterobj['restriction']);
-		prettyfilters+="Restriction: "+encodeURIComponent(filterobj['restriction'])+" ";
-	}
-	if (typeof filterobj['severity']!='undefined'){
-		filters+='&severity='+encodeURIComponent(filterobj['severity']);
-		prettyfilters+="Severity: "+encodeURIComponent(filterobj['severity'])+" ";
-	}
 	if (typeof filterobj['confidence']!='undefined'){
 		filters+='&confidence='+encodeURIComponent(filterobj['confidence']);
 		prettyfilters+="Confidence: "+encodeURIComponent(filterobj['confidence'])+" ";

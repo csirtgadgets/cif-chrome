@@ -193,18 +193,12 @@ CIF_CLIENT.prepSearchFilters=function(){
 }
 CIF_CLIENT.getFilters=function(){
 	var filters = {};
-	if ($("#uselimit").is(":checked") && $('#limit').val().trim()!=''){
-		filters['limit']=$('#limit').val().trim();
-	}
 	if ($("#useseverity").is(":checked") && $('#severity').val().trim()!=''){
 		filters['severity']=$('#severity').val().trim();
 	}
-	if ($("#useconfidence").is(":checked") && $('#confidence').val().trim()!=''){
-		filters['confidence']=$('#confidence').val().trim();
-	}
-	if ($("#userestriction").is(":checked") && $('#restriction').val().trim()!=''){
-		filters['restriction']=$('#restriction').val().trim();
-	}
+	filters['limit']=$('#limit').val().trim();
+    filters['confidence']=$('#confidence').val().trim();
+    //filters['restriction']=$('#restriction').val().trim();
 	return filters;
 }	
 CIF_CLIENT.showVersion=function(){
