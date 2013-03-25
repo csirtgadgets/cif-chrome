@@ -466,6 +466,7 @@ CIF_CLIENT.parseIODEFentry=function(data,fieldset){
 	entry.ports=CIF_CLIENT.extractItem('EventData,Flow,System,Service,Portlist',data['Incident']);
 	entry.detecttime=CIF_CLIENT.extractItem('DetectTime',data['Incident']);
 	entry.impact = CIF_CLIENT.extractItem('Assessment,Impact,content',data['Incident']);
+	if (entry.impact=='') entry.impact = CIF_CLIENT.extractItem('Assessment,Impact',data['Incident']); //whitelist responses aren't nested into the 'content' key
 	entry.severity = CIF_CLIENT.extractItem('Assessment,Impact,severity',data['Incident']);
 	entry.confidence = CIF_CLIENT.extractItem('Assessment,Confidence,content',data['Incident']);
 	entry.description = CIF_CLIENT.extractItem('Description',data['Incident']);
