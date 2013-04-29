@@ -30,7 +30,15 @@ var cif_connector = {
 								 */
 								 
 								try {
-									data=jQuery.parseJSON($.trim(received));
+									parseddata=jQuery.parseJSON($.trim(received));
+									if (typeof parseddata.message == 'undefined'){ //is v1
+										data = {}
+										data.entries=new Array();
+										data.entries.push(parseddata);
+										data.message='v1';
+									} else {
+										data = parseddata;
+									}
 								} catch(err){
 									
 									//bad JSON. probably a v1 response, this encapsulates the individual JSON responses into one
