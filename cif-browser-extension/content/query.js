@@ -1,5 +1,4 @@
 $(document).ready(function() {
-	window.protocoldata = new Array();
 	CIF_CLIENT.settingsCheck();
 	CIF_CLIENT.showVersion();
 	CIF_CLIENT.populateProtocolTranslations();
