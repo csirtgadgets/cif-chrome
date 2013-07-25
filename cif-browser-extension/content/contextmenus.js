@@ -25,22 +25,23 @@ CIF_CLIENT.queryClick=function(info, tab) {
 	} catch(err) {
 		console.log(err);
 	}
-	
+
 	if (!alwaysNewPages){
 		/* check for existing query page 
 		 * if it exists, have it run the query
 		 */
 		var views = chrome.extension.getViews({'type':'tab'});
 		for (i in views) {
-			if (views[i].location.href.indexOf(chrome.extension.getURL('content/query.html')) == 0) {
+			if (views[i].location.href.indexOf(chrome.extension.getURL('chrome://cifclient/content/query.html')) == 0) {
 			  views[i].CIF_CLIENT.runQuerySet();
 			  return;
 			} 
 		}
 	}
+
 	/* query page isn't open, open it and run the query */
 	localStorage['runquery']='true'; //tells the new query page to run the query in storage when launched
-	chrome.tabs.create({url: "content/query.html"}); 
+	chrome.tabs.create({url: "chrome://cifclient/content/query.html"}); 
 }
 
 /*
@@ -75,7 +76,7 @@ CIF_CLIENT.iconParty=function(){
 	if (iconindex>4) iconindex=1;
 	chrome.browserAction.setIcon({'path':"images/favicon_"+CIF_CLIENT.iconindex+".ico"});
 	CIF_CLIENT.iconindex++;
-	window.setTimeout(CIF_CLIENT.iconParty, 10000, true);
+	window.setInterval(function () { CIF_CLIENT.iconParty(); }, 1000);
 }									 
 
 

@@ -218,6 +218,7 @@ if (typeof appInfo != 'undefined'){ //if this is not undefined, we are in firefo
 		if (newWinPref=='ignoreNewWindow'){
 			alwaysNewPages=false;
 		}
+		alwaysNewPages=false;
 		if (alwaysNewPages){
 			CIF_CLIENT.makeNewPage("content/query.html");
 		} else {

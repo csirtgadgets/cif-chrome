@@ -249,13 +249,14 @@ CIF_CLIENT.showVersion=function(){
 		});
 	}
 }
+
 CIF_CLIENT.prepSearchBox=function(){
     options = JSON.parse(CIF_CLIENT.getItem("cifapiprofiles"));
 	for (i in options){
 		if (options[i]['isDefault']){
-			$('#serverselect').append('<option value="'+i+'" selected>'+options[i]['name']+'</option>');
+			$('#serverselect').append('<option value="'+ i +'" selected>'+ options[i]['name'].toString() +'</option>');
 		} else {
-			$('#serverselect').append('<option value="'+i+'">'+options[i]['name']+'</option>');
+			$('#serverselect').append('<option value="'+ i +'">'+ options[i]['name'].toString() +'</option>');
 		}
 	}
 	$('#serverselect').change(function(){

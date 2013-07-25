@@ -1,3 +1,6 @@
+var dataToSend = new Array();
+var groupstosendto = new Array();
+
 $(document).ready(function() {
 	try{
 		var fromcontext=JSON.parse(CIF_CLIENT.getItem("datatoadd"));
@@ -15,13 +18,14 @@ $(document).ready(function() {
 	});
 	$("#datapoints").keyup(function(){
 		window.clearTimeout(window.keyuptimeoutid);
-		window.keyuptimeoutid=window.setTimeout(CIF_CLIENT.parseDataInput,1000, true);
+		window.keyuptimeoutid = window.setTimeout(function () { CIF_CLIENT.parseDataInput(); }, 1000);
 	});
 	$("#submitbutton").click(function(){
 		CIF_CLIENT.submitData();
 		return false;
 	});
 });
+
 if(!CIF_CLIENT){
     var CIF_CLIENT = {};
 }
@@ -77,7 +81,7 @@ CIF_CLIENT.submitData=function(){
 		CIF_CLIENT.showError("Please enter some data.");
 		return;
 	}
-	window.groupstosendto=groups;
+	groupstosendto = groups;
 	CIF_CLIENT.sendToServer();
 }
 CIF_CLIENT.sendToServer=function(){
@@ -85,11 +89,11 @@ CIF_CLIENT.sendToServer=function(){
 	var server=$("#serverselect").val();
 	var cifapikey = CIF_CLIENT.getServerKey(server);
 	var cifurl = CIF_CLIENT.getServerUrl(server);
-	var dataToSend = new Array();
+	console.log($("#portlist").val());
 	for (i in window.datapoints){
 		for (j in window.groupstosendto){
 			var individualentry={'address':window.datapoints[i],
-							'impact':$("#assessment option:selected").val(),
+							'assessment':$("#assessment option:selected").val(),
 							'description':$("#description").val().trim(),
 							'portlist':$("#portlist").val().trim(),
 							'protocol':$("#protocol option:selected").val(),
@@ -104,7 +108,7 @@ CIF_CLIENT.sendToServer=function(){
 			dataToSend.push(individualentry);
 		}
 	}
-	window.dataToSend=dataToSend;
+	console.log(dataToSend);
 	cif_connector.post({
 		url:cifurl,
 		apikey:cifapikey,
@@ -130,9 +134,9 @@ CIF_CLIENT.prepServerBox=function(){
 	options = JSON.parse(CIF_CLIENT.getItem("cifapiprofiles"));
 	for (i in options){
 		if (options[i]['isDefault']){
-			$('#serverselect').append('<option value="'+i+'" selected>'+options[i]['name']+'</option>');
+			$('#serverselect').append('<option value="'+ i + '" selected>' + options[i]['name'].toString() + '</option>');
 		} else {
-			$('#serverselect').append('<option value="'+i+'">'+options[i]['name']+'</option>');
+			$('#serverselect').append('<option value="'+ i +'">' + options[i]['name'].toString() + '</option>');
 		}
 	}
 }
@@ -258,7 +262,7 @@ CIF_CLIENT.parseDataInput=function(){
 			$("#detectedentries").append("<li><b>SHA1/MD5/UUID:</b> "+points[i]+"</li>");
 		}
 		else {
-			$("#protocol-tr, #portlist-tr").show();
+			//$("#protocol-tr, #portlist-tr").show();
 			typesfound['ipordomain']=true;
 			$("#detectedentries").append("<li><b>address:</b> "+points[i]+"</li>");
 		}
