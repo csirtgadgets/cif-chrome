@@ -1,5 +1,8 @@
 Revision History for cif-client-chrome
 
+1.21.1	2013-07-25
+	- misc bugfixes
+
 1.21 2013-05-08
     - improved v1 support
     - cleaned up some of the language/artifacts
