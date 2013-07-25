@@ -13,5 +13,3 @@ Chrome
 Firefox
     Using Firefox, visit: https://addons.mozilla.org/en-US/firefox/addon/cif-client 
     Click on the CIF icon to enter your server settings.
-
-
