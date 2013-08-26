@@ -94,6 +94,10 @@ CIF_CLIENT.sendToServer=function(){
 		for (j in window.groupstosendto){
 			var individualentry={'address':window.datapoints[i],
 							'assessment':$("#assessment option:selected").val(),
+							// work-around for v0 instances
+							'severity':'medium',
+							'impact':$("#assessment option:selected").val(),
+							//
 							'description':$("#description").val().trim(),
 							'portlist':$("#portlist").val().trim(),
 							'protocol':$("#protocol option:selected").val(),
