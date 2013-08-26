@@ -32,7 +32,7 @@ if(!CIF_CLIENT){
 CIF_CLIENT.togglealternativeidinput=function(){
 	if ($("#removealtid").is(":visible")){
 		$("#altidrestriction-tr").hide();
-		$("#altid-tr").hide();	
+		$("#altid-tr").hide();
 		$("#addaltid").show();
 		$("#removealtid").hide();
 		$("#altid").val('');
@@ -47,7 +47,7 @@ CIF_CLIENT.togglealternativeidinput=function(){
 CIF_CLIENT.toggleSharingInput=function(){
     if ($("#removesharing").is(":visible")){
         $("#removesharing").hide();
-        $("#sharing-tr").hide();  
+        $("#sharing-tr").hide();
         $("#sharing").show();
     } else {
         $("#removesharing").show();
@@ -117,10 +117,10 @@ CIF_CLIENT.sendToServer=function(){
 			CIF_CLIENT.parseResponse(data);
 			CIF_CLIENT.resetForm();
 		},
-		errorFunction: function(e){ 
+		errorFunction: function(e){
 			if (e['status']==401){
 				CIF_CLIENT.showError("Error: Authorization required. Does your API key have write access?");
-			} else if (e['status']==0){ 
+			} else if (e['status']==0){
 				CIF_CLIENT.showError('Could not connect to the server. Try testing your server with a query.');
 			}
 			else {
@@ -130,7 +130,7 @@ CIF_CLIENT.sendToServer=function(){
 		}
 	});
 }
-CIF_CLIENT.prepServerBox=function(){    
+CIF_CLIENT.prepServerBox=function(){
 	options = JSON.parse(CIF_CLIENT.getItem("cifapiprofiles"));
 	for (i in options){
 		if (options[i]['isDefault']){
@@ -164,6 +164,7 @@ CIF_CLIENT.parseResponse=function(data){
 		tweetbutton=''; //disable twitter for future work
 		$("#submissionstatus").append('<div class="alert alert-success"><b>'+window.dataToSend[i]['address']+'</b> submitted with ID <b>'+data['data'][i]+'</b> '+tweetbutton+'<br/></div>');
 	}
+	dataToSend = new Array();
 }
 CIF_CLIENT.addObservedGroups=function(){
 	try{
@@ -206,7 +207,7 @@ CIF_CLIENT.parseDataInput=function(){
 		if (i>1000) continue; //sets maximum number of data points that can be submitted at once
 		if ((sorted_arr[i + 1] != sorted_arr[i]) && $.trim(sorted_arr[i])!='') {
 			points.push($.trim(sorted_arr[i]));
-		} 
+		}
 	}
 	var urlRegex = /(https?:\/\/[^\s]+)/;
 	var typesfound= {};
@@ -247,7 +248,7 @@ CIF_CLIENT.parseDataInput=function(){
 			}
 			$("#protocol-tr, #portlist-tr").hide();
 			$("#detectedentries").append("<li><b>URL:</b> "+points[i]+"</li>");
-		} 
+		}
 		else if (points[i].indexOf('@') != -1){
 			$("option",$("#protocol")).removeAttr('selected');
 			$("#naoption").attr('selected',true);
@@ -256,7 +257,7 @@ CIF_CLIENT.parseDataInput=function(){
 			typesfound['email']=true;
 			$("#detectedentries").append("<li><b>Email:</b> "+points[i]+"</li>");
 		}
-		else if (points[i].match(/^[a-fA-F0-9]{32}$/) || points[i].match(/^[a-fA-F0-9]{40}$/) 
+		else if (points[i].match(/^[a-fA-F0-9]{32}$/) || points[i].match(/^[a-fA-F0-9]{40}$/)
 				|| points[i].match(/^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/)){
 			typesfound['uid']=true;
 			$("#detectedentries").append("<li><b>SHA1/MD5/UUID:</b> "+points[i]+"</li>");
