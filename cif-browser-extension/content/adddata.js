@@ -169,6 +169,7 @@ CIF_CLIENT.parseResponse=function(data){
 		$("#submissionstatus").append('<div class="alert alert-success"><b>'+window.dataToSend[i]['address']+'</b> submitted with ID <b>'+data['data'][i]+'</b> '+tweetbutton+'<br/></div>');
 	}
 	dataToSend = new Array();
+	groupstosendto = new Array();
 }
 CIF_CLIENT.addObservedGroups=function(){
 	try{
