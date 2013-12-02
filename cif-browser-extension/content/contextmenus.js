@@ -1,5 +1,5 @@
 /*
- *  This file adds the right-click menus in Chrome and binds functions to the clicks. 
+ *  This file adds the right-click menus in Chrome and binds functions to the clicks.
  *  It's included directly from the manifest.json file, which is only read by Chrome.
  */
 
@@ -27,21 +27,21 @@ CIF_CLIENT.queryClick=function(info, tab) {
 	}
 
 	if (!alwaysNewPages){
-		/* check for existing query page 
+		/* check for existing query page
 		 * if it exists, have it run the query
 		 */
 		var views = chrome.extension.getViews({'type':'tab'});
 		for (i in views) {
-			if (views[i].location.href.indexOf(chrome.extension.getURL('chrome://cifclient/content/query.html')) == 0) {
+			if (views[i].location.href.indexOf(chrome.extension.getURL('content/query.html')) == 0) {
 			  views[i].CIF_CLIENT.runQuerySet();
 			  return;
-			} 
+			}
 		}
 	}
 
 	/* query page isn't open, open it and run the query */
 	localStorage['runquery']='true'; //tells the new query page to run the query in storage when launched
-	chrome.tabs.create({url: "chrome://cifclient/content/query.html"}); 
+	chrome.tabs.create({url: "content/query.html"});
 }
 
 /*
@@ -68,8 +68,8 @@ var id2 = chrome.contextMenus.create({"title": "Add '%s' to CIF",
 									 "onclick": CIF_CLIENT.addClick});
 
 
-/* changes the CIF icon every ten seconds 
- * disabled by default, call once to start 
+/* changes the CIF icon every ten seconds
+ * disabled by default, call once to start
  */
 CIF_CLIENT.iconindex = 1;
 CIF_CLIENT.iconParty=function(){
@@ -77,7 +77,7 @@ CIF_CLIENT.iconParty=function(){
 	chrome.browserAction.setIcon({'path':"images/favicon_"+CIF_CLIENT.iconindex+".ico"});
 	CIF_CLIENT.iconindex++;
 	window.setInterval(function () { CIF_CLIENT.iconParty(); }, 1000);
-}									 
+}
 
 
 
