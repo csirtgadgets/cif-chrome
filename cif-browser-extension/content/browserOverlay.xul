@@ -68,7 +68,7 @@
   <!-- Prepares the popup panel and it's right-click menu items.-->
   <popupset>
         <menupopup id="cifclient_menu_popup">
-            <menuitem label="Query Page" oncommand="CIF_CLIENT.switchToPage('chrome://cifclient/content/query.html');" />
+            <menuitem label="Query Page" oncommand="CIF_CLIENT.switchToPage('content/query.html');" />
 			<menuitem label="Data Submission Page" oncommand="gBrowser.selectedTab = gBrowser.addTab('chrome://cifclient/content/adddata.html');" />
             <menuitem label="Settings" oncommand="gBrowser.selectedTab = gBrowser.addTab('chrome://cifclient/content/settings.html');" />
         </menupopup>
