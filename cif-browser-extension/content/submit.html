@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Submit</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="">
+        <meta name="author" content="">
+
+        <script src="jquery.min.js"></script>
+
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+
+        <!-- Optional theme -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
+
+        <!-- Latest compiled and minified JavaScript -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+
+
+        <!-- JavaScript and HTML must be in separate files for security. -->
+        <script src="jquery.min.js"></script>
+        <script src="cif-connector.js"></script>
+        <script src="browserDependent_functions.js"></script>
+        <script src="common.js"></script>
+        <script src="submit.js"></script>
+    </head>
+    <body>
+        <nav class="navbar navbar-inverse">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="http://csirtgadgets.org" target="_blank">CIF</a>
+            </div>
+            <div id="navbar" class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="submit.html">Submit</a></li>
+                    <li><a href="settings.html">Settings</a></li>
+                </ul>
+                <form class="navbar-form" action="search.html">
+                    <div class="form-group">
+                        <input type="text" placeholder="evilbit.com" class="form-control">
+                    </div>
+                    <button type="submit" class="btn btn-success">Search</button>
+                </form>
+            </div>
+        </nav>
+
+        <div class="row">
+            <div class="col-md-4"></div>
+            <div class="col-md-4">
+                <div class="row">
+                    <div id="status"></div>
+                </div>
+                <div class="page-header">
+                    <h1>Submit</h1>
+                </div>
+                <form class="form-horizontal">
+                    <div class="form-group input-group-lg">
+                            <input class="form-control" type="text" placeholder="evilbit.com" id="observable">
+
+                    </div>
+                    <div class="form-group input-group-lg">
+                        <input class="form-control" type="text" placeholder="scanner, ssh, tag3, tag4" id="tags">
+                    </div>
+                    <div class="form-group input-group-lg">
+                        <select class="form-control" id="protocol">
+                            <option selected="1" value="tcp">TCP</option>
+                            <option value="tcp">UDP</option>
+                            <option value="tcp">ICMP</option>
+                        </select>
+                    </div>
+                    <div class="form-group input-group-lg">
+                        <input class="form-control" type="text" placeholder="Ports (21,23-25)" id="portlist">
+                    </div>
+                    <div class="form-group input-group-xlg">
+                        <textarea class="form-control" rows="4" placeholder="Comments..." id="comments"></textarea>
+                    </div>
+                    <div class="form-group input-group-lg">
+                        <input class="form-control" type="text" placeholder="http://www.spamhaus.org/sbl/sbl.lasso?query=SBL91148" id="altid">
+                    </div>
+                    <div class="form-group input-group-lg">
+                        <select class="form-control" id="serverselect"></select>
+                    </div>
+                    <div class="form-group input-group-lg">
+                        <button type="submit" class="btn btn-success">Submit</button>
+                    </div>
+                </form>
+            </div>
+            <div class="col-md-1"></div>
+        </div>
+    </body>
+</html>

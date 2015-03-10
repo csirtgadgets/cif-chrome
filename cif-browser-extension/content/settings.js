@@ -1,6 +1,8 @@
 if(!CIF_CLIENT){
     var CIF_CLIENT = {};
 }
+
+
 var options = new Array();
 // Saves options to localStorage.
 CIF_CLIENT.save_options=function() {
@@ -17,30 +19,12 @@ CIF_CLIENT.save_options=function() {
 		}
 	});
 	CIF_CLIENT.storeItem("cifapiprofiles",JSON.stringify(options));
-	/*
-	var restrictions=$("#restrictionsnames").val().trim().split("\n");
-	if (restrictions.length>0){
-		CIF_CLIENT.storeItem('restrictions',JSON.stringify(restrictions));
-	}
-	*/
-
-	var confidences=$("#confidencevalues").val().split("\n");
-	var tosave= new Array();
-	for (i in confidences){
-		var parts=confidences[i].split(':');
-		if (parts.length!=2) continue;
-		tosave.push({'numeric':parts[0],'word':parts[1]});
-	}
-	if (tosave.length>0){
-		CIF_CLIENT.storeItem('confidencemap',JSON.stringify(tosave));
-	}
 		
 	var miscOptions = {};
-	miscOptions.newTabOnquery=$('#setting_openQueryInNewWindow').is(':checked');
 	CIF_CLIENT.storeItem('miscOptions',JSON.stringify(miscOptions));
 	
 	// Update status to let user know options were saved.
-	$("#status").html("<div class='alert alert-block alert-success'>Options Saved.</div>").show().delay(1000).fadeOut('slow');
+	$("#status").html("<div class='alert alert-block alert-success'>Options Saved.</div>").show().delay(5000).fadeOut('slow');
 }
 // Restores select box state to saved value from localStorage.
 CIF_CLIENT.restore_options=function() {
@@ -52,21 +36,9 @@ CIF_CLIENT.restore_options=function() {
   } catch(err) {
 	console.log(err);
   }
-  confidencemap=CIF_CLIENT.getConfidenceMap();
-  $("#confidencevalues").val('');
-  for (i in confidencemap){
-	$("#confidencevalues").val($("#confidencevalues").val()+confidencemap[i]['numeric']+":"+confidencemap[i]['word']+"\n");
-  }
-  restrictions=CIF_CLIENT.getRestrictions();
-  $("#restrictionsnames").val('');
-  for (i in restrictions){
-	$("#restrictionsnames").val($("#restrictionsnames").val()+restrictions[i]+"\n");
-  }
+
   try{
 	miscOptions=JSON.parse(CIF_CLIENT.getItem("miscOptions"));
-	if (miscOptions.newTabOnquery){
-		$("#setting_openQueryInNewWindow").prop('checked',true);
-	}
   } catch(err) {
 	console.log(err);
   }
@@ -76,15 +48,14 @@ CIF_CLIENT.restore_options=function() {
 
 CIF_CLIENT.addProfileRow=function(name,url,key,isDefault,logQueries){
 	toappend='<tr class="profilerow">';
-	toappend+='<td><input type="text" class="nameinput input-medium"  placeholder="e.g. My CIF Server"/></td>';
-	toappend+='<td><input type="text" class="urlinput input-xlarge" placeholder="e.g. https://example.org/api/"/></td>';
-	toappend+='<td><input type="text" class="keyinput input-xlarge" placeholder="e.g. 012345678-1234-abcd-4321-dcba00000000"/></td>';
-	toappend+='<td><button class="deletebutton btn btn-danger btn-small">Delete</button> ';
-	toappend+='<button class="testbutton btn btn-small btn-success">Test Connection</button>';
-	toappend+='</td>';
-	toappend+='<td class="teststatus" ></td>';
-	toappend+='<td><span class="label">Default Server:</span> <input type="radio" class="defaultradioinput" name="isdefault" disabled/><br/>';
-	toappend+='<span class="label">Log Queries by Default:</span> <input type="checkbox" class="logqueriesinput" checked/></td>';
+	toappend+='<td><input type="text" class="nameinput form-control"  placeholder="My CIF Server"/></td>';
+	toappend+='<td><input type="text" class="urlinput form-control" placeholder="https://example.org/api" size="72"/></td>';
+	toappend+='<td><input type="text" class="keyinput form-control" placeholder="12341234" size="72"/></td>';
+
+	toappend+='<td><span class="aria-label">Default Server:</span> <input type="radio" class="defaultradioinput" name="isdefault" disabled/><br/>';
+	toappend+='<span class="aria-label">Log Queries:</span> <input type="checkbox" class="logqueriesinput" checked/></td>';
+    toappend+='<td><button class="deletebutton btn btn-danger btn-small">Delete</button> ';
+    toappend+='<button class="testbutton btn btn-small btn-success">Test Connection</button></td>';
 	toappend+='</tr>';
 	$("#profilestable").append(toappend);
 	$(".nameinput").last().val(name);
@@ -114,42 +85,48 @@ CIF_CLIENT.addProfileRow=function(name,url,key,isDefault,logQueries){
 	$(".deletebutton").last().click(function(){
 		if (!confirm('Are you sure you want to delete this profile?')) return false;
 		$(this).parent().parent().remove();
+        $("#status").html("<div class='alert alert-block alert-success'>Profile Removed.</div>").show().delay(5000).fadeOut('slow');
 	});
 	if (!$("input[name='isdefault']:checked").val()) {
 		$('.defaultradioinput').last().prop('checked',true);
 	}
 }
+
 CIF_CLIENT.test_settings=function(clickedbutton){
-	var cifurl=$(".urlinput",clickedbutton.parent().parent()).val().trim();
-	var cifquery="";
-	var cifapikey=$(".keyinput",clickedbutton.parent().parent()).val().trim();
-	window.visitme="If you use a self-signed certificate, you will need to <a target='_blank' href='"+cifurl+cifquery+"?apikey="+cifapikey+"'>accept your certificate</a> before this will work.";
-	try{
-		$.getJSON(cifurl+cifquery+"?apikey="+cifapikey+"&fmt=json",function(data) {
-			if (data['status']==200){
-				$(".teststatus",clickedbutton.parent().parent()).html('<span class="label label-success">connection successful</span>');
-			}
-		}).error(function(xhr,status,error){ 
-			e=xhr;
-			var errmsg='';
-			if (e['status']==401){
-				errmsg='401 authorization error. check your api key';
-			} else if (e['status']==0){
-				errmsg='Could not connect to that address.<br/><i>'+window.visitme+'</i>';
-			} else if (e['status']==404){
-				errmsg='404 error. make sure that you have the correct path to the API';
-			} else if (e['status']==200){
-				console.log(e);
-				errmsg='bad response. is that the path to a CIF API?';
-			} else {
-				errmsg='Could not connect to that address.<br/><i>'+window.visitme+'</i>';
-			}
-			$(".teststatus",clickedbutton.parent().parent()).html('<span class="label label-important">'+errmsg+'</span>');
-			//console.log(e);
-		});
-	} catch (err) {
-		$(".teststatus",clickedbutton.parent().parent()).html('<span class="label label-important">could not connect with those settings</span>');
-	}
+	var remote=$(".urlinput",clickedbutton.parent().parent()).val().trim();
+	var uri="/ping";
+	var token=$(".keyinput",clickedbutton.parent().parent()).val().trim();
+
+    function success() {
+        $("#status").html("<div class='alert alert-success'>Test Connection Successful.</div>").show().delay(2000).fadeOut('slow');
+    }
+
+    function fail(xhr, textStatus, error) {
+        delay = 5000;
+        html = "<div class='alert alert-danger'>Test Connection Failed: <b>" + error + "</b></div>";
+        switch(xhr['status']) {
+            case 0:
+                html = '<div class="alert alert-danger">Please visit your CIF instance and  <a href="' + remote + '" target="_blank">accept the TLS certificate</a></div>';
+                delay = 20000;
+                break;
+
+            case 401:
+                html = "<div class='alert alert-danger'>Test Connection Failed: <b>" + error + "</b> be sure to check your Token.</div>";
+                break;
+
+            case 404:
+                html = "<div class='alert alert-danger'>Test Connection Failed: <b>" + error + "</b> be sure to check your API location.</div>";
+                break;
+        }
+        $("#status").html(html).show().delay(delay).fadeOut('slow');
+    }
+
+    cif_connector.ping({
+        remote: remote,
+        token: token,
+        success: success,
+        fail: fail
+    });
 }
 $(document).ready(function() {
 	CIF_CLIENT.restore_options();
@@ -172,20 +149,4 @@ $(document).ready(function() {
 		$("#additional").slideUp();
 		return false;
 	});
-	$("#def_confidence").click(function(){
-		confidencemap = CIF_CLIENT.defaultConfidence();
-		$("#confidencevalues").val('');
-		for (i in confidencemap){
-			$("#confidencevalues").val($("#confidencevalues").val()+confidencemap[i]['numeric']+":"+confidencemap[i]['word']+"\n");
-		}
-	});
-	/*
-	$("#def_restriction").click(function(){
-		restrictions = defaultRestrictions();  
-		$("#restrictionsnames").val('');
-		for (i in restrictions){
-			$("#restrictionsnames").val($("#restrictionsnames").val()+restrictions[i]+"\n");
-		}
-	});
-	*/
 });

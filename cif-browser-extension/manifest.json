@@ -1,8 +1,8 @@
 {
   "name": "Collective Intelligence Framework Client",
-  "version": "1.21.3",
+  "version": "2.0",
   "manifest_version": 2,
-  "description": "Client for the collective intelligence framework api",
+  "description": "Client for the Collective Intelligence Framework",
   "browser_action": {
     "default_icon": "content/images/favicon_1.ico",
 	"default_popup": "content/popup.html"
