@@ -59,5 +59,13 @@ CIF_CLIENT.iconParty=function(){
 	window.setInterval(function () { CIF_CLIENT.iconParty(); }, 1000);
 }
 
-
-
+// This event is fired with the user accepts the input in the omnibox.
+chrome.omnibox.onInputEntered.addListener(
+    function(text) {
+        localStorage['query'] = JSON.stringify({
+            'query': text,
+            'type': 'omnibox'
+        });
+        chrome.tabs.create({ url: 'content/search.html' })
+    }
+);

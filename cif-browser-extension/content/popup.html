@@ -1,38 +1,49 @@
-<!doctype html>
-<html>
-  <head>
-    <title>Query CIF</title>
+<!DOCTYPE html>
+<html lang="en" style="min-width:600px;">
+<head>
+    <title>Search</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <script src="ext/jquery-2.1.3.min.js"></script>
+    <script src="ext/jquery.dataTables-1.10.5.min.js"></script>
+    <script src="ext/bootstrap-3.3.2.min.js"></script>
 
-    <!-- JavaScript and HTML must be in separate files for security. -->
-	<script src="jquery.min.js"></script>
-	<script src="browserDependent_functions.js"></script>
-	<script src="common.js"></script>
+    <link rel="stylesheet" href="css/bootstrap-3.3.2.min.css">
+    <link rel="stylesheet" href="css/bootstrap-theme-3.2.2.min.css">
+
+    <script src="browserDependent_functions.js"></script>
+    <script src="common.js"></script>
+    <script src="settings.js"></script>
+
     <script src="popup.js"></script>
-  </head>
-  <body style="width:240px;">
-  <div id="version" style="float:right;"></div>
-  <h3>Query CIF</h3>
-  <form id="theform" class='popup'>
-  Server: <select id="serverselect"></select><br/>
-  Data: <input type="text" id="querystring" value="" size="25"><a href="#" id="getCurrentURL" alt="Populate with current URL" title="Populate with current URL">&laquo;</a>
-  Log Query: <input type="checkbox" id="logquery" checked>
-  [<a href="#" id="showfilters">+</a><a href="#" id="hidefilters" style="display:none;">-</a>]<br/>
-  <fieldset id="additionalfilters" style="display:none;">
-  <legend>Search Filters</legend>
-  <input type="checkbox" id="useseverity"> Severity: 			
-			<select id="severity" disabled>
-				<option value="null">Null</option>
-				<option value="low">Low</option>
-				<option value="medium">Medium</option>
-				<option value="high">High</option>
-			</select><br/>
-  <input type="checkbox" id="useconfidence"> Confidence: <input type="text" id="confidence" size="3" disabled/><br/>
-  <input type="checkbox" id="userestriction"> Restriction: <select id="restriction" disabled></select><br/>
-  <input type="checkbox" id="uselimit"> Limit: <input type="text" id="limit" size="5" disabled/>
-  </fieldset>
-  <input type="submit" value="Search"><button id="datasubmissionlink">Data Submission Form</button>
-  </form>
-  
-  </body>
+</head>
+<body>
+    <nav class="navbar navbar-inverse">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="http://csirtgadgets.org" target="_blank">CIF</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                <li><a href="submit.html">Submit</a></li>
+                <li><a href="settings.html">Settings</a></li>
+            </ul>
+
+        </div>
+    </nav>
+    <div class="container-fluid">
+        <form class="navbar-form" action="search.html" method="POST" id="searchForm">
+            <div class="form-group">
+                <input type="text" placeholder="evilbit.com" class="form-control" name="q" id="q">
+            </div>
+            <button class="btn btn-default" id="btnSearch">Search</button>
+        </form>
+    </div>
+</body>
 </html>

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" style="min-width:600px;">
     <head>
         <meta charset="utf-8">
         <title>Settings</title>
@@ -48,33 +48,34 @@
             </div>
 
         </nav>
-
-        <div class="row">
-            <div class="col-md-1"></div>
-            <div class="col-md-10">
-                <div class="page-header">
-                    <h1>Profiles</h1>
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-1"></div>
+                <div class="col-md-10">
+                    <div class="page-header">
+                        <h1>Profiles</h1>
+                    </div>
+                    <table class="table table-stripped" id="profilestable">
+                        <tr>
+                            <th>Name</th>
+                            <th>API Location</th>
+                            <th>Token</th>
+                            <th>Options</th>
+                            <th>Actions</th>
+                        </tr>
+                    </table>
+                    <button id="addarow" class="btn">Add Another Profile</button>
+                    <button id="savebutton" class="btn btn-primary">Save</button>
                 </div>
-                <table class="table table-stripped" id="profilestable">
-                    <tr>
-                        <th>Name</th>
-                        <th>API Location</th>
-                        <th>Token</th>
-                        <th>Options</th>
-                        <th>Actions</th>
-                    </tr>
-                </table>
-                <button id="addarow" class="btn">Add Another Profile</button>
-                <button id="savebutton" class="btn btn-primary">Save</button>
+                <div class="col-md-1"></div>
             </div>
-            <div class="col-md-1"></div>
-        </div>
-        <div class="row" style="margin-top: 20px">
-            <div class="col-md-1"></div>
-            <div class="col-md-10">
-                <div id="status"></div>
-            </div>
+            <div class="row" style="margin-top: 20px">
+                <div class="col-md-1"></div>
+                <div class="col-md-10">
+                    <div id="status"></div>
+                </div>
 
+            </div>
         </div>
     </body>
 </html>
