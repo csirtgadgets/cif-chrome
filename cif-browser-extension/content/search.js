@@ -5,14 +5,20 @@ search = function(q) {
     var server = CIF_CLIENT.getDefaultServer();
     var token = CIF_CLIENT.getServerKey(server);
     var remote = CIF_CLIENT.getServerUrl(server);
-    var nolog = CIF_CLIENT.getServerLogSetting(server);
+    var log = CIF_CLIENT.getServerLogSetting(server);
+    //var limit = CIF_CLIENT.getServerLimit(server) || 100;
+    var limit = 100;
+
+    nolog = 1;
+    if (log) {
+        nolog = 0;
+    }
 
     function success(data, textStatus, xhr) {
         //$("#results").html("<div class='alert alert-success'>Test Connection Successful.</div>").show().delay(2000).fadeOut('slow');
         //$('#results').html( '<table cellpadding="0" cellspacing="0" border="0" class="display" id="example"></table>' );
         t.fnClearTable();
         for (var i in xhr.responseJSON){
-
             t.fnAddData([
                 xhr.responseJSON[i].reporttime,
                 xhr.responseJSON[i].group.join(),
@@ -55,8 +61,8 @@ search = function(q) {
         success: success,
         fail: fail,
         filters: {
-            limit: 50,
-            nolog: 1
+            limit: limit,
+            nolog: nolog
         }
     });
 }
@@ -68,14 +74,21 @@ $(document).ready(function() {
         "mData": true,
         "searching": false
     });
+    t.fnClearTable();
 
-    var $form = $(this),
-        q = $form.find( "input[name='q']" ).val(),
-        url = $form.attr('action');
+    if (localStorage.query) {
+        q = JSON.parse(localStorage.query).query
+    } else {
+        var $form = $(this),
+            q = $form.find( "input[name='q']" ).val(),
+            url = $form.attr('action');
+    }
+
     search(q);
 
     $('#searchForm').submit(function(e){
         e.preventDefault();
+        t.fnClearTable();
         var $form = $(this),
             q = $form.find( "input[name='q']" ).val(),
             url = $form.attr('action');

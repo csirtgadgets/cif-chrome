@@ -49,7 +49,7 @@ if (typeof appInfo != 'undefined'){ //if this is not undefined, we are in firefo
 		/* opens a new data submission page from a drop-down menu or right-click on icon */
 		openDataPage : function(aEvent) {
 			if (typeof gBrowser=='undefined') gBrowser=getgBrowser();
-			gBrowser.selectedTab = gBrowser.addTab('chrome://cifclient/content/adddata.html');
+			gBrowser.selectedTab = gBrowser.addTab('chrome://cifclient/content/submit.html');
 		},
 		
 		/* opens a new data submission page from a context menu on high-lighted text, which gets passed to the page */
@@ -58,12 +58,12 @@ if (typeof appInfo != 'undefined'){ //if this is not undefined, we are in firefo
 					  'type':'contextmenuadd'
 					};
 			CIF_CLIENT.storeItem('datatoadd',JSON.stringify(query)); //store the high-lighted text for the data page to use
-			CIF_CLIENT.makeNewPage('content/adddata.html');
+			CIF_CLIENT.makeNewPage('content/submit.html');
 		},
 
 		/* opens the query page from a drop-down menu or right-click on icon */
 		openQueryPage : function(aEvent) {
-			CIF_CLIENT.switchToPage("content/query.html");
+			CIF_CLIENT.switchToPage("content/search.html");
 		},
 
 		/* opens the query page from a context menu on high-lighted text, which gets passed to the page */
@@ -93,7 +93,7 @@ if (typeof appInfo != 'undefined'){ //if this is not undefined, we are in firefo
 				document.getElementById("addselectiontocif").hidden = true;
 			} else {
 				document.getElementById("searchcifforselection").setAttribute('label',"Search CIF for '"+seltext+"'");
-				document.getElementById("addselectiontocif").setAttribute('label',"Add '"+seltext+"' to CIF");
+				document.getElementById("addselectiontocif").setAttribute('label',"Submit '"+seltext+"' to CIF");
 				document.getElementById("searchcifforselection").hidden = false;
 				document.getElementById("addselectiontocif").hidden = false;
 				
@@ -220,9 +220,9 @@ if (typeof appInfo != 'undefined'){ //if this is not undefined, we are in firefo
 		}
 		alwaysNewPages=false;
 		if (alwaysNewPages){
-			CIF_CLIENT.makeNewPage("content/query.html");
+			CIF_CLIENT.makeNewPage("content/search.html");
 		} else {
-			existing=CIF_CLIENT.switchToPage("content/query.html");
+			existing=CIF_CLIENT.switchToPage("content/search.html");
 			if (existing){
 				var mainWindow=CIF_CLIENT.getmainwindow();
 				mainWindow.gBrowser.selectedBrowser.contentWindow.wrappedJSObject.CIF_CLIENT.runQuerySet();
@@ -312,7 +312,7 @@ if (typeof appInfo != 'undefined'){ //if this is not undefined, we are in firefo
 			/* loop through existing tabs to look for query page */
 			for (var i = 0; i < views.length; i++) {
 				var view = views[i];
-				if (view.location.href.indexOf(chrome.extension.getURL('content/query.html'))==0) {
+				if (view.location.href.indexOf(chrome.extension.getURL('content/search.html'))==0) {
 				  view.CIF_CLIENT.runQuerySet(); //trigger the query run on the existing query page
 				  return;
 				} 
@@ -320,7 +320,7 @@ if (typeof appInfo != 'undefined'){ //if this is not undefined, we are in firefo
 		}
 		/* make a new page if one doesn't exist and leave flag for it to run the query */
 		CIF_CLIENT.storeItem('runquery','true');
-		chrome.tabs.create({url: "content/query.html"});
+		chrome.tabs.create({url: "content/search.html"});
 		return;
 	}
 	

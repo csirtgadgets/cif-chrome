@@ -68,8 +68,8 @@
   <!-- Prepares the popup panel and it's right-click menu items.-->
   <popupset>
         <menupopup id="cifclient_menu_popup">
-            <menuitem label="Query Page" oncommand="CIF_CLIENT.switchToPage('content/query.html');" />
-			<menuitem label="Data Submission Page" oncommand="gBrowser.selectedTab = gBrowser.addTab('chrome://cifclient/content/adddata.html');" />
+            <menuitem label="Query Page" oncommand="CIF_CLIENT.switchToPage('content/search.html');" />
+			<menuitem label="Data Submission Page" oncommand="gBrowser.selectedTab = gBrowser.addTab('chrome://cifclient/content/submit.html');" />
             <menuitem label="Settings" oncommand="gBrowser.selectedTab = gBrowser.addTab('chrome://cifclient/content/settings.html');" />
         </menupopup>
 
@@ -93,7 +93,7 @@
 	  <!-- button details -->
 	<toolbarbutton id="custom-button-1"
 	  label="CIF Client"
-	  tooltiptext="Collective Intelligence Framework Client"
+	  tooltiptext="CIF"
 	  oncommand="document.getElementById('cifclient_popup').openPopup(document.getElementById('custom-button-1'), 'after_start', 0, 0, false, false);"
 	  context="cifclient_menu_popup"
 	  class="toolbarbutton-1 chromeclass-toolbar-additional custombutton"

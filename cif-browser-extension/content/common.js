@@ -332,9 +332,3 @@ CIF_CLIENT.prepSearchBox=function(){
 		return false;
 	});
 }
-//$(document).ready(function() {
-//  $("#querypagelink").click(function(){
-//	CIF_CLIENT.switchToPage('content/query.html');
-//	return false;
-//  });
-//});
