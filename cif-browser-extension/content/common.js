@@ -1,3 +1,7 @@
+if(!CIF_CLIENT){
+    var CIF_CLIENT = {};
+}
+
 var cif_connector = {
     get: function(args) {
         console.log(args.remote);
@@ -29,14 +33,30 @@ var cif_connector = {
         });
     },
 
+    put: function(args) {
+        function setHeaders(xhr) {
+            xhr.setRequestHeader('Authorization', 'Token token=' + args.token);
+        }
+
+        $.ajax({
+            url: args.remote,
+            type: 'PUT',
+            dataType: 'json',
+            success: args.success,
+            error: args.error,
+            beforeSend: setHeaders,
+            data: JSON.stringify(args.data)
+        });
+    },
+
     ping: function(args) {
         args.remote = args.remote + '/ping';
         this.get(args);
     },
 
     submit: function(args) {
-        args.remote = args.remote + '/observables/new';
-        this.post(args);
+        args.remote = args.remote + '/observables';
+        this.put(args);
     },
 
     search: function(args) {
@@ -140,116 +160,7 @@ CIF_CLIENT.settingsCheck=function(){
 	}
 	return true;
 }
-CIF_CLIENT.getRestrictions=function(){
-	try {
-		restrictions = JSON.parse(CIF_CLIENT.getItem('restrictions'));
-		if (restrictions===null) restrictions = CIF_CLIENT.defaultRestrictions();
-	} catch(err){
-		restrictions = CIF_CLIENT.defaultRestrictions();
-	}
-	//return restrictions;
-	return CIF_CLIENT.defaultRestrictions();
-}
-CIF_CLIENT.getConfidenceMap=function(){
-  try {
-	confidencemap = JSON.parse(CIF_CLIENT.getItem('confidencemap'));
-	if (confidencemap===null) confidencemap = CIF_CLIENT.defaultConfidence();
-  } catch(err){
-	confidencemap = CIF_CLIENT.defaultConfidence();
-  }
-  return confidencemap;
-}
-CIF_CLIENT.defaultRestrictions=function(){
-	res = new Array();
-	res.push('private');
-	res.push('need-to-know');
-	res.push('public');
-	res.push('default');
-	return res;
-}
-CIF_CLIENT.defaultConfidence=function(){
-	confidencemap = new Array();
-	confidencemap.push({'numeric':'25','word':'Not Confident'});
-	confidencemap.push({'numeric':'75','word':'Somewhat Confident'});
-	confidencemap.push({'numeric':'85','word':'Very Confident'});
-	confidencemap.push({'numeric':'95','word':'Certain'});
-	return confidencemap;
-}
-CIF_CLIENT.populateProtocolTranslations=function(){
-	CIF_CLIENT.protodata=new Array();
-	$.ajax({
-		type: "GET",
-		url:'Protocol-Numbers.xml', 
-		dataType: "xml",
-		success: function(data){
-			CIF_CLIENT.protodata=new Array();
-			$(data).find("record").each(function(){
-				CIF_CLIENT.protodata.push({'proto':$(this).find('value').text(), 'name':$(this).find('name').text(), 'desc':$(this).find('description').text()});
-			});
-			CIF_CLIENT.storeItem('protocoldata',JSON.stringify(CIF_CLIENT.protodata));
-		},
-		error: function (e){
-			this.success($.parseXML(e['responseText']));
-		}
-	});
-}
-CIF_CLIENT.prepSearchFilters=function(){
-	CIF_CLIENT.populateRestrictions();
-	$("#useseverity").click(function(){
-		if ($(this).is(":checked")){
-			$("#severity").removeAttr('disabled');
-		} else {
-			$("#severity").attr('disabled',true);
-		}
-	});
-	$("#useconfidence").click(function(){
-		if ($(this).is(":checked")){
-			$("#confidence").removeAttr('disabled');
-		} else {
-			$("#confidence").attr('disabled',true);
-		}
-	});
-	$("#userestriction").click(function(){
-		if ($(this).is(":checked")){
-			$("#restriction").removeAttr('disabled');
-		} else {
-			$("#restriction").attr('disabled',true);
-		}
-	});
-	$("#uselimit").click(function(){
-		if ($(this).is(":checked")){
-			$("#limit").removeAttr('disabled');
-		} else {
-			$("#limit").attr('disabled',true);
-		}
-	});
-	$("#showfilters").attr('title',"Show additional search filters.");
-	$("#showfilters").attr('alt',$(this).attr('title'));
-	$("#hidefilters").attr('title',"Hide additional search filters.");
-	$("#hidefilters").attr('alt',$(this).attr('title'));
-	$("#showfilters").click(function(){
-		$(this).hide();
-		$("#hidefilters").show();
-		$("#additionalfilters").slideDown();
-		return false;
-	});
-	$("#hidefilters").click(function(){
-		$(this).hide();
-		$("#showfilters").show();
-		$("#additionalfilters").slideUp();
-		return false;
-	});
-}
-CIF_CLIENT.getFilters=function(){
-	var filters = {};
-	if ($("#useseverity").is(":checked") && $('#severity').val().trim()!=''){
-		filters['severity']=$('#severity').val().trim();
-	}
-	filters['limit']=$('#limit').val().trim();
-    filters['confidence']=$('#confidence').val().trim();
-    //filters['restriction']=$('#restriction').val().trim();
-	return filters;
-}	
+
 CIF_CLIENT.showVersion=function(){
 	try {
 		// Firefox 4 and later; Mozilla 2 and later

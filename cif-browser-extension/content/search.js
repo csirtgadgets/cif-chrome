@@ -1,5 +1,18 @@
+function getUrlParameter(sParam)
+{
+    var sPageURL = window.location.search.substring(1);
+    var sURLVariables = sPageURL.split('&');
+    for (var i = 0; i < sURLVariables.length; i++)
+    {
+        var sParameterName = sURLVariables[i].split('=');
+        if (sParameterName[0] == sParam)
+        {
+            return sParameterName[1];
+        }
+    }
+}
 
-search = function(q) {
+search = function(q, nolog) {
     console.log(q);
 
     var server = CIF_CLIENT.getDefaultServer();
@@ -9,25 +22,55 @@ search = function(q) {
     //var limit = CIF_CLIENT.getServerLimit(server) || 100;
     var limit = 100;
 
-    nolog = 1;
-    if (log) {
-        nolog = 0;
-    }
-
     function success(data, textStatus, xhr) {
         //$("#results").html("<div class='alert alert-success'>Test Connection Successful.</div>").show().delay(2000).fadeOut('slow');
         //$('#results').html( '<table cellpadding="0" cellspacing="0" border="0" class="display" id="example"></table>' );
         t.fnClearTable();
         for (var i in xhr.responseJSON){
+            var protocol = xhr.responseJSON[i].protocol;
+            switch(protocol) {
+                case 0:
+                    protocol = 'icmp';
+                    break;
+                case 6:
+                    protocol = 'tcp';
+                    break;
+                case 17:
+                    protocl = 'udp';
+                    break;
+                default:
+                    protocol = '';
+            }
+
+            var tlp = xhr.responseJSON[i].tlp
+            switch(tlp){
+                case 'red':
+                    tlp = '<div style="color:red">RED</div>';
+                    break;
+                case 'white':
+                    tlp = '<div style="color:black">WHITE</div>';
+                    break;
+                case 'green':
+                    tlp = '<div style="color:green">GREEN</div>';
+                    break;
+                default:
+                    tlp = '<div style="color:orange">AMBER</div>';
+            }
+
+            var observable = xhr.responseJSON[i].observable;
+            if (xhr.responseJSON[i].altid) {
+                observable = '<a href="' + xhr.responseJSON[i].altid + '">' + observable + '</a>'
+            }
+
             t.fnAddData([
                 xhr.responseJSON[i].reporttime,
                 xhr.responseJSON[i].group.join(),
-                xhr.responseJSON[i].tlp,
-                xhr.responseJSON[i].observable,
-                xhr.responseJSON[i].provider,
+                tlp,
+                observable,
+                xhr.responseJSON[i].provider || 'private',
                 xhr.responseJSON[i].tags.join(),
-                xhr.responseJSON[i].provider,
-                xhr.responseJSON[i].protocol || '',
+                xhr.responseJSON[i].confidence,
+                protocol,
                 xhr.responseJSON[i].portlist || '',
 
             ]);
@@ -74,17 +117,30 @@ $(document).ready(function() {
         "mData": true,
         "searching": false
     });
+
     t.fnClearTable();
 
-    if (localStorage.query) {
+    q = false;
+    nolog = false;
+
+    if (getUrlParameter('nolog')){
+      nolog = getUrlParameter('nolog');
+    }
+
+    if (getUrlParameter('q')){
+        q = getUrlParameter(('q'));
+    } else if (localStorage.query) {
         q = JSON.parse(localStorage.query).query
+        localStorage.query = false;
     } else {
         var $form = $(this),
             q = $form.find( "input[name='q']" ).val(),
             url = $form.attr('action');
     }
 
-    search(q);
+    if(q){
+        search(q, nolog);
+    }
 
     $('#searchForm').submit(function(e){
         e.preventDefault();

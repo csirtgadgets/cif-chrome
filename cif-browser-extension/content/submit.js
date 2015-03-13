@@ -1,108 +1,76 @@
-var dataToSend = new Array();
+CIF_CLIENT.sendToServer=function(data){
+
+    var remote = CIF_CLIENT.getDefaultServer();
+    var token = CIF_CLIENT.getServerKey(remote);
+    remote = CIF_CLIENT.getServerUrl(remote);
+
+    function success(data, textStatus, xhr) {
+        $("#results").html('<div class="alert alert-success">Successfully submitted <a href="search.html?nolog=1&q=' + obs + '">' + obs + '</a></div>');
+    }
+
+    function fail(xhr, textStatus, error) {
+        delay = 5000;
+        html = "<div class='alert alert-danger'>Failed: <b>" + error + "</b></div>";
+        switch(xhr['status']) {
+            case 500:
+                html = "<div class='alert alert-danger'>500 Internal Server Error, check with your administrator</div>";
+                break;
+            case 401:
+                html = "<div class='alert alert-danger'>Authorization <Failed></Failed>: <b>" + error + "</b> be sure to check your Token.</div>";
+                break;
+
+            case 404:
+                html = "<div class='alert alert-danger'>Connection failed: <b>" + error + "</b> be sure to check your API location.</div>";
+                break;
+        }
+       $("#results").html(html).show().delay(delay).fadeOut('slow');
+    }
+
+    if (!data['observable']) {
+        fail({'status': 500});
+    }
+
+    var obs = data['observable'];
+
+    cif_connector.submit({
+        remote: remote,
+        token: token,
+        data: [data],
+        success: success,
+        fail: fail
+    });
+}
 
 $(document).ready(function() {
-    try{
-        var fromcontext=JSON.parse(CIF_CLIENT.getItem("datatoadd"));
-        $('#observable').val(fromcontext['data']);
-    } catch(err) {}
-    CIF_CLIENT.settingsCheck();
-    CIF_CLIENT.getRemotes();
-
-    $("#observable").keyup(function(){
-        window.clearTimeout(window.keyuptimeoutid);
-        window.keyuptimeoutid = window.setTimeout(function () { CIF_CLIENT.parseDataInput(); }, 1000);
+    $('#tlp').css('color','orange');
+    $('#tlp').change(function() {
+        var current = $('#tlp').val();
+        console.log(current);
+        if ( current == 'RED' ){
+            $('#tlp').css('color','red');
+        }
+        if ( current == 'AMBER' ){
+            $('#tlp').css('color','orange');
+        }
+        if ( current == 'GREEN' ){
+            $('#tlp').css('color','GREEN');
+        }
+        if ( current == 'WHITE' ){
+            $('#tlp').css('color','black');
+        }
     });
-    $("#submitbutton").click(function(){
-        CIF_CLIENT.submitData();
-        return false;
+
+    $("#myform").submit(function (event) {
+        event.preventDefault();
+        var fields = $(":input").serializeArray();
+        var data = {};
+        for (var i in fields) {
+            console.log(fields[i].name);
+            data[fields[i].name] = fields[i].value;
+        }
+        data['group'] = 'everyone';
+        CIF_CLIENT.sendToServer(data);
+
+        $("#myform").find('input:text').val('');
     });
 });
-
-if(!CIF_CLIENT){
-    var CIF_CLIENT = {};
-}
-
-
-CIF_CLIENT.submitData=function(){
-    $("#submitbutton").attr("disabled","disabled");
-
-    if (window.observable.length==0 || $.trim(window.observable[0])==''){
-        CIF_CLIENT.showError("Please enter an observable.");
-        return;
-    }
-    CIF_CLIENT.sendToServer();
-}
-
-CIF_CLIENT.sendToServer=function(){
-    $("#submissionstatus").html('<div class="alert">Submitting...<img src="images/ajax-loader.gif" id="loadinggif"/></div>');
-    var server=$("#serverselect").val();
-    var cifapikey = CIF_CLIENT.getServerKey(server);
-    var cifurl = CIF_CLIENT.getServerUrl(server);
-
-
-
-    for (i in window.datapoints){
-        for (j in window.groupstosendto){
-            var individualentry={'address':window.datapoints[i],
-
-                'portlist':$("#portlist").val().trim(),
-                'protocol':$("#protocol option:selected").val(),
-
-            };
-            dataToSend.push(individualentry);
-        }
-    }
-    console.log(dataToSend);
-    cif_connector.post({
-        url:cifurl,
-        apikey:cifapikey,
-        entries:dataToSend,
-        successFunction: function(data){
-            CIF_CLIENT.parseResponse(data);
-            CIF_CLIENT.resetForm();
-        },
-        errorFunction: function(e){
-            if (e['status']==401){
-                CIF_CLIENT.showError("Error: Authorization required. Does your API key have write access?");
-            } else if (e['status']==0){
-                CIF_CLIENT.showError('Could not connect to the server. Try testing your server with a query.');
-            }
-            else {
-                CIF_CLIENT.showError('Internal Server Error: '+e['responseText']);
-            }
-            console.log(e);
-        }
-    });
-}
-
-CIF_CLIENT.getRemotes=function(){
-    var options = JSON.parse(CIF_CLIENT.getItem("cifapiprofiles"));
-    for (i in options){
-        if (options[i]['isDefault']){
-            $('#serverselect').append('<option value="'+ i + '" selected>' + options[i]['name'].toString() + '</option>');
-        } else {
-            $('#serverselect').append('<option value="'+ i +'">' + options[i]['name'].toString() + '</option>');
-        }
-    }
-}
-CIF_CLIENT.resetForm=function(){
-    $("#observable").val('');
-    $("#observable").keyup();
-
-    $("option",$("#protocol")).removeAttr('selected');
-
-}
-
-CIF_CLIENT.showError=function(string){
-    $("#submitbutton").removeAttr("disabled");
-    $("#submissionstatus").html("<h4 style='color:red;'>"+string+"</h4>");
-}
-
-CIF_CLIENT.parseResponse=function(data){
-    $("#submitbutton").removeAttr("disabled");
-    $("#submissionstatus").html('');
-    for (i in data['data']){
-        $("#submissionstatus").append('<div class="alert alert-success"><b>'+window.dataToSend[i]['address']+'</b> submitted with ID <b>'+data['data'][i]+'</b> '+tweetbutton+'<br/></div>');
-    }
-    dataToSend = new Array();
-}

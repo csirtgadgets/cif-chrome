@@ -35,7 +35,7 @@
                     <li><a href="submit.html">Submit</a></li>
                     <li><a href="settings.html">Settings</a></li>
                 </ul>
-                <form class="navbar-form" action="search.html">
+                <form class="navbar-form" action="search.html" id="searchform">
                     <div class="form-group">
                         <input type="text" placeholder="evilbit.com" class="form-control">
                     </div>
@@ -45,47 +45,56 @@
         </nav>
         <div class="container-fluid">
             <div class="row">
-                <div class="col-md-4"></div>
-                <div class="col-md-4">
-                    <div class="row">
-                        <div id="status"></div>
-                    </div>
+                <div class="col-md-3"></div>
+                <div class="col-md-6">
                     <div class="page-header">
                         <h1>Submit</h1>
                     </div>
-                    <form class="form-horizontal">
+                    <div id="results"></div>
+                    <form class="form-horizontal" id="myform">
                         <div class="form-group input-group-lg">
-                                <input class="form-control" type="text" placeholder="evilbit.com" id="observable">
-
+                                <input class="form-control" type="text" placeholder="evilbit.com" id="observable" name="observable">
                         </div>
                         <div class="form-group input-group-lg">
-                            <input class="form-control" type="text" placeholder="scanner, ssh, tag3, tag4" id="tags">
+                            <input class="form-control" type="text" placeholder="scanner, ssh, tag3, tag4" id="tags" name="tags">
                         </div>
                         <div class="form-group input-group-lg">
-                            <select class="form-control" id="protocol">
+                            <select class="form-control" id="protocol" name="protocol">
                                 <option selected="1" value="tcp">TCP</option>
                                 <option value="tcp">UDP</option>
                                 <option value="tcp">ICMP</option>
                             </select>
                         </div>
                         <div class="form-group input-group-lg">
-                            <input class="form-control" type="text" placeholder="Ports (21,23-25)" id="portlist">
-                        </div>
-                        <div class="form-group input-group-xlg">
-                            <textarea class="form-control" rows="4" placeholder="Comments..." id="comments"></textarea>
+                            <input class="form-control" type="text" placeholder="Ports (21,23-25)" id="portlist" name="portlist">
                         </div>
                         <div class="form-group input-group-lg">
-                            <input class="form-control" type="text" placeholder="http://www.spamhaus.org/sbl/sbl.lasso?query=SBL91148" id="altid">
+                            <input class="form-control" type="text" placeholder="http://www.spamhaus.org/sbl/sbl.lasso?query=SBL91148" id="altid" name="altid">
                         </div>
                         <div class="form-group input-group-lg">
-                            <select class="form-control" id="serverselect"></select>
+                            <select class="form-control" id="tlp" name="tlp">
+                                <option selected="1" value="AMBER">AMBER</option>
+                                <option value="RED">RED</option>
+                                <option value="GREEN">GREEN</option>
+                                <option value="WHITE">WHITE</option>
+                            </select>
                         </div>
                         <div class="form-group input-group-lg">
-                            <button type="submit" class="btn btn-success">Submit</button>
+                            <select class="form-control" id="confidence" name="confidence">
+                                <option selected="1" value="75">Somewhat Confident</option>
+                                <option value="85">Very Confident</option>
+                                <option value="95">Certain</option>
+                            </select>
+                        </div>
+                        <div class="form-group input-group-lg">
+                            <button type="submit" class="btn btn-success" id="submitbutton">Submit</button>
                         </div>
                     </form>
                 </div>
-                <div class="col-md-1"></div>
+                <div class="col-md-3"></div>
+            </div>
+            <div class="row">
+
             </div>
         </div>
     </body>
