@@ -13,8 +13,6 @@
 
     <script src="browserDependent_functions.js"></script>
     <script src="common.js"></script>
-    <script src="settings.js"></script>
-
     <script src="popup.js"></script>
 </head>
 <body>
@@ -26,7 +24,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="http://csirtgadgets.org" target="_blank">CIF</a>
+            <a class="navbar-brand" href="/content/search.html" target="_blank">CIF</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
@@ -37,7 +35,7 @@
         </div>
     </nav>
     <div class="container-fluid">
-        <form class="navbar-form" action="search.html" method="POST" id="searchForm">
+        <form class="navbar-form" action="search.html" method="GET" id="searchForm">
             <div class="form-group">
                 <input type="text" placeholder="evilbit.com" class="form-control" name="q" id="q">
             </div>

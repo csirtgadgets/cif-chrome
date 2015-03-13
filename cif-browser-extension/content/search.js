@@ -120,6 +120,8 @@ $(document).ready(function() {
 
     t.fnClearTable();
 
+    console.log($(this));
+
     q = false;
     nolog = false;
 
@@ -137,6 +139,8 @@ $(document).ready(function() {
             q = $form.find( "input[name='q']" ).val(),
             url = $form.attr('action');
     }
+
+    console.log(q);
 
     if(q){
         search(q, nolog);
