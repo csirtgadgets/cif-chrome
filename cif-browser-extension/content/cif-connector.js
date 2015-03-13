@@ -44,11 +44,20 @@ var cif_connector = {
     },
 
     search: function(args) {
-        args.remote = args.remote + '/observables?q=' + args.query;
+        args.remote = args.remote + '/observables?';
+        if (args.query) {
+            args.remote += '?q=' + args.query
+        }
         if (args.filters){
-            for (var i in args.filters){
-                args.remote += '&' + i;
+            if(args.query){
+                args.remote += '&';
+            } else {
+                args.remote += '?';
             }
+            for (var i in args.filters){
+                args.remote += i + '=' + args.filters[i] + '&';
+            }
+            args.remote = args.remote.substr(0, args.remote.length - 1);
         }
         console.log(args.remote);
         this.get(args);
