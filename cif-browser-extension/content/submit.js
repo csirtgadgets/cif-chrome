@@ -42,6 +42,10 @@ CIF_CLIENT.sendToServer=function(data){
 }
 
 $(document).ready(function() {
+    var remote = CIF_CLIENT.getDefaultServer();
+    var groups = CIF_CLIENT.getServerGroups(remote);
+    remote = CIF_CLIENT.getServerUrl(remote);
+
     $('#tlp').css('color','orange');
     $('#tlp').change(function() {
         var current = $('#tlp').val();
@@ -53,12 +57,21 @@ $(document).ready(function() {
             $('#tlp').css('color','orange');
         }
         if ( current == 'GREEN' ){
-            $('#tlp').css('color','GREEN');
+            $('#tlp').css('color','green');
         }
         if ( current == 'WHITE' ){
             $('#tlp').css('color','black');
         }
     });
+
+    if(groups){
+        groups = groups.split(',');
+        groups.forEach(function(e) {
+            $('#group').append('<option value="' + e + '"e>' + e + '</option>');
+        })
+    } else {
+        $('#group').append('<option selected="1" value="everyone">everyone</option>');
+    }
 
     $("#myform").submit(function (event) {
         event.preventDefault();
@@ -68,7 +81,7 @@ $(document).ready(function() {
             console.log(fields[i].name);
             data[fields[i].name] = fields[i].value;
         }
-        data['group'] = 'everyone';
+        alert(data);
         CIF_CLIENT.sendToServer(data);
 
         $("#myform").find('input:text').val('');

@@ -127,6 +127,12 @@ CIF_CLIENT.getDefaultServer=function(){
 	}
 	return 0;
 }
+
+CIF_CLIENT.getServerGroups=function(server){
+	servers = JSON.parse(CIF_CLIENT.getItem('cifapiprofiles'));
+	return servers[server]['groups']
+}
+
 CIF_CLIENT.getServerUrl=function(server){
 	servers = JSON.parse(CIF_CLIENT.getItem("cifapiprofiles"));
 	return servers[server]['url'];

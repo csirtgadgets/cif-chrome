@@ -59,6 +59,9 @@
                             <input class="form-control" type="text" placeholder="scanner, ssh, tag3, tag4" id="tags" name="tags">
                         </div>
                         <div class="form-group input-group-lg">
+                            <input class="form-control" type="text" placeholder="short description" id="description" name="description">
+                        </div>
+                        <div class="form-group input-group-lg">
                             <select class="form-control" id="protocol" name="protocol">
                                 <option selected="1" value="tcp">TCP</option>
                                 <option value="tcp">UDP</option>
@@ -69,7 +72,7 @@
                             <input class="form-control" type="text" placeholder="Ports (21,23-25)" id="portlist" name="portlist">
                         </div>
                         <div class="form-group input-group-lg">
-                            <input class="form-control" type="text" placeholder="http://www.spamhaus.org/sbl/sbl.lasso?query=SBL91148" id="altid" name="altid">
+                            <input class="form-control" type="text" placeholder="https://whiteface.csirtgadgets.com/users/wes/feeds/scanners/observables/13013" id="altid" name="altid">
                         </div>
                         <div class="form-group input-group-lg">
                             <select class="form-control" id="tlp" name="tlp">
@@ -84,6 +87,11 @@
                                 <option selected="1" value="75">Somewhat Confident</option>
                                 <option value="85">Very Confident</option>
                                 <option value="95">Certain</option>
+                            </select>
+                        </div>
+                        <div class="form-group input-group-lg">
+                            <select class="form-control" id="group" name="group">
+
                             </select>
                         </div>
                         <div class="form-group input-group-lg">

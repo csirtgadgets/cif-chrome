@@ -11,9 +11,17 @@ CIF_CLIENT.save_options=function() {
 		var key=$(".keyinput",$(this)).val().trim();
 		var name=$(".nameinput",$(this)).val().trim();
 		var url=$(".urlinput",$(this)).val().trim();
+		var groups=$(".groupsinput", $(this)).val().trim();
 		var isDefault=$('.defaultradioinput',$(this)).is(':checked');
 		var logQueries=$('.logqueriesinput',$(this)).is(':checked');
-		var set = {'name':name,'key':key,'url':url,'isDefault':isDefault,'logQueries':logQueries};
+		var set = {
+			'name': name,
+			'key': key,
+			'url': url,
+			'groups': groups,
+			'isDefault': isDefault,
+			'logQueries': logQueries
+		};
 		if (key!="" && name!="" && url!=""){
 			options.push(set);
 		}
@@ -31,7 +39,7 @@ CIF_CLIENT.restore_options=function() {
   try {
 	  options = JSON.parse(CIF_CLIENT.getItem("cifapiprofiles"));
 	  for (i in options){
-		CIF_CLIENT.addProfileRow(options[i]['name'],options[i]['url'],options[i]['key'],options[i]['isDefault'],options[i]['logQueries']);
+		CIF_CLIENT.addProfileRow(options[i]['name'],options[i]['url'],options[i]['key'],options[i]['groups'],options[i]['isDefault'],options[i]['logQueries']);
 	  }
   } catch(err) {
 	console.log(err);
@@ -42,25 +50,33 @@ CIF_CLIENT.restore_options=function() {
   } catch(err) {
 	console.log(err);
   }
-  CIF_CLIENT.addProfileRow('','','',false,true);
+  CIF_CLIENT.addProfileRow('','','','', false,true);
 }
 
 
-CIF_CLIENT.addProfileRow=function(name,url,key,isDefault,logQueries){
+CIF_CLIENT.addProfileRow=function(name, url, key, groups, isDefault, logQueries){
 	toappend='<tr class="profilerow">';
 	toappend+='<td><input type="text" class="nameinput form-control"  placeholder="My CIF Server"/></td>';
 	toappend+='<td><input type="text" class="urlinput form-control" placeholder="https://example.org/api" size="72"/></td>';
 	toappend+='<td><input type="text" class="keyinput form-control" placeholder="12341234" size="72"/></td>';
+	toappend += '<td><input type="text" class="groupsinput form-control" placeholder="everyone,groupA,groupB" size="72"/></td>';
 
 	toappend+='<td><span class="aria-label">Default Server:</span> <input type="radio" class="defaultradioinput" name="isdefault" disabled/><br/>';
 	toappend+='<span class="aria-label">Log Queries:</span> <input type="checkbox" class="logqueriesinput" checked/></td>';
     toappend+='<td><button class="deletebutton btn btn-danger btn-small">Delete</button> ';
     toappend+='<button class="testbutton btn btn-small btn-success">Test Connection</button></td>';
 	toappend+='</tr>';
+
 	$("#profilestable").append(toappend);
 	$(".nameinput").last().val(name);
 	$(".urlinput").last().val(url);
 	$(".keyinput").last().val(key);
+
+
+	if(groups){
+		$(".groupsinput").last().val(groups);
+	}
+
 	if (isDefault){
 		$('.defaultradioinput').last().prop('checked',true);
 	}
