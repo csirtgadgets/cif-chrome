@@ -5,7 +5,7 @@ CIF_CLIENT.sendToServer=function(data){
     remote = CIF_CLIENT.getServerUrl(remote);
 
     function success(data, textStatus, xhr) {
-        $("#results").html('<div class="alert alert-success">Successfully submitted <a href="search.html?nolog=1&q=' + obs + '">' + obs + '</a></div>');
+        $("#results").html('<div class="alert alert-success">Successfully submitted <a href="search.html?nolog=1&q=' + obs + '">' + obs + '</a></div>').fadeOut(5000);
     }
 
     function fail(xhr, textStatus, error) {
@@ -39,9 +39,17 @@ CIF_CLIENT.sendToServer=function(data){
         success: success,
         fail: fail
     });
-}
+};
 
 $(document).ready(function() {
+    // Setup the ajax indicator
+    $('#results').append('<div id="ajaxBusy"><p><img src="images/ajax-loader.gif"></p></div>');
+
+    $('#ajaxBusy').css({
+        display:"none",
+
+    });
+
     var remote = CIF_CLIENT.getDefaultServer();
     var groups = CIF_CLIENT.getServerGroups(remote);
     remote = CIF_CLIENT.getServerUrl(remote);
@@ -81,9 +89,16 @@ $(document).ready(function() {
             console.log(fields[i].name);
             data[fields[i].name] = fields[i].value;
         }
-        alert(data);
+
         CIF_CLIENT.sendToServer(data);
 
         $("#myform").find('input:text').val('');
     });
+});
+
+// Ajax activity indicator bound to ajax start/stop document events
+$(document).ajaxStart(function(){
+    $('#ajaxBusy').show();
+}).ajaxStop(function(){
+    $('#ajaxBusy').hide();
 });
