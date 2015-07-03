@@ -92,7 +92,8 @@ $(document).ready(function() {
 
         CIF_CLIENT.sendToServer(data);
 
-        $("#myform").find('input:text').val('');
+        // turn this into a checkbox?
+        //$("#myform").find('input:text').val(''); clear the form
     });
 });
 

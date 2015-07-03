@@ -67,10 +67,10 @@ search = function(q, nolog) {
                 xhr.responseJSON[i].group.join(),
                 tlp,
                 observable,
-                xhr.responseJSON[i].provider || 'private',
+                xhr.responseJSON[i].provider || '',
                 xhr.responseJSON[i].tags.join(),
                 xhr.responseJSON[i].confidence,
-                protocol,
+                protocol || '',
                 xhr.responseJSON[i].portlist || '',
 
             ]);
@@ -118,6 +118,14 @@ $(document).ready(function() {
         "searching": false
     });
 
+    // Setup the ajax indicator
+    $('#results').append('<div id="ajaxBusy"><p><img src="images/ajax-loader.gif"></p></div>');
+
+    $('#ajaxBusy').css({
+        display:"none",
+
+    });
+
     t.fnClearTable();
 
     console.log($(this));
@@ -155,4 +163,11 @@ $(document).ready(function() {
         search(q);
     });
 
+});
+
+// Ajax activity indicator bound to ajax start/stop document events
+$(document).ajaxStart(function(){
+    $('#ajaxBusy').show();
+}).ajaxStop(function(){
+    $('#ajaxBusy').hide();
 });
