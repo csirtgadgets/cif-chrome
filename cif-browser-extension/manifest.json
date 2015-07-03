@@ -17,5 +17,5 @@
   },
   "options_page": "content/settings.html",
   "permissions": [ "http://*/*", "https://*/*", "contextMenus","tabs"],
-  "omnibox": { "keyword": "cif" },
+  "omnibox": { "keyword": "cif" }
 }
