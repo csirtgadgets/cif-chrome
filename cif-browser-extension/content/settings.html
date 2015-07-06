@@ -35,18 +35,15 @@
                     <li><a href="submit.html">Submit</a></li>
                     <li><a href="settings.html">Settings</a></li>
                     <li>
-                        <form class="navbar-form" action="search.html">
+                        <form class="navbar-form" action="search.html" method="GET" id="searchForm">
                             <div class="form-group">
-                                <input type="text" placeholder="evilbit.com" class="form-control">
+                                <input type="text" placeholder="evilbit.com" class="form-control" name="q" id="q">
                             </div>
-                            <button type="submit" class="btn btn-success">Search</button>
+                            <button class="btn btn-default" id="btnSearch">Search</button>
                         </form>
                     </li>
                 </ul>
-
-
             </div>
-
         </nav>
         <div class="container-fluid">
             <div class="row">
