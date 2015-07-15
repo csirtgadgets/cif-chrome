@@ -4,7 +4,6 @@ var cif_connector = {
             xhr.setRequestHeader('Authorization', 'Token token=' + args.token);
             xhr.setRequestHeader('Accept', 'application/vnd.cif.v2+json');
         }
-        console.log(args.remote);
         $.ajax({
             url: args.remote,
             type: 'GET',
@@ -44,7 +43,7 @@ var cif_connector = {
     },
 
     search: function(args) {
-        args.remote = args.remote + '/observables?';
+        args.remote = args.remote + '/observables';
         if (args.query) {
             args.remote += '?q=' + args.query
         }
@@ -59,7 +58,6 @@ var cif_connector = {
             }
             args.remote = args.remote.substr(0, args.remote.length - 1);
         }
-        console.log(args.remote);
         this.get(args);
     }
 };
