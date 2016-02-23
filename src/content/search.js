@@ -53,8 +53,10 @@ search = function(q, nolog) {
                 case 'green':
                     tlp = '<div style="color:green">GREEN</div>';
                     break;
-                default:
+                case 'amber':
                     tlp = '<div style="color:orange">AMBER</div>';
+                default:
+                    tlp = '<div style="color:black">' + tlp + '</div>';
             }
 
             var observable = xhr.responseJSON[i].observable;
