@@ -141,7 +141,7 @@ CIF_CLIENT.test_settings=function(clickedbutton){
         remote: remote,
         token: token,
         success: success,
-        fail: fail
+        error: fail
     });
 }
 $(document).ready(function() {

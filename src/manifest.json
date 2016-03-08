@@ -1,6 +1,6 @@
 {
   "name": "CIF Client",
-  "version": "2.0",
+  "version": "2.0.1",
   "manifest_version": 2,
   "description": "Client for the Collective Intelligence Framework",
   "browser_action": {
