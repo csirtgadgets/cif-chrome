@@ -38,7 +38,7 @@ var cif_connector = {
     },
 
     submit: function(args) {
-        args.remote = args.remote + '/observables/new';
+        args.remote = args.remote + '/observables';
         this.post(args);
     },
 

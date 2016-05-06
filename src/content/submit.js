@@ -9,7 +9,6 @@ CIF_CLIENT.sendToServer=function(data){
     }
 
     function fail(xhr, textStatus, error) {
-        delay = 5000;
         html = "<div class='alert alert-danger'>Failed: <b>" + error + "</b></div>";
         switch(xhr['status']) {
             case 500:
@@ -18,12 +17,11 @@ CIF_CLIENT.sendToServer=function(data){
             case 401:
                 html = "<div class='alert alert-danger'>Authorization <Failed></Failed>: <b>" + error + "</b> be sure to check your Token.</div>";
                 break;
-
             case 404:
                 html = "<div class='alert alert-danger'>Connection failed: <b>" + error + "</b> be sure to check your API location.</div>";
                 break;
         }
-       $("#results").html(html).show().delay(delay).fadeOut('slow');
+       $("#results").html(html).show();
     }
 
     if (!data['observable']) {
@@ -37,7 +35,7 @@ CIF_CLIENT.sendToServer=function(data){
         token: token,
         data: [data],
         success: success,
-        fail: fail
+        error: fail
     });
 };
 
