@@ -5,6 +5,7 @@ CIF_CLIENT.sendToServer=function(data){
     remote = CIF_CLIENT.getServerUrl(remote);
 
     function success(data, textStatus, xhr) {
+        $("#results").css("display", ""); //Fixes success alert not showing when submitting two or more observables
         $("#results").html('<div class="alert alert-success">Successfully submitted <a href="search.html?nolog=1&q=' + obs + '">' + obs + '</a></div>').fadeOut(5000);
     }
 
