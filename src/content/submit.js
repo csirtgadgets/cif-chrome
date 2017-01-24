@@ -57,16 +57,16 @@ $(document).ready(function() {
     $('#tlp').change(function() {
         var current = $('#tlp').val();
         console.log(current);
-        if ( current == 'RED' ){
+        if ( current == 'red' ){
             $('#tlp').css('color','red');
         }
-        if ( current == 'AMBER' ){
+        if ( current == 'amber' ){
             $('#tlp').css('color','orange');
         }
-        if ( current == 'GREEN' ){
+        if ( current == 'green' ){
             $('#tlp').css('color','green');
         }
-        if ( current == 'WHITE' ){
+        if ( current == 'white' ){
             $('#tlp').css('color','black');
         }
     });
