@@ -21,6 +21,14 @@ var cif_connector = {
             xhr.setRequestHeader('Accept', 'application/vnd.cif.v2+json');
         }
 
+        for (i = 0; i < args.data.length; i++){
+            args.data[i].observable = args.data[i].observable.toLowerCase();
+            args.data[i].observable = args.data[i].observable.trim();
+            if(args.data[i].observable.startsWith('http')){
+                args.data[i].observable = args.data[i].observable.replace(/\/$/g, '');
+            }
+        }
+
         $.ajax({
             url: args.remote,
             type: 'POST',
@@ -45,7 +53,12 @@ var cif_connector = {
     search: function(args) {
         args.remote = args.remote + '/observables';
         if (args.query) {
-            args.remote += '?q=' + args.query
+            q = args.query.toLowerCase();
+            q = q.trim();
+            if (q.startsWith('http')){
+                q = q.replace(/\/$/g, "");
+            }
+            args.remote += '?q=' + q
         }
         if (args.filters){
             if(args.query){

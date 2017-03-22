@@ -130,11 +130,9 @@ $(document).ready(function() {
 
     t.fnClearTable();
 
-    console.log($(this));
-
     q = false;
-    nolog = false;
-
+    nolog = 0;
+    console.log(nolog);
     if (getUrlParameter('nolog')){
       nolog = getUrlParameter('nolog');
     }
@@ -162,7 +160,7 @@ $(document).ready(function() {
         var $form = $(this),
             q = $form.find( "input[name='q']" ).val(),
             url = $form.attr('action');
-        search(q);
+        search(q, nolog);
     });
 
 });
