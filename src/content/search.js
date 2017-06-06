@@ -12,7 +12,7 @@ function getUrlParameter(sParam)
     }
 }
 
-search = function(q, nolog) {
+search = function(q, data, nolog) {
     console.log(q);
 
     var server = CIF_CLIENT.getDefaultServer();
@@ -21,6 +21,7 @@ search = function(q, nolog) {
     var log = CIF_CLIENT.getServerLogSetting(server);
     //var limit = CIF_CLIENT.getServerLimit(server) || 100;
     var limit = 100;
+    data["limit"] = limit;
 
     function success(data, textStatus, xhr) {
         //$("#results").html("<div class='alert alert-success'>Test Connection Successful.</div>").show().delay(2000).fadeOut('slow');
@@ -60,9 +61,11 @@ search = function(q, nolog) {
             }
 
             var observable = xhr.responseJSON[i].observable;
+
             if (xhr.responseJSON[i].altid) {
                 observable = '<a href="' + xhr.responseJSON[i].altid + '">' + observable + '</a>'
             }
+
 
             t.fnAddData([
                 xhr.responseJSON[i].reporttime,
@@ -104,6 +107,7 @@ search = function(q, nolog) {
         token: token,
         query: q,
         success: success,
+        data, data,
         fail: fail,
         filters: {
             limit: limit,
@@ -160,7 +164,16 @@ $(document).ready(function() {
         var $form = $(this),
             q = $form.find( "input[name='q']" ).val(),
             url = $form.attr('action');
-        search(q, nolog);
+
+        var fields = $(":input").serializeArray();
+        data = {}
+        for (var i in fields) {
+          if (fields[i].name != "results_length" && fields[i].value != ""){
+            data[fields[i].name] = fields[i].value;
+          }
+        }
+        console.log(data)
+        search(q, data);
     });
 
 });
