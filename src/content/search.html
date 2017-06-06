@@ -40,7 +40,23 @@
                 </ul>
                 <form class="navbar-form" action="" method="POST" id="searchForm">
                     <div class="form-group">
-                        <input type="text" placeholder="evilbit.com" class="form-control" name="q" id="q" size="72">
+                        <input type="text" placeholder="evilbit.com" class="form-control" name="q" id="q">
+                        <select class="form-control" id="confidence" name="confidence">
+                                <option value="5">5</option>
+                                <option value="15">15</option>
+                                <option value="25">25</option>
+                                <option value="35">35</option>
+                                <option value="45">45</option>
+                                <option selected="1" value="55">55</option>
+                                <option value="65">65</option>
+                                <option value="75">75</option>
+                                <option value="85">85</option>
+                                <option value="95">95</option>
+                            </select>
+                        <input type="text" placeholder="provider" class="form-control" name="provider" id="provider">
+                        <input type="text" placeholder="group" class="form-control" name="group" id="group">
+                        <input type="text" placeholder="tags" class="form-control" name="tags" id="tags">
+                        <input type="date" class="form-control" name="reporttime">
                     </div>
                     <button class="btn btn-default" id="btnSearch">Search</button>
                 </form>
