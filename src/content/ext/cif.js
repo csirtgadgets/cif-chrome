@@ -69,8 +69,12 @@ var cif_connector = {
             for (var i in args.filters){
                 args.remote += i + '=' + args.filters[i] + '&';
             }
+            for (var i in args.data){
+                  args.remote += i + '=' + args.data[i] + '&';
+            }
             args.remote = args.remote.substr(0, args.remote.length - 1);
         }
+
         this.get(args);
     }
 };

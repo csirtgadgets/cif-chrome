@@ -12,6 +12,7 @@ CIF_CLIENT.save_options=function() {
 		var name=$(".nameinput",$(this)).val().trim();
 		var url=$(".urlinput",$(this)).val().trim();
 		var groups=$(".groupsinput", $(this)).val().trim();
+		var provider=$(".providerinput", $(this)).val().trim();
 		var isDefault=$('.defaultradioinput',$(this)).is(':checked');
 		var logQueries=$('.logqueriesinput',$(this)).is(':checked');
 		var set = {
@@ -19,6 +20,7 @@ CIF_CLIENT.save_options=function() {
 			'key': key,
 			'url': url,
 			'groups': groups,
+			'provider': provider,
 			'isDefault': isDefault,
 			'logQueries': logQueries
 		};
@@ -27,10 +29,10 @@ CIF_CLIENT.save_options=function() {
 		}
 	});
 	CIF_CLIENT.storeItem("cifapiprofiles",JSON.stringify(options));
-		
+
 	var miscOptions = {};
 	CIF_CLIENT.storeItem('miscOptions',JSON.stringify(miscOptions));
-	
+
 	// Update status to let user know options were saved.
 	$("#status").html("<div class='alert alert-block alert-success'>Options Saved.</div>").show().delay(5000).fadeOut('slow');
 }
@@ -39,7 +41,7 @@ CIF_CLIENT.restore_options=function() {
   try {
 	  options = JSON.parse(CIF_CLIENT.getItem("cifapiprofiles"));
 	  for (i in options){
-		CIF_CLIENT.addProfileRow(options[i]['name'],options[i]['url'],options[i]['key'],options[i]['groups'],options[i]['isDefault'],options[i]['logQueries']);
+		CIF_CLIENT.addProfileRow(options[i]['name'],options[i]['url'],options[i]['key'],options[i]['groups'], options[i]['provider'],options[i]['isDefault'],options[i]['logQueries']);
 	  }
   } catch(err) {
 	console.log(err);
@@ -50,16 +52,17 @@ CIF_CLIENT.restore_options=function() {
   } catch(err) {
 	console.log(err);
   }
-  CIF_CLIENT.addProfileRow('','','','', false,true);
+  CIF_CLIENT.addProfileRow('','','','','', false,true);
 }
 
 
-CIF_CLIENT.addProfileRow=function(name, url, key, groups, isDefault, logQueries){
+CIF_CLIENT.addProfileRow=function(name, url, key, groups, provider, isDefault, logQueries){
 	toappend='<tr class="profilerow">';
 	toappend+='<td><input type="text" class="nameinput form-control"  placeholder="Name"/></td>';
 	toappend+='<td><input type="text" class="urlinput form-control" placeholder="https://example.org" size="50"/></td>';
 	toappend+='<td><input type="text" class="keyinput form-control" placeholder="12341234" size="72"/></td>';
-	toappend += '<td><input type="text" class="groupsinput form-control" placeholder="everyone,groupA,groupB" size="30"/></td>';
+	toappend+= '<td><input type="text" class="groupsinput form-control" placeholder="everyone,groupA,groupB" size="30"/></td>';
+	toappend+='<td><input type="text" class="providerinput form-control" placeholder="Organization (no spaces)" size="50"/></td>';
 
 	toappend+='<td><span class="aria-label">Default Server:</span> <input type="radio" class="defaultradioinput" name="isdefault" disabled/><br/>';
 	toappend+='<span class="aria-label">Log Queries:</span> <input type="checkbox" class="logqueriesinput" checked/></td>';
@@ -71,6 +74,7 @@ CIF_CLIENT.addProfileRow=function(name, url, key, groups, isDefault, logQueries)
 	$(".nameinput").last().val(name);
 	$(".urlinput").last().val(url);
 	$(".keyinput").last().val(key);
+	$(".providerinput").last().val(provider);
 
 
 	if(groups){
