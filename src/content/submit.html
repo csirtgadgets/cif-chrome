@@ -57,7 +57,14 @@
                                 <input class="form-control" type="text" placeholder="evilbit.com" id="observable" name="observable">
                         </div>
                         <div class="form-group input-group-lg">
-                            <input class="form-control" type="text" placeholder="scanner, ssh, tag3, tag4" id="tags" name="tags">
+                            <input class="form-control" type="text" name="tags" placeholder="scanner, ssh, tag3, tag4" list="tags">
+                            <datalist id="tags">
+                                <option value="phishing">
+                                <option value="malware">
+                                <option value="exploit">
+                                <option value="botnet">
+                                <option value="scanner">
+                            </datalist>
                         </div>
                         <div class="form-group input-group-lg">
                             <input class="form-control" type="text" placeholder="short description" id="description" name="description">

@@ -51,6 +51,7 @@ $(document).ready(function() {
 
     var remote = CIF_CLIENT.getDefaultServer();
     var groups = CIF_CLIENT.getServerGroups(remote);
+    var provider = CIF_CLIENT.getServerProvider(remote);
     remote = CIF_CLIENT.getServerUrl(remote);
 
     $('#tlp').css('color','orange');
@@ -88,6 +89,8 @@ $(document).ready(function() {
             console.log(fields[i].name);
             data[fields[i].name] = fields[i].value;
         }
+
+        data["provider"] = provider
 
         CIF_CLIENT.sendToServer(data);
 

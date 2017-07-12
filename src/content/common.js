@@ -65,6 +65,11 @@ CIF_CLIENT.getServerGroups=function(server){
 	return servers[server]['groups']
 }
 
+CIF_CLIENT.getServerProvider=function(server){
+	servers = JSON.parse(CIF_CLIENT.getItem('cifapiprofiles'));
+	return servers[server]['provider']
+}
+
 CIF_CLIENT.getServerUrl=function(server){
 	servers = JSON.parse(CIF_CLIENT.getItem("cifapiprofiles"));
 	return servers[server]['url'];
@@ -118,7 +123,7 @@ CIF_CLIENT.showVersion=function(){
 	catch (ex) { //above throws an error if not firefox.
 		$.ajax({
 			type: "GET",
-			url:'../manifest.json', 
+			url:'../manifest.json',
 			dataType: "json",
 			success: function(data){
 				CIF_CLIENT.storeItem('myversion',data['version']);
@@ -139,7 +144,7 @@ CIF_CLIENT.showVersion=function(){
 		CIF_CLIENT.storeItem('lastudpatecheck',ts);
 		$.ajax({
 			type: "GET",
-			url:'https://raw.githubusercontent.com/csirtgadgets/cif-browsers/master/cif-browser-extension/manifest.json', 
+			url:'https://raw.githubusercontent.com/csirtgadgets/cif-browsers/master/cif-browser-extension/manifest.json',
 			dataType: "json",
 			success: function(data){
 				CIF_CLIENT.storeItem('latestversion',data['version']);
@@ -164,7 +169,7 @@ CIF_CLIENT.prepSearchBox=function(){
 			$("#logquery").removeAttr('checked');
 		}
 	}).change();
-	$("#theform").submit(function(){ 
+	$("#theform").submit(function(){
 		query = { 'query':$("#querystring").val().trim(),
 				  'type':'formquery',
 				  'filters': CIF_CLIENT.getFilters(),
