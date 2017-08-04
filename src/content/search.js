@@ -13,12 +13,17 @@ function getUrlParameter(sParam)
 }
 
 search = function(q, data, nolog) {
-    console.log(q);
-
     var server = CIF_CLIENT.getDefaultServer();
     var token = CIF_CLIENT.getServerKey(server);
     var remote = CIF_CLIENT.getServerUrl(server);
     var log = CIF_CLIENT.getServerLogSetting(server);
+
+    if (log) {
+        nolog = 0;
+    } else {
+        nolog = 1;
+    }
+
     //var limit = CIF_CLIENT.getServerLimit(server) || 100;
     var limit = 100;
     data["limit"] = limit;
@@ -105,7 +110,7 @@ search = function(q, data, nolog) {
     cif_connector.search({
         remote: remote,
         token: token,
-        query: q,
+        query: q.toLowerCase(),
         success: success,
         data, data,
         fail: fail,
@@ -135,8 +140,8 @@ $(document).ready(function() {
     t.fnClearTable();
 
     q = false;
-    nolog = 0;
-    console.log(nolog);
+
+    var nolog = 0;
     if (getUrlParameter('nolog')){
       nolog = getUrlParameter('nolog');
     }
