@@ -112,7 +112,7 @@ search = function(q, data, nolog) {
         token: token,
         query: q.toLowerCase(),
         success: success,
-        data, data,
+        data: data,
         fail: fail,
         filters: {
             limit: limit,
